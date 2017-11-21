@@ -1,0 +1,17 @@
+
+if [ -d "$HOME/.bashrc.d" ] ; then
+for f in $HOME/.bashrc.d/*
+do
+. "${f}"
+done
+fi
+if [ -d "$HOME/.bash_completion.d" ] ; then
+for f in $HOME/.bash_completion.d/*
+do
+. "${f}"
+done
+fi
+
+
+GIT_PROMPT_ONLY_IN_REPO=1
+source ~/.bash-git-prompt/gitprompt.shh
