@@ -3,3 +3,5 @@ if [[ -d "$HOME/.bash_completion.d" ]]; then
         . "${f}"
     done
 fi
+
+export PATH="$HOME/.cargo/bin:$PATH"
