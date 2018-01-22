@@ -1,17 +1,16 @@
 
-if [ -d "$HOME/.bashrc.d" ] ; then
-for f in $HOME/.bashrc.d/*
-do
-. "${f}"
-done
-fi
-if [ -d "$HOME/.bash_completion.d" ] ; then
-for f in $HOME/.bash_completion.d/*
-do
-. "${f}"
-done
-fi
+function include_dir {
+    dir=$1
+    if [ -d "$HOME/$dir" -a -r "$HOME/$dir" -a -x "$HOME/$dir ]; then
+        for f in "$HOME/$dir"/*.sh; do
+            . "$f"
+        done
+    fi
+}
 
+include_dir .bashrc.d
+include_dir .bash_completion.d
+include_dir .bash_aliases.d
 
 GIT_PROMPT_ONLY_IN_REPO=1
-source ~/.bash-git-prompt/gitprompt.shh
+source ~/.bash-git-prompt/gitprompt.sh
