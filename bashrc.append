@@ -1,4 +1,4 @@
-
+# To be appended to ~/.bashrc
 function include_dir {
     dir=$1
     if [ -d "$HOME/$dir" -a -r "$HOME/$dir" -a -x "$HOME/$dir ]; then
