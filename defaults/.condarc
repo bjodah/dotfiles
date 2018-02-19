@@ -1,0 +1,8 @@
+channels:
+  - symengine
+  - conda-forge
+  - bjodah
+  - defaults
+show_channel_urls: true
+
+#add_anaconda_token: false
