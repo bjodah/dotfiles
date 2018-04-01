@@ -238,19 +238,19 @@
 
 
 (define-abbrev-table 'global-abbrev-table '(
-    ("alpha" "α" nil 0)
-    ("beta" "β" nil 0)
-    ("gamma" "γ" nil 0)
-    ("delta" "δ" nil 0)
-    ("Delta" "Δ" nil 0)
-    ("theta" "θ" nil 0)
-    ("mu" "μ" nil 0)
-    ("pi" "π" nil 0)
-    ("inf" "∞" nil 0)
-    ("ddagger" "‡" nil 0)
-    ("ar1" "→" nil 0)
-    ("ar2" "⇒" nil 0)
-    ("dnm" "DO-NOT-MERGE!" nil 0)
+    ("alpha!" "α" nil 0)
+    ("beta!" "β" nil 0)
+    ("gamma!" "γ" nil 0)
+    ("delta!" "δ" nil 0)
+    ("Delta!" "Δ" nil 0)
+    ("theta!" "θ" nil 0)
+    ("mu!" "μ" nil 0)
+    ("pi!" "π" nil 0)
+    ("inf!" "∞" nil 0)
+    ("ddager!" "‡" nil 0)
+    ("ar1!" "→" nil 0)
+    ("ar2!" "⇒" nil 0)
+    ("dnm!" "DO-NOT-MERGE!" nil 0)
     ))
 
 (abbrev-mode 1) ; turn on abbrev mode
