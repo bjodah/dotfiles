@@ -1,6 +1,6 @@
-if [ -d "$HOME/vc/anfilt/scripts" ]; then
-    export PATH="$HOME/vc/anfilt/scripts:$PATH"
+if [ -d "$HOME/vc/anfilte/scripts" ]; then
+    export PATH="$HOME/vc/anfilte/scripts:$PATH"
 fi
-if [ -d /opt/anfilt-cache ]; then
-    export ANFILT_CACHE_DIR=/opt/anfilt-cache
+if [ -d /opt/anfilte-cache ]; then
+    export ANFILTE_CACHE_DIR=/opt/anfilte-cache
 fi
