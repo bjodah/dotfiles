@@ -82,32 +82,11 @@
 (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
 
 
-;; Set minor modes for Python
-(add-hook 'python-mode-hook
+(add-hook 'cmake-mode-hook
     (function (lambda ()
-       (yas-global-mode t) ;; <-- I can't get minor mode to work properly
-       (column-number-mode)
-       ;(auto-complete-mode)
-       (flyspell-prog-mode)
-       ;(highlight-indentation-mode)
-       (electric-pair-mode)
-       (add-hook 'write-contents-functions
-		 (lambda()
-		   (save-excursion
-		     (delete-trailing-whitespace)
-                     ;(pep8)
-                     )))
-       (local-set-key (kbd "C-c o") 'pep8)
-       (local-set-key (kbd "C-c p") (lambda () (interactive) (occur "\\bdef \\|\\bclass \\|=[ ]?lambda")))
-       (jedi:setup)
-       )))
-;; (fset 'pytoc
-;;    [?\M-x ?o ?c ?c ?u ?r return ?d ?e ?f ?\\ ?b ?\\ ?| ?c ?l ?a ?s ?s ?\\ ?b ?\\ ?| ?= ?\[ ?  ?\] ?? ?l ?a ?m ?b ?d ?a return ?\C-x])
+        (setq cmake-tab-width 4)
+        )))
 
-
-(defun ipython ()
-    (interactive)
-    (term "/usr/bin/ipython")) ;; note: C-x becomes C-c in term
 
 ;; yas-next-field-or-maybe-expand
 
@@ -269,10 +248,48 @@
 ;http://www.emacswiki.org/emacs/LoadPath
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
+(require 'python-mode)
+;; Set minor modes for Python
+(add-hook 'python-mode-hook
+    (function (lambda ()
+       (yas-global-mode t) ;; <-- I can't get minor mode to work properly
+       (column-number-mode)
+       ;(auto-complete-mode)
+       (flyspell-prog-mode)
+       ;(highlight-indentation-mode)
+       (electric-pair-mode)
+       (add-hook 'write-contents-functions
+		 (lambda()
+		   (save-excursion
+		     (delete-trailing-whitespace)
+                     ;(pep8)
+                     )))
+       (local-set-key (kbd "C-c o") 'pep8)
+       (local-set-key (kbd "C-c p") (lambda () (interactive) (occur "\\bdef \\|\\bclass \\|=[ ]?lambda")))
+       (jedi:setup)
+       )))
+;; (fset 'pytoc
+;;    [?\M-x ?o ?c ?c ?u ?r return ?d ?e ?f ?\\ ?b ?\\ ?| ?c ?l ?a ?s ?s ?\\ ?b ?\\ ?| ?= ?\[ ?  ?\] ?? ?l ?a ?m ?b ?d ?a return ?\C-x])
+
+
+(defun ipython ()
+    (interactive)
+    (term "/usr/bin/ipython")) ;; note: C-x becomes C-c in term
+
+
 ;; cython-mode
 (require 'cython-mode)
 (setq auto-mode-alist
    (cons '("\\.pyx" . cython-mode) auto-mode-alist))
+
+;; mmm-mako
+(require 'mmm-mode)
+(load-file "~/.emacs.d/lisp/mmm-mako.el")
+(add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . makefile-gmake-mode))
+(mmm-add-mode-ext-class 'makefile-gmake-mode "\\.mk.mako\\'" 'mako)
+(add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . c++-mode))
+(mmm-add-mode-ext-class 'c++-mode "\\.cpp.mako\\'" 'mako)
+
 
 
 ;; From http://jblevins.org/projects/markdown-mode/
