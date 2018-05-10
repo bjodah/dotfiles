@@ -5,12 +5,13 @@ show_help(){
     echo " -e  environment name"
     echo " -h  show this help"
     echo " -c  set compiler flags"
+    echo " -n  set PYTHONNOUSERSITE=1"
     echo " -v  verbose"
     echo ""
     echo "Example:"
     echo ""
     echo "   \$ source $(basename $0)"
-    echo "   \$ source $(basename $0) -e sun3"
+    echo "   \$ source $(basename $0) -c -n -e sun3"
 }
 OPTIND=1
 ENV_NAME=""
@@ -24,6 +25,9 @@ while getopts "h?cve:" opt; do
             ;;
         c)
             SET_FLAGS=1
+            ;;
+        n)
+            export PYTHONNOUSERSITE=1
             ;;
         v)
             VERBOSE=1
@@ -55,8 +59,7 @@ if [[ $SET_FLAGS -eq 1 ]]; then
     if [[ $VERBOSE -eq 1 ]]; then
         echo "setting compiler flags..."
     fi
-    export CPLUS_INCLUDE_PATH=$ROOT/include:$CPLUS_INCLUDE_PATH
-    export C_INCLUDE_PATH=$ROOT/include:$C_INCLUDE_PATH
+    export CPATH=$ROOT/include:$CPATH
     export LIBRARY_PATH=$ROOT/lib:$LIBRARY_PATH
     export LD_LIBRARY_PATH=$ROOT/lib:$LD_LIBRARY_PATH
 fi

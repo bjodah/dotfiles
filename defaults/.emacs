@@ -21,6 +21,8 @@
  el-get-sources
  '(el-get;
    yasnippet;
+   mmm-mode;
+   python-mode;
    ;;elpy;
    ;;highlight-indentation
    (:name jedi
@@ -248,7 +250,7 @@
 ;http://www.emacswiki.org/emacs/LoadPath
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
-(require 'python-mode)
+;(require 'python-mode)
 ;; Set minor modes for Python
 (add-hook 'python-mode-hook
     (function (lambda ()
