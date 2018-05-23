@@ -1,1 +1,2 @@
+xontrib load xonda
 aliases['ll'] = 'ls -lrtah'
