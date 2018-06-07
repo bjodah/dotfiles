@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: defpytest
+# key: tst
+# group: testing
+# --
+def test_${1:long_name}($2):
+    $0

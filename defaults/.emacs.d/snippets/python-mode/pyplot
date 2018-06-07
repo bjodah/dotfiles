@@ -1,0 +1,5 @@
+#name : pyplot
+# key: plt
+# --
+import matplotlib.pyplot as plt
+$0

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: physical quantities
+# key: pq
+# group : general
+# --
+import quantities as pq
+$0

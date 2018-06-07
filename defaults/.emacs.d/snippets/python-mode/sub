@@ -1,0 +1,5 @@
+#name : __sub__(self, ...): ...
+# key: sub
+# --
+__sub__(self, ${1:other}):
+    """ $2 """

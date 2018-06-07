@@ -1,0 +1,4 @@
+#name : shebang
+# key: shbng
+# --
+#!/usr/bin/env ${1:python}

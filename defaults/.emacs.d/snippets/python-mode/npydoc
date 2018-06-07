@@ -1,0 +1,35 @@
+# -*- mode: snippet -*-
+# name: npydoc
+# key: npd
+# --
+"""
+$0
+
+Parameters
+----------
+$1 : array_like, optional
+    Input array of exam grades.
+
+Returns
+-------
+$2: ndarray
+    Geometric mean of exam grades (0 if non were provided)
+
+Notes
+-----
+.. versionadded:: $3
+
+Raises
+------
+ValueError
+    if axis is larger than ndim of arrays, or no arrays are passed along
+
+See Also
+--------
+$4
+
+Examples
+--------
+>>> $5
+
+"""

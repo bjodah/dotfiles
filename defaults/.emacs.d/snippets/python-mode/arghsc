@@ -1,0 +1,20 @@
+# -*- mode: snippet -*-
+# name: argh script
+# key: arghsc
+# --
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from __future__ import (absolute_import, division,
+                        print_function, unicode_literals)
+from future.builtins import *
+
+$0
+
+def main($1):
+    ${2:pass}
+
+
+if __name__ == '__main__':
+    import argh
+    argh.dispatch_command(main)

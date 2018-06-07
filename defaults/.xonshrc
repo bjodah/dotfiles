@@ -1,2 +1,9 @@
 xontrib load xonda
 aliases['ll'] = 'ls -lrtah'
+aliases['emasc'] = 'emacs'
+imprt = """
+import numpy as np
+import sympy as sym
+import matplotlib.pyplot as plt
+from chempy import Substance, ReactionSystem
+from chempy.units import to_unitless, default_units as u"""

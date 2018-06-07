@@ -1,48 +1,60 @@
 (global-set-key (kbd "C-S-k") (lambda() (interactive) (delete-region (point) (line-end-position))))
 
+(setq abbrev-file-name "~/.emacs.d/lisp/abbrev_defs")
+(abbrev-mode 1) ; turn on abbrev mode
+
 ;; el-get (One to rule them all)
 ;; =============================
 ;; See https://github.com/dimitri/el-get
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
-;; el-get-init-files is buggy see issue 1081 (reevaluate when closed)
-;;(setq el-get-user-package-directory "~/.emacs.d/el-get-init-files/")
-
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
       (url-retrieve-synchronously
-       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-    (let (el-get-master-branch)
-      (goto-char (point-max))
-      (eval-print-last-sexp))))
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
 
-;; now either el-get is `require'd already, or have been `load'ed by the el-get installer.
-(setq
- el-get-sources
- '(el-get;
-   yasnippet;
-   mmm-mode;
-   python-mode;
-   ;;elpy;
-   ;;highlight-indentation
-   (:name jedi
-	  :after (progn
-		   (global-set-key (kbd "C-c c") 'jedi:goto-definition) ; C-. not available in terminal
-		   (global-set-key (kbd "C-c v") 'jedi:complete)))      ; <C-tab> not avail in term
-   ein;
-   auto-complete;
-   python-pep8;
-   smart-operator;
-   auctex;
-   graphviz-dot-mode;
-   reftex;
-   magit;
-   flycheck;
-   )
-)
+(add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+
+(el-get-bundle yasnippet)
+(el-get-bundle mmm-mode)
+(el-get-bundle python-mode)
+(el-get-bundle cython-mode)
+(el-get-bundle mmm-mode)
+
+(el-get-bundle websocket)     ; ein req
+(el-get-bundle request)       ; ein req
+(el-get-bundle dash)          ; ein req
+(el-get-bundle s)             ; ein req
+(el-get-bundle auto-complete) ; ein req
+(el-get-bundle skewer-mode)   ; ein req
+(el-get-bundle ein)
+
+(el-get-bundle python-pep8)
+(el-get-bundle smart-operator)
+(el-get-bundle auctex)
+(el-get-bundle graphviz-dot-mode)
+(el-get-bundle reftex)
+(el-get-bundle magit)
+(el-get-bundle flycheck)
+
+;; (el-get-bundle jedi)
+
+   ;; (:name jedi
+   ;;        :after (progn
+   ;;      	   (global-set-key (kbd "C-c c") 'jedi:goto-definition) ; C-. not available in terminal
+   ;;      	   (global-set-key (kbd "C-c v") 'jedi:complete)))      ; <C-tab> not avail in term
+
 
 ;; install new packages and init already installed packages
 (el-get 'sync)
+
+(advice-add 'request--netscape-cookie-parse :around #'fix-request-netscape-cookie-parse) ;; https://github.com/millejoh/emacs-ipython-notebook/issues/163#issuecomment-271593454
+(require 'ein)
+(require 'ein-loaddefs)
+(require 'ein-notebook)
+(require 'ein-subpackages)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -73,15 +85,15 @@
                     (save-excursion
                       (delete-trailing-whitespace)
                       )))
-        (setq c-offsets-alist ((inline-open . 0)  ; custom indentation rules
-                               (brace-list-open . 0)
-                               (statement-case-open . +)))
+        ;; (setq c-offsets-alist ((inline-open . 0)  ; custom indentation rules
+        ;;                        (brace-list-open . 0)
+        ;;                        (statement-case-open . +)))
         )))
 
 
 ;; Python
 
-(setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
+;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
 
 
 (add-hook 'cmake-mode-hook
@@ -218,24 +230,21 @@
 ;;  	     )
 
 
-(define-abbrev-table 'global-abbrev-table '(
-    ("alphaQ" "α" nil 0)
-    ("betaQ" "β" nil 0)
-    ("gammaQ" "γ" nil 0)
-    ("deltaQ" "δ" nil 0)
-    ("DeltaQ" "Δ" nil 0)
-    ("thetaQ" "θ" nil 0)
-    ("muQ" "μ" nil 0)
-    ("piQ" "π" nil 0)
-    ("infQ" "∞" nil 0)
-    ("ddagerQ" "‡" nil 0)
-    ("ar1Q" "→" nil 0)
-    ("ar2Q" "⇒" nil 0)
-    ("dnmQ" "DO-NOT-MERGE!" nil 0)
-    ))
-
-(abbrev-mode 1) ; turn on abbrev mode
-
+;; (define-abbrev-table 'global-abbrev-table '(
+;;     ("alphaQ" "α" nil 0)
+;;     ("betaQ" "β" nil 0)
+;;     ("gammaQ" "γ" nil 0)
+;;     ("deltaQ" "δ" nil 0)
+;;     ("DeltaQ" "Δ" nil 0)
+;;     ("thetaQ" "θ" nil 0)
+;;     ("muQ" "μ" nil 0)
+;;     ("piQ" "π" nil 0)
+;;     ("infQ" "∞" nil 0)
+;;     ("ddagerQ" "‡" nil 0)
+;;     ("ar1Q" "→" nil 0)
+;;     ("ar2Q" "⇒" nil 0)
+;;     ("dnmQ" "DO-NOT-MERGE!" nil 0)
+;;     ))
 
 ;; http://emacswiki.org/emacs/BackupDirectory
 (setq
@@ -268,7 +277,7 @@
                      )))
        (local-set-key (kbd "C-c o") 'pep8)
        (local-set-key (kbd "C-c p") (lambda () (interactive) (occur "\\bdef \\|\\bclass \\|=[ ]?lambda")))
-       (jedi:setup)
+       ;; (jedi:setup)
        )))
 ;; (fset 'pytoc
 ;;    [?\M-x ?o ?c ?c ?u ?r return ?d ?e ?f ?\\ ?b ?\\ ?| ?c ?l ?a ?s ?s ?\\ ?b ?\\ ?| ?= ?\[ ?  ?\] ?? ?l ?a ?m ?b ?d ?a return ?\C-x])
@@ -291,6 +300,8 @@
 (mmm-add-mode-ext-class 'makefile-gmake-mode "\\.mk.mako\\'" 'mako)
 (add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . c++-mode))
 (mmm-add-mode-ext-class 'c++-mode "\\.cpp.mako\\'" 'mako)
+(add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . c++-mode))
+(mmm-add-mode-ext-class 'c++-mode "\\.hpp.mako\\'" 'mako)
 
 
 
