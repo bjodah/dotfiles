@@ -9,8 +9,8 @@ if [[ "$(hostname)" == "urania" ]]; then
     fi
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
-    export CPATH=$HOME/.local/include:/opt/sundials-3.1.1/include:/opt/py37/include:/opt/boost_1_67_0/include
-    export LIBRARY_PATH=/opt/sundials-3.1.1/lib:/opt/py37/lib:/opt/boost_1_67_0/lib
+    export CPATH=$HOME/.local/include:/opt/sundials-3.1.1/include:/opt/py37/include:/opt/boost_1_67_0/include:/opt/symengine-32d8612/include
+    export LIBRARY_PATH=/opt/sundials-3.1.1/lib:/opt/py37/lib:/opt/boost_1_67_0/lib:/opt/symengine-32d8612/lib
     export LD_LIBRARY_PATH=$LIBRARY_PATH
     export PATH=/opt/py37/bin:$PATH
 fi
