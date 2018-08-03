@@ -13,6 +13,7 @@ alias ll='ls -laFrth --color=auto'
 alias ec="emacsclient"
 alias ecn="emacsclient -n"
 alias enw="emacs -nw"
+alias enwq="emacs -nw -q"
 
 alias uuid='python -c "import uuid; import base64; print(\"_\" + base64.b32encode(uuid.uuid4().bytes).decode().strip(\"=\"))"'
 
