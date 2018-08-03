@@ -12,6 +12,7 @@
     pl = pull
     ps = push
     pt = push --tags
+    po = push --set-upstream origin
 
     a = add
     ap = add -p
