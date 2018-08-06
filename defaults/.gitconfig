@@ -12,7 +12,7 @@
     pl = pull
     ps = push
     pt = push --tags
-    po = push --set-upstream origin
+    po = "!git push --set-upstream origin $(git symbolic-ref --short HEAD)"
 
     a = add
     ap = add -p
