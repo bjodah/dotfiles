@@ -1,13 +1,22 @@
+add_prefix_to_compiler_env_vars(){
+    export CPATH=$1/include:$CPATH
+    export LIBRARY_PATH=$1/lib:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=$1/lib:$LD_LIBRARY_PATH
+}
+
+if [[ ! -e "$HOME/bin/custom" ]]; then
+    mkdir -p "$HOME/bin/custom"
+fi
+export PATH=$HOME/bin/custom:$PATH
+
+
 if [[ "$(hostname)" == "urania" ]]; then
-    export CC=gcc-8 CXX=g++-8 FC=gfortran-8 OPENBLAS_NUM_THREADS=1
-    export CPATH=$HOME/.local/include:/opt/sundials-3.1.1-0.3.1/include:/opt/openblas/include:/opt/boost_1_67_0/include:/opt/symengine-32d8612/include:/usr/include/suitesparse
-    export LIBRARY_PATH=$HOME/.local/lib:/opt/sundials-3.1.1-0.3.1/lib:/opt/openblas-0.3.1/lib:/opt/boost_1_67_0/lib:/opt/symengine-32d8612/lib
-    export LD_LIBRARY_PATH=$LIBRARY_PATH:/opt/py36/lib
+    export CC=gcc-8 CXX=g++-8 FC=gfortran-8
+    export OPENBLAS_NUM_THREADS=1
+    for PREFIX in /opt/openblas-0.3.2 /opt/sundials-3.1.2 /opt/boost_1_67_0 /opt/symengine-32d8612; do
+        add_prefix_to_compiler_env_vars $PREFIX
+    done
     export CMAKE_PREFIX_PATH=/opt/symengine-32d8612
-    if [[ ! -e "$HOME/bin/custom" ]]; then
-	mkdir -p "$HOME/bin/custom"
-    fi
-    export PATH=$HOME/bin/custom:$PATH
     if [[ ! -e "$HOME/bin/custom/python3.7" ]]; then
 	ln -s "$HOME/.local/bin/python3.7" "$HOME/bin/custom/python3.7"
     fi
@@ -16,8 +25,13 @@ if [[ "$(hostname)" == "urania" ]]; then
     fi
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
-    export CPATH=$HOME/.local/include:/opt/sundials-3.1.1/include:/opt/py37/include:/opt/boost_1_67_0/include:/opt/symengine-32d8612/include
-    export LIBRARY_PATH=/opt/sundials-3.1.1/lib:/opt/py37/lib:/opt/boost_1_67_0/lib:/opt/symengine-32d8612/lib
-    export LD_LIBRARY_PATH=$LIBRARY_PATH
-    export PATH=/opt/py37/bin:$PATH
+    export OPENBLAS_NUM_THREADS=1
+    for PREFIX in /opt/py37 /opt/openblas-0.3.2 /opt/sundials-3.1.2 /opt/boost_1_67_0 /opt/symengine-32d8612; do
+        add_prefix_to_compiler_env_vars $PREFIX
+    done
+    export CMAKE_PREFIX_PATH=/opt/symengine-32d8612
+    if [[ ! -e "$HOME/bin/custom/python3.7" ]]; then
+	ln -s "/opt/py37/bin/python3.7" "$HOME/bin/custom/python3.7"
+    fi
+    # export PATH=/opt/py37/bin:$PATH
 fi
