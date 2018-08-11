@@ -6,6 +6,8 @@
 	gpgsign = true
 [push]
 	default = simple
+[gpg]
+	program = gpg2
 
 [alias]
     # one-line log
