@@ -18,7 +18,6 @@
     po = "!git push --set-upstream origin $(git symbolic-ref --short HEAD)"
 
     a = add
-    A = add -A
     ap = add -p
 
     c = commit --verbose
