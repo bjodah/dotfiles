@@ -13,7 +13,7 @@ export PATH=$HOME/bin/custom:$PATH
 if [[ "$(hostname)" == "urania" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
     export OPENBLAS_NUM_THREADS=1
-    for PREFIX in /opt/openblas-0.3.2 /opt/sundials-3.1.2 /opt/boost_1_67_0 /opt/symengine-32d8612; do
+    for PREFIX in /opt/openblas-0.3.2 /opt/sundials-3.1.2 /opt/boost_1_67_0 /opt/symengine-32d8612 /opt/py36; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     export CMAKE_PREFIX_PATH=/opt/symengine-32d8612
