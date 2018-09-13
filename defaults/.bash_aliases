@@ -10,6 +10,8 @@ pygrep() {
 alias g='git'  # see also .bash_completion.d
 
 alias ll='ls -laFrth --color=auto'
+alias rmb='rm -r ./build/'
+
 alias ec="emacsclient"
 alias ecn="emacsclient -n"
 alias enw="emacs -nw"
