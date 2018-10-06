@@ -187,7 +187,7 @@
        (flyspell-mode)
        (auto-fill-mode)
        (define-key LaTeX-mode-map "\C-c\C-t\C-x" 'TeX-toggle-escape)
-       (setq fill-column 99))))
+       (setq fill-column 199))))
 
 (setq auto-mode-alist
    (cons '("\\.tex" . LaTeX-mode) auto-mode-alist))
