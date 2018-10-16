@@ -34,6 +34,7 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
 	ln -s "/opt/py37/bin/python3.7" "$HOME/bin/custom/python3.7"
     fi
     # export PATH=/opt/py37/bin:$PATH
+    export MPLBACKEND=TkAgg
 
     export CPATH=/usr/include/suitesparse:$CPATH  # sundials includes without "suitesparse/" prefix
     export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
