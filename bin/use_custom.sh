@@ -26,10 +26,10 @@ if [[ "$(hostname)" == "urania" ]]; then
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
     export OPENBLAS_NUM_THREADS=1
-    for PREFIX in /opt/py37 /opt/openblas-0.3.2 /opt/sundials-3.2.1 /opt/boost_1_67_0 /opt/symengine-9cb1e70; do
+    for PREFIX in /opt/py37 /opt/openblas-0.3.3 /opt/sundials-3.2.1 /opt/boost_1_68_0 /opt/symengine-af64b72c; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
-    export CMAKE_PREFIX_PATH=/usr/lib/llvm-6.0:/opt/symengine-9cb1e70
+    export CMAKE_PREFIX_PATH=/usr/lib/llvm-6.0:/opt/symengine-af64b72c
     if [[ ! -e "$HOME/bin/custom/python3.7" ]]; then
 	ln -s "/opt/py37/bin/python3.7" "$HOME/bin/custom/python3.7"
     fi
