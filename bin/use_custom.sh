@@ -26,7 +26,7 @@ if [[ "$(hostname)" == "urania" ]]; then
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
     export OPENBLAS_NUM_THREADS=1
-    for PREFIX in /opt/py37 /opt/openblas-0.3.3 /opt/sundials-3.2.1 /opt/boost_1_68_0 /opt/symengine-af64b72c; do
+    for PREFIX in /opt/py37 /opt/openblas-0.3.4 /opt/boost_1_68_0 /opt/symengine-af64b72c  /opt/sundials-3.2.1; do  #  /opt/sundials-4.0.0
         add_prefix_to_compiler_env_vars $PREFIX
     done
     export CMAKE_PREFIX_PATH=/usr/lib/llvm-6.0:/opt/symengine-af64b72c

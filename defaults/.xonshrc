@@ -1,6 +1,9 @@
 xontrib load xonda
+aliases['g'] = 'git'
 aliases['ll'] = 'ls -lrtah'
 aliases['emasc'] = 'emacs'
+aliases['enw'] = 'emacs -nw'
+aliases['enwq'] = 'emacs -nw -q'
 imprt = """
 import numpy as np
 import sympy as sym
