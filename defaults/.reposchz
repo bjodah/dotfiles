@@ -1,0 +1,2 @@
+repo@argus ~/public_html/${SHA256_DIGEST}/ http://davycrockett.mooo.com:49090/~repo/${SHA256_DIGEST}/
+repo@hera ~/public_html/${MD5_DIGEST}/ http://hera.physchem.kth.se/~repo/${MD5_DIGEST}/
