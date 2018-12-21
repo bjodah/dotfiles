@@ -10,10 +10,15 @@ fi
 export PATH=$HOME/bin/custom:$PATH
 
 
+# openblas: make install PREFIX=/opt/openblas-0.3.4
+# boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_68_0 --toolset=gcc-8
+# symengine: cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-7f13827 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=ON  ..
+# sundials: cmake -DCMAKE_INSTALL_PREFIX=/opt/sundials-3.2.1 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DEXAMPLES_ENABLE_C=OFF -DEXAMPLES_INSTALL=OFF -DOPENMP_ENABLE=OFF -DLAPACK_ENABLE:BOOL=ON -DKLU_ENABLE:BOOL=OFF -DSUNDIALS_INDEX_SIZE=32 -DKLU_ENABLE=ON -DKLU_INCLUDE_DIR=/usr/include/suitesparse -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu ..
+
 if [[ "$(hostname)" == "urania" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
     export OPENBLAS_NUM_THREADS=1
-    for PREFIX in /opt/openblas-0.3.2 /opt/sundials-3.2.0 /opt/boost_1_67_0 /opt/symengine-32d8612 /opt/py36; do
+    for PREFIX in /opt/openblas-0.3.4 /opt/sundials-3.2.1 /opt/boost_1_68_0 /opt/symengine-7f13827 /opt/py36; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     export CMAKE_PREFIX_PATH=/usr/lib/llvm-6.0:/opt/symengine-9cb1e70
