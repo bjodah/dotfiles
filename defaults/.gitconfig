@@ -16,14 +16,16 @@
     # list branches sorted by last modified
     b = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
     bd = branch --delete
+    br = branch --remote
 
-    c = commit --verbose
-    ca = commit -a --verbose
-    cm = commit -m
-    cam = commit -a -m
+    co = commit --verbose
+    coa = commit -a --verbose
+    coaa = commit -a --verbose --amend
+    com = commit -m
+    coam = commit -a -m
 
-    co = checkout
-    cob = checkout -b
+    ch = checkout
+    chb = checkout -b
 
     d = diff
     dc = diff --cached
@@ -41,9 +43,11 @@
 
     pl = pull
     plum = pull upstream master
+
     ps = push
-    pt = push --tags
-    po = "!git push --set-upstream origin $(git symbolic-ref --short HEAD)"
+    pst = push --tags
+    psf = push -f
+    pso = "!git push --set-upstream origin $(git symbolic-ref --short HEAD)"
 
     re = remote -v
 

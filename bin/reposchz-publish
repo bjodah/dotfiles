@@ -1,19 +1,20 @@
 #!/bin/bash
-SHA256_DIGEST=$(openssl sha256 "$1" | rev | cut -d= -f1 | rev | tr -d [:space:])
-MD5_DIGEST=$(   openssl    md5 "$1" | rev | cut -d= -f1 | rev | tr -d [:space:])
-while read DEST; do
+SHA256_DIGEST=$(openssl sha256 "$1" | rev | cut -d= -f1 | rev | tr -d "[:space:]")
+MD5_DIGEST=$(   openssl    md5 "$1" | rev | cut -d= -f1 | rev | tr -d "[:space:]")
+while IFS="" read -r LINE || [ -n "$LINE" ]; do
     IFS=' ' read -a ARRAY <<< "$LINE"
     REMOTE_SSH=${ARRAY[0]}
     REMOTE_PREFIX_TEMPLATE=${ARRAY[1]}
     REMOTE_URL_TEMPLATE=${ARRAY[2]}
     REMOTE_PREFIX="$(eval echo "\"$REMOTE_PREFIX_TEMPLATE\"")"
+    set -x
     ssh "$REMOTE_SSH" "mkdir -p ${REMOTE_PREFIX}"
-    scp "$1" "${SSH_DEST}:${REMOTE_PREFIX}"
+    scp "$1" "${REMOTE_SSH}:${REMOTE_PREFIX}"
+    set +x
     REMOTE_URL="$(eval echo "\"$REMOTE_URL_TEMPLATE\"")"
     if curl --output /dev/null --silent --head --fail "$REMOTE_URL"; then
 	echo "Successfully uploaded to: $REMOTE_URL"
     else
 	echo "Could not reach: $REMOTE_URL"
     fi
-fi
 done <~/.reposchz

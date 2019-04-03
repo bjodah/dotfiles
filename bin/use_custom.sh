@@ -4,6 +4,13 @@ add_prefix_to_compiler_env_vars(){
     export LD_LIBRARY_PATH=$1/lib:$LD_LIBRARY_PATH
 }
 
+sundials_fix(){
+    # see e.g. http://sundials.2283335.n4.nabble.com/sundials-3-and-4-td4654629.html
+    export CPATH=/usr/include/suitesparse:$CPATH  # sundials includes without "suitesparse/" prefix
+    export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
+    export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+}
+
 if [[ ! -e "$HOME/bin/custom" ]]; then
     mkdir -p "$HOME/bin/custom"
 fi
@@ -18,7 +25,7 @@ export PATH=$HOME/bin/custom:$PATH
 if [[ "$(hostname)" == "urania" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
     export OPENBLAS_NUM_THREADS=1
-    for PREFIX in /opt/openblas-0.3.4 /opt/sundials-3.2.1 /opt/boost_1_68_0 /opt/symengine-7f13827 /opt/py36; do
+    for PREFIX in /opt/openblas-0.3.4 /opt/sundials-${SUNDIALS_VERSION:-3.2.1} /opt/boost_1_68_0 /opt/symengine-6847e8a /opt/py36; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     export CMAKE_PREFIX_PATH=/usr/lib/llvm-6.0:/opt/symengine-9cb1e70
@@ -28,10 +35,11 @@ if [[ "$(hostname)" == "urania" ]]; then
     if [[ ! -e "$HOME/bin/custom/python3.6" ]]; then
 	ln -s "/opt/py36/bin/python3.6" "$HOME/bin/custom/python3.6"
     fi
+    sundials_fix
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
     export OPENBLAS_NUM_THREADS=1
-    for PREFIX in /opt/py37 /opt/openblas-0.3.4 /opt/boost_1_68_0 /opt/symengine-af64b72c  /opt/sundials-3.2.1; do  #  /opt/sundials-4.0.0
+    for PREFIX in /opt/py37 /opt/openblas-0.3.4 /opt/boost_1_68_0 /opt/symengine-af64b72c  /opt/sundials-${SUNDIALS_VERSION:-3.2.1}; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     export CMAKE_PREFIX_PATH=/usr/lib/llvm-6.0:/opt/symengine-af64b72c
@@ -40,8 +48,5 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
     fi
     # export PATH=/opt/py37/bin:$PATH
     export MPLBACKEND=TkAgg
-
-    export CPATH=/usr/include/suitesparse:$CPATH  # sundials includes without "suitesparse/" prefix
-    export LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH
-    export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+    sundials_fix
 fi
