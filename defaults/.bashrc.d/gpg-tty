@@ -1,0 +1,6 @@
+#!/bin/bash
+if [[ "$DISPLAY" == localhost* ]] || [[ "$DISPLAY" == "" ]]; then
+    if [ -z "$GPG_TTY" ] ; then
+       export GPG_TTY=$(tty)
+    fi
+fi
