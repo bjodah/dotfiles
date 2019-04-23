@@ -1,16 +1,19 @@
 [user]
-	name = Björn Dahlgren
-	email = bjodah@gmail.com
-	signingkey = DC372128
+    name = Björn Ingvar Dahlgren
+    email = bjodah@gmail.com
+    signingkey = DC372128
 [commit]
-	gpgsign = true
+    gpgsign = true
 [push]
-	default = simple
+    default = simple
 [gpg]
-	program = gpg2
+    program = gpg2
+
+[includeIf "gitdir:~/wvc/"]
+    path = ~/wvc/.gitconfig
 
 [color]
-	ui = always
+    ui = always
 
 [alias]
     a = add
@@ -61,4 +64,4 @@
 
     t = tag
 
-    ghost = "!git show $(git rev-list --max-count=1 --all -- $1)~1:$1 #" # show latest revision before deletion of file
+    time-of-death = "!git show $(git rev-list --max-count=1 --all -- $1)~1:$1 #" # show latest revision before deletion of file

@@ -52,7 +52,6 @@
 
 (advice-add 'request--netscape-cookie-parse :around #'fix-request-netscape-cookie-parse) ;; https://github.com/millejoh/emacs-ipython-notebook/issues/163#issuecomment-271593454
 (require 'ein)
-(require 'ein-loaddefs)
 (require 'ein-notebook)
 (require 'ein-subpackages)
 
