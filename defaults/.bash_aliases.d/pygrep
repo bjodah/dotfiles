@@ -1,0 +1,3 @@
+pygrep() {
+    grep --include "*.py" "${1}" -R .
+}
