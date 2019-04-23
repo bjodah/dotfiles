@@ -1,8 +1,8 @@
 # To be appended to ~/.bashrc
 function include_dir {
-    dir=$1
-    if [ -d "$HOME/$dir" -a -r "$HOME/$dir" -a -x "$HOME/$dir ]; then
-        for f in "$HOME/$dir"/*.sh; do
+    dir="$1"
+    if [ -d "$HOME/$dir" -a -r "$HOME/$dir" -a -x "$HOME/$dir" ]; then
+        for f in "$HOME/$dir"/*; do
             . "$f"
         done
     fi
@@ -11,6 +11,3 @@ function include_dir {
 include_dir .bashrc.d
 include_dir .bash_completion.d
 include_dir .bash_aliases.d
-
-GIT_PROMPT_ONLY_IN_REPO=1
-source ~/.bash-git-prompt/gitprompt.sh
