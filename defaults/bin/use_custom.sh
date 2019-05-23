@@ -35,16 +35,18 @@ if [[ "$(hostname)" == "urania" ]]; then
 
     export OPENBLAS_NUM_THREADS=1
 
-    if [[ ${PY:-3.6} == "3.7" ]]; then
-	export PATH=/opt/cpython-3.7/bin:$PATH
-	#export LD_LIBRARY_PATH=/opt/cpython-3.7.3/lib:$LD_LIBRARY_PATH
-    elif [[ ${PY:-3.6} == "master" ]]; then
-	export PATH=/opt/cpython-master/bin:$PATH
-	#export LD_LIBRARY_PATH=/opt/cpython-3.7.3/lib:$LD_LIBRARY_PATH
-    else
+    if [[ ${PY:-3.5} == "3.6" ]]; then
 	if [[ ! -e "$HOME/bin/custom/python3.6" ]]; then
 	    ln -s "/opt/py36/bin/python3.6" "$HOME/bin/custom/python3.6"
 	fi
+    elif [[ ${PY:-3.5} == "3.7" ]]; then
+	export PATH=/opt/cpython-3.7/bin:$PATH
+	#export LD_LIBRARY_PATH=/opt/cpython-3.7.3/lib:$LD_LIBRARY_PATH
+    elif [[ ${PY:-3.5} == "master" ]]; then
+	export PATH=/opt/cpython-master/bin:$PATH
+	#export LD_LIBRARY_PATH=/opt/cpython-3.7.3/lib:$LD_LIBRARY_PATH
+    else
+        echo "Got \$PY=$PY, using python3.5"
     fi
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
