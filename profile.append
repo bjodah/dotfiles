@@ -1,3 +1,4 @@
+# To be appended to ~/.profile (from bjodah/dotfiles)
 if [ -d "$HOME/.profile.d" ]; then
    for f in "$HOME/.profile.d/"*.sh
    do
