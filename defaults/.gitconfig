@@ -62,3 +62,5 @@
     t = tag
 
     time-of-death = "!git show $(git rev-list --max-count=1 --all -- $1)~1:$1 #" # show latest revision before deletion of file
+    parent = "!git show-branch | grep '*' | grep -v \"$(git rev-parse --abbrev-ref HEAD)\" | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//' #"
+    rbip = "!git rebase -i $(git parent)"
