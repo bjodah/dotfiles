@@ -50,7 +50,15 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
     export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-3.2.1}
 
-    for PREFIX in /opt/py37 /opt/openblas-0.3.4 /opt/boost_1_68_0 /opt/symengine-6847e8a $SUNDIALS_INSTALL_DIR; do
+    if [[ ${PY:-3.5} == "3.7" ]]; then
+	export PATH=/opt/cpython-3.7/bin:$PATH
+    elif [[ ${PY:-3.5} == "master" ]]; then
+	export PATH=/opt/cpython-master/bin:$PATH
+    else
+        echo "Not using any particular Python version"
+    fi
+
+    for PREFIX in /opt/py37 /opt/openblas-0.3.6 /opt/boost_1_70_0 /opt/symengine-6847e8a $SUNDIALS_INSTALL_DIR; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     sundials_fix
@@ -58,9 +66,5 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
 
     export OPENBLAS_NUM_THREADS=1
 
-    if [[ ! -e "$HOME/bin/custom/python3.7" ]]; then
-	ln -s "/opt/py37/bin/python3.7" "$HOME/bin/custom/python3.7"
-    fi
-    # export PATH=/opt/py37/bin:$PATH
     export MPLBACKEND=TkAgg
 fi
