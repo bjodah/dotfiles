@@ -36,9 +36,7 @@ if [[ "$(hostname)" == "urania" ]]; then
     export OPENBLAS_NUM_THREADS=1
 
     if [[ ${PY:-3.5} == "3.6" ]]; then
-	if [[ ! -e "$HOME/bin/custom/python3.6" ]]; then
-	    ln -s "/opt/py36/bin/python3.6" "$HOME/bin/custom/python3.6"
-	fi
+        export PATH=/opt/py36/bin:$PATH
     elif [[ ${PY:-3.5} == "3.7" ]]; then
 	export PATH=/opt/cpython-3.7/bin:$PATH
 	#export LD_LIBRARY_PATH=/opt/cpython-3.7.3/lib:$LD_LIBRARY_PATH
