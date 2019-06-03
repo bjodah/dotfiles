@@ -43,5 +43,11 @@ cleanup() {
     sudo chown -R $(id -u):$(id -g) /tmp/_drone_ci_cache/${REPO}_ci
 }
 trap cleanup INT TERM EXIT
-( cd /tmp/_drone_ci_cache/${REPO}_ci; git clean -xfd; drone exec --trusted ${@:2} )
+if groups | grep docker >/dev/null; then
+    DRONECMD=drone
+else
+    DRONECMD="sudo drone"
+fi
+
+( cd /tmp/_drone_ci_cache/${REPO}_ci; git clean -xfd; $DRONECMD exec --trusted ${@:2} )
 
