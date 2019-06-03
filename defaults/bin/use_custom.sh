@@ -52,6 +52,8 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
 
     if [[ ${PY:-3.5} == "3.7" ]]; then
 	export PATH=/opt/cpython-3.7/bin:$PATH
+    elif [[ ${PY:-3.5} == "3.6" ]]; then
+	export PATH=/opt/cpython-3.6/bin:$PATH
     elif [[ ${PY:-3.5} == "master" ]]; then
 	export PATH=/opt/cpython-master/bin:$PATH
     else
