@@ -2,6 +2,7 @@ alias g='git'
 alias ll='ls -laFrth --color=auto'
 alias rmb='rm -r ./build/'
 
+alias eem="emacs -l ~/.emacs-evil"
 alias ec="emacsclient"
 alias ecn="emacsclient -n"
 alias enw="emacs -nw"

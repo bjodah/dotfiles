@@ -1,0 +1,3 @@
+; -*- mode: emacs-lisp -*-
+(require 'evil)
+(evil-mode 1)
