@@ -331,6 +331,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
+ '(org-agenda-files (quote ("~/doc/org/agendas.org")))
  '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -363,3 +364,7 @@
 ;; (set-variable 'ycmd-server-command '("python" "/home/bjorn/rovc/ycmd/ycmd"))
 
 (put 'downcase-region 'disabled nil)
+
+
+
+;; from 
