@@ -324,6 +324,7 @@
 ;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
+(eval-after-load 'ox '(require 'ox-koma-letter))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
