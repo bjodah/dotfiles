@@ -50,21 +50,22 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
     export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-3.2.1}
 
-    if [[ ${PY:-3.5} == "3.7" ]]; then
-	export PATH=/opt/cpython-3.7/bin:$PATH
-    elif [[ ${PY:-3.5} == "3.6" ]]; then
-	export PATH=/opt/cpython-3.6/bin:$PATH
-    elif [[ ${PY:-3.5} == "master" ]]; then
-	export PATH=/opt/cpython-master/bin:$PATH
+    if [[ ! -z ${PY} ]]; then
+        CANIDATE_CPY_BIN_DIR="/opt/cpython-$PY/bin"
+        if [[ -d "$CANIDATE_CPY_BIN_DIR" ]]; then
+	    export PATH="$CANIDATE_CPY_BIN_DIR:$PATH"
+        else
+            echo "No such directory: $CANIDATE_CPY_BIN_DIR"
+        fi
     else
-        echo "Not using any particular Python version"
+        echo "Not using any particular python version"
     fi
 
     for PREFIX in /opt/py37 /opt/openblas-0.3.6 /opt/boost_1_70_0 /opt/symengine-ab7c16a $SUNDIALS_INSTALL_DIR; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     sundials_fix
-    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-6.0:/opt/symengine-ab7c16a
+    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:/opt/symengine-ab7c16a
 
     export OPENBLAS_NUM_THREADS=1
 
