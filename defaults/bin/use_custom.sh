@@ -18,6 +18,7 @@ export PATH=$HOME/bin/custom:$PATH
 
 
 # openblas: make install PREFIX=/opt/openblas-0.3.4
+# numpy: export OPENBLAS_STATIC_LIB=/opt/openblas-0.3.6/lib/libopenblas.a && BLAS=$OPENBLAS_STATIC_LIB LAPACK=$OPENBLAS_STATIC_LIB setup.py install
 # boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_68_0 --toolset=gcc-8
 # symengine: cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-7f13827 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=ON  ..
 # sundials: cmake -DCMAKE_INSTALL_PREFIX=/opt/sundials-3.2.1 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DEXAMPLES_ENABLE_C=OFF -DEXAMPLES_INSTALL=OFF -DOPENMP_ENABLE=OFF -DLAPACK_ENABLE:BOOL=ON -DKLU_ENABLE:BOOL=OFF -DSUNDIALS_INDEX_SIZE=32 -DKLU_ENABLE=ON -DKLU_INCLUDE_DIR=/usr/include/suitesparse -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu ..
@@ -61,7 +62,7 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         echo "Not using any particular python version"
     fi
 
-    for PREFIX in /opt/py37 /opt/openblas-0.3.6 /opt/boost_1_70_0 /opt/symengine-ab7c16a $SUNDIALS_INSTALL_DIR; do
+    for PREFIX in /opt/py37 /opt/openblas-master /opt/boost_1_70_0 /opt/symengine-ab7c16a $SUNDIALS_INSTALL_DIR; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     sundials_fix
