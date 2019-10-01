@@ -20,7 +20,7 @@ export PATH=$HOME/bin/custom:$PATH
 # openblas: make install PREFIX=/opt/openblas-0.3.4
 # numpy: export OPENBLAS_STATIC_LIB=/opt/openblas-0.3.6/lib/libopenblas.a && BLAS=$OPENBLAS_STATIC_LIB LAPACK=$OPENBLAS_STATIC_LIB setup.py install
 # boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_68_0 --toolset=gcc-8
-# symengine: cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-7f13827 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=ON  ..
+# symengine: cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-d0b1932 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=ON  ..
 # sundials: cmake -DCMAKE_INSTALL_PREFIX=/opt/sundials-3.2.1 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DEXAMPLES_ENABLE_C=OFF -DEXAMPLES_INSTALL=OFF -DOPENMP_ENABLE=OFF -DLAPACK_ENABLE:BOOL=ON -DKLU_ENABLE:BOOL=OFF -DSUNDIALS_INDEX_SIZE=32 -DKLU_ENABLE=ON -DKLU_INCLUDE_DIR=/usr/include/suitesparse -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu ..
 # cpython: curl -Ls https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz | tar xJ && cd Python-3.7.3 && mkdir build && cd build && CFLAGS="-O2 -march=native" ../configure --prefix=/opt/cpython-3.7.3 --enable-loadable-sqlite-extensions --enable-shared --with-ensurepip=yes && LD_LIBRARY_PATH=$(pwd) ./python -c "import sqlite3, uuid, lzma, bz2" && make install
 
@@ -62,11 +62,11 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         echo "Not using any particular python version"
     fi
 
-    for PREFIX in /opt/py37 /opt/openblas-master /opt/boost_1_70_0 /opt/symengine-ab7c16a $SUNDIALS_INSTALL_DIR; do
+    for PREFIX in /opt/openblas-master /opt/boost_1_70_0 /opt/symengine-d0b1932 $SUNDIALS_INSTALL_DIR; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     sundials_fix
-    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:/opt/symengine-ab7c16a
+    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:/opt/symengine-d0b1932
 
     export OPENBLAS_NUM_THREADS=1
 

@@ -1,7 +1,10 @@
 alias g='git'
 alias ll='ls -laFrth --color=auto'
 rmb() {
-      rm -r./build/
+      rm -r ./build/
+}
+rmtmp() {
+      rm -r ./tmp/
 }
 alias eem="emacs -l ~/.emacs-evil"
 alias ec="emacsclient"
