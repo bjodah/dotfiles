@@ -24,46 +24,47 @@
     bd = branch --delete
     br = branch --remote
 
-    co = commit --verbose
-    coa = commit -a --verbose
+    co   = commit --verbose
+    coa  = commit -a --verbose
     coaa = commit -a --verbose --amend
-    com = commit -m
+    com  = commit -m
     coam = commit -a -m
 
-    ch = checkout
+    ch  = checkout
     chb = checkout -b
 
-    d = diff
+    d  = diff
     dc = diff --cached
     ds = diff --stat
 
     f = fetch
 
-    l = log
+    l  = log
     ll = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
 
     # list aliases
     la = "!git config -l | grep alias | cut -c 7-"
 
-    m = commit --amend --verbose
-
-    pl = pull
+    pl   = pull
     plum = pull upstream master
 
-    ps = push
+    parent = "!git show-branch | grep '*' | grep -v \"$(git rev-parse --abbrev-ref HEAD)\" | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//' #"
+
+    ps  = push
     pst = push --tags
     psf = push -f
     pso = "!git push --set-upstream origin $(git symbolic-ref --short HEAD)"
 
+    rbip = "!git rebase -i $(git parent)"
     re = remote -v
 
-    s = status
+    s  = status
     ss = status -s
+
+    sed = "!git grep -z --full-name -l '.' | xargs -0 sed -i -e"
 
     sm = submodule
 
     t = tag
 
     time-of-death = "!git show $(git rev-list --max-count=1 --all -- $1)~1:$1 #" # show latest revision before deletion of file
-    parent = "!git show-branch | grep '*' | grep -v \"$(git rev-parse --abbrev-ref HEAD)\" | head -n1 | sed 's/.*\\[\\(.*\\)\\].*/\\1/' | sed 's/[\\^~].*//' #"
-    rbip = "!git rebase -i $(git parent)"
