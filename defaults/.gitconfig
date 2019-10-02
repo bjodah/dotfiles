@@ -61,7 +61,7 @@
     s  = status
     ss = status -s
 
-    sed = "!git grep -z --full-name -l '.' | xargs -0 sed -i -e"
+    sed = "!git grep -I -z --full-name -l '.' | xargs -0 sed -i -e"
 
     sm = submodule
 
