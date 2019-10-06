@@ -62,11 +62,15 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         echo "Not using any particular python version"
     fi
 
-    for PREFIX in /opt/openblas-master /opt/boost_1_70_0 /opt/symengine-d0b1932 $SUNDIALS_INSTALL_DIR; do
+    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-d0b1932}
+    if [[ ! -d $SYMENGINE_DIR ]]; then
+        >&2 echo "No such directory: $SYMENGINE_DIR"
+    fi
+    for PREFIX in /opt/openblas-master /opt/boost_1_70_0 $SYMENGINE_DIR $SUNDIALS_INSTALL_DIR; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     sundials_fix
-    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:/opt/symengine-d0b1932
+    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:$SYMENGINE_DIR
 
     export OPENBLAS_NUM_THREADS=1
 
