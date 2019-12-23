@@ -65,6 +65,14 @@
 ;; yasnippet
 (setq yas/indent-line 'fixed)
 
+(add-hook 'gdb-mode-hook
+    (function (lambda ()
+		(define-key gud-minor-mode-map [(f5)] #'gud-step)
+		(define-key gud-minor-mode-map [(f6)] #'gud-next)
+		(define-key gud-minor-mode-map [(f7)] #'gud-finish)
+		(define-key gud-minor-mode-map [(f8)] #'gud-cont)
+		(define-key gud-minor-mode-map [(f11)] #'gud-run)
+)))
 
 ;; This is the proper way to rebind yasnippet key
 ;; (see https://github.com/capitaomorte/yasnippet/issues/296)
@@ -133,6 +141,7 @@
     (end-of-line)
     (newline-and-indent)))
 
+(global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
 
 ; Let \C-cb insert buffer name
@@ -393,4 +402,17 @@
   :bind (:map c-mode-base-map
               ("M-." . rtags-find-symbol-at-point)))
 
-;; from 
+;; https://stackoverflow.com/a/13408008/790973
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (toggle-read-only)
+  (ansi-color-apply-on-region compilation-filter-start (point))
+  (toggle-read-only))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
+;; https://stackoverflow.com/a/3592559/790973
+(add-hook 'c-mode-common-hook 
+          (lambda () (define-key c-mode-base-map (kbd "C-c C-l") 'compile)))
+
+;; https://www.emacswiki.org/emacs/WinnerMode
+(winner-mode 1)

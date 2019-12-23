@@ -22,7 +22,7 @@ export PATH=$HOME/bin/custom:$PATH
 # boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_68_0 --toolset=gcc-8
 # symengine: cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-d0b1932 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=ON  ..
 # sundials: cmake -DCMAKE_INSTALL_PREFIX=/opt/sundials-3.2.1 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DEXAMPLES_ENABLE_C=OFF -DEXAMPLES_INSTALL=OFF -DOPENMP_ENABLE=OFF -DLAPACK_ENABLE:BOOL=ON -DKLU_ENABLE:BOOL=OFF -DSUNDIALS_INDEX_SIZE=32 -DKLU_ENABLE=ON -DKLU_INCLUDE_DIR=/usr/include/suitesparse -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu ..
-# cpython: curl -Ls https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz | tar xJ && cd Python-3.7.3 && mkdir build && cd build && CFLAGS="-O2 -march=native" ../configure --prefix=/opt/cpython-3.7.3 --enable-loadable-sqlite-extensions --enable-shared --with-ensurepip=yes && LD_LIBRARY_PATH=$(pwd) ./python -c "import sqlite3, uuid, lzma, bz2" && make install
+# cpython: curl -Ls https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tar.xz | tar xJ && cd Python-3.8.1 && mkdir build && cd build && CFLAGS="-O2 -march=native" .././configure --prefix=/opt/cpython-3.8 --enable-loadable-sqlite-extensions --enable-shared --with-ensurepip=yes LDFLAGS=-Wl,-rpath=/opt/cpython-3.8/lib && make install && /opt/cpython-3.8/bin/python3 -c "import sqlite3, uuid, lzma, bz2"
 
 if [[ "$(hostname)" == "urania" ]]; then
     export CC=gcc-8 CXX=g++-8 FC=gfortran-8
@@ -41,6 +41,8 @@ if [[ "$(hostname)" == "urania" ]]; then
     elif [[ ${PY:-3.5} == "3.7" ]]; then
 	export PATH=/opt/cpython-3.7/bin:$PATH
 	#export LD_LIBRARY_PATH=/opt/cpython-3.7.3/lib:$LD_LIBRARY_PATH
+    elif [[ ${PY:-3.5} == "3.8" ]]; then
+	export PATH=/opt/cpython-3.8/bin:$PATH
     elif [[ ${PY:-3.5} == "master" ]]; then
 	export PATH=/opt/cpython-master/bin:$PATH
 	#export LD_LIBRARY_PATH=/opt/cpython-3.7.3/lib:$LD_LIBRARY_PATH
