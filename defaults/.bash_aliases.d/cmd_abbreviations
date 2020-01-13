@@ -6,6 +6,9 @@ rmb() {
 rmtmp() {
       rm -r ./tmp/
 }
+rmcm() {
+      rm -r ./CMakeFiles/ CMakeCache.txt
+}
 alias eem="emacs -l ~/.emacs-evil"
 alias ec="emacsclient"
 alias ecn="emacsclient -n"

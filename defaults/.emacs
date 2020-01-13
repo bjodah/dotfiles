@@ -38,6 +38,7 @@
 (el-get-bundle reftex)
 (el-get-bundle magit)
 (el-get-bundle flycheck)
+(el-get-bundle use-package)
 
 ;; (el-get-bundle jedi)
 
@@ -170,7 +171,7 @@
       (while (re-search-forward "\\s-+" nil t)
         (replace-match " ")))))
 
-;; 4 spaces indentation level for C/C++/(Java - *shrug*)
+;; 4 spaces indentation level for C/C++
 (setq-default c-default-style "bsd")
 (setq-default indent-tabs-mode nil)
 (setq-default c-basic-offset 4)
@@ -378,6 +379,30 @@
 (put 'downcase-region 'disabled nil)
 
 
+(require 'use-package)
+(use-package company-rtags
+  :after company)
+
+(use-package rtags
+  :commands rtags-mode
+  :bind (("C-. r D" . rtags-dependency-tree)
+         ("C-. r F" . rtags-fixit)
+         ("C-. r R" . rtags-rename-symbol)
+         ("C-. r T" . rtags-tagslist)
+         ("C-. r d" . rtags-create-doxygen-comment)
+         ("C-. r c" . rtags-display-summary)
+         ("C-. r e" . rtags-print-enum-value-at-point)
+         ("C-. r f" . rtags-find-file)
+         ("C-. r i" . rtags-include-file)
+         ("C-. r i" . rtags-symbol-info)
+         ("C-. r m" . rtags-imenu)
+         ("C-. r n" . rtags-next-match)
+         ("C-. r p" . rtags-previous-match)
+         ("C-. r r" . rtags-find-references)
+         ("C-. r s" . rtags-find-symbol)
+         ("C-. r v" . rtags-find-virtuals-at-point))
+  :bind (:map c-mode-base-map
+              ("M-." . rtags-find-symbol-at-point)))
 
 ;; https://stackoverflow.com/a/13408008/790973
 (require 'ansi-color)
