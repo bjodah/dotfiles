@@ -254,6 +254,7 @@
 ;;     ("dnmQ" "DO-NOT-MERGE!" nil 0)
 ;;     ))
 
+
 ;; http://emacswiki.org/emacs/BackupDirectory
 (setq
    backup-by-copying t      ; don't clobber symlinks
@@ -342,6 +343,7 @@
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
  '(org-agenda-files (quote ("~/doc/org/agendas.org")))
+ '(package-selected-packages (quote (jupyter htmlize)))
  '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -391,3 +393,30 @@
 
 ;; https://www.emacswiki.org/emacs/WinnerMode
 (winner-mode 1)
+
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ (mapcar (lambda (lang) (cons lang t))
+         `(C
+           dot
+           emacs-lisp
+           julia
+           python
+           jupyter
+           ,(if (locate-library "ob-shell") 'shell 'sh)
+           )))
+
+(setq
+ org-confirm-babel-evaluate nil)
+
+(setq org-html-htmlize-output-type 'css) ; default: 'inline-css
+(setq org-html-htmlize-font-prefix "org-") ; default: "org-"
+
+
+;; Render mako from org-mode source block (https://stackoverflow.com/a/10418779/790973)
+(defun org-babel-execute:mako (body params)
+  "Render Mako templated source with org-babel."
+  (message "calling render-mako on code block")
+  (org-babel-eval "mako-render" body))
+(setq org-babel-python-command "python3")

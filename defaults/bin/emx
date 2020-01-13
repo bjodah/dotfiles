@@ -1,0 +1,12 @@
+#!/bin/bash -x
+EMACS_SOCKET="/tmp/emx-tmux-$(tmux display -p '#{client_tty}' | cut -d/ -f4)"
+
+client () {
+  emacsclient -nw --socket-name=$EMACS_SOCKET
+}
+
+server () {
+  emacs -nw --daemon=$EMACS_SOCKET
+}
+
+client || ((server &) && (sleep 3; client))
