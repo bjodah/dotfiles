@@ -40,6 +40,8 @@
 (el-get-bundle flycheck)
 (el-get-bundle use-package)
 
+(el-get-bundle magit-gh-pulls)
+
 ;; (el-get-bundle jedi)
 
    ;; (:name jedi
@@ -344,7 +346,7 @@
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
  '(org-agenda-files (quote ("~/doc/org/agendas.org")))
- '(package-selected-packages (quote (jupyter htmlize)))
+ '(package-selected-packages (quote (magit-gh-pulls jupyter htmlize)))
  '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -426,7 +428,7 @@
          `(C
            dot
            emacs-lisp
-           julia
+           ;julia
            python
            jupyter
            ,(if (locate-library "ob-shell") 'shell 'sh)
@@ -445,3 +447,7 @@
   (message "calling render-mako on code block")
   (org-babel-eval "mako-render" body))
 (setq org-babel-python-command "python3")
+
+;; https://github.com/sigma/magit-gh-pulls
+(require 'magit-gh-pulls)
+(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)

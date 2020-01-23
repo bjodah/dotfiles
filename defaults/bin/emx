@@ -1,12 +1,33 @@
-#!/bin/bash -x
+#!/bin/bash
+#
+# Use a single emacs daemon per tmux session
+#
+
 EMACS_SOCKET="/tmp/emx-tmux-$(tmux display -p '#{client_tty}' | cut -d/ -f4)"
 
 client () {
-  emacsclient -nw --socket-name=$EMACS_SOCKET
+  set -x
+  emacsclient -nw --socket-name=$EMACS_SOCKET "$@"
+  set +x
 }
 
 server () {
   emacs -nw --daemon=$EMACS_SOCKET
 }
 
-client || ((server &) && (sleep 3; client))
+if [[ ! -S "${EMACS_SOCKET}" ]]; then
+    echo "Starting emacs daemon with socket: ${EMACS_SOCKET}"
+    server &
+fi
+
+while true
+do
+    if [[ -S "${EMACS_SOCKET}" ]]; then
+        client "$@"
+        break
+    fi
+    echo "...wating for emacs daemon to create socket: ${EMACS_SOCKET}"
+    sleep 1
+done
+
+#client "$@" || ((server &) && (sleep 3; client "$@"))
