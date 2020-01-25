@@ -1,3 +1,4 @@
+# -*- mode: shell-script -*-
 vv() {
    # list folder sizes of argument 1 (default *)
    files=${@:-"*"} # vv !(.gvfs||afs) misses e.g. "~/VirtualBox VMs"

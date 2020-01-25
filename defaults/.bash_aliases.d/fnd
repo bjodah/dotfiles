@@ -1,0 +1,4 @@
+# -*- mode: shell-script -*-
+fnd() {
+   find . -iname "*$@"
+}
