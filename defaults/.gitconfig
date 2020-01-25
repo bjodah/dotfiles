@@ -27,6 +27,8 @@
     bd = branch --delete
     br = branch --remote
 
+    clxfd = clean -xfd
+
     co   = commit --verbose
     coa  = commit -a --verbose
     coaa = commit -a --verbose --amend
