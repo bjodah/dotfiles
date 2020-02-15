@@ -145,6 +145,7 @@
 
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
+(global-set-key (kbd "C-c m") 'recompile)
 
 ; Let \C-cb insert buffer name
 (global-set-key "\C-cb" 'insert-buffer-name)
@@ -287,6 +288,7 @@
 		     (delete-trailing-whitespace)
                      ;(pep8)
                      )))
+       (local-set-key (kbd "C-c C-c") 'py-execute-buffer-python3)
        (local-set-key (kbd "C-c o") 'pep8)
        (local-set-key (kbd "C-c p") (lambda () (interactive) (occur "\\bdef \\|\\bclass \\|=[ ]?lambda")))
        ;; (jedi:setup)
