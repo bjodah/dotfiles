@@ -23,7 +23,7 @@
 (el-get-bundle cython-mode)
 (el-get-bundle mmm-mode)
 
-(el-get-bundle websocket)     ; ein req
+;(el-get-bundle websocket)     ; ein req
 (el-get-bundle request)       ; ein req
 (el-get-bundle dash)          ; ein req
 (el-get-bundle s)             ; ein req
@@ -41,6 +41,7 @@
 (el-get-bundle use-package)
 
 (el-get-bundle magit-gh-pulls)
+(el-get-bundle jupyter)
 
 ;; (el-get-bundle jedi)
 
@@ -297,7 +298,7 @@
 
 (defun ipython ()
     (interactive)
-    (term "/usr/bin/ipython")) ;; note: C-x becomes C-c in term
+    (term "/usr/bin/ipython3")) ;; note: C-x becomes C-c in term
 
 
 ;; cython-mode
@@ -451,3 +452,5 @@
 ;; https://github.com/sigma/magit-gh-pulls
 (require 'magit-gh-pulls)
 (add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
+
+(setq python-shell-interpreter "python3")
