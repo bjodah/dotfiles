@@ -1,9 +1,13 @@
 #!/bin/bash
 #
-# Use a single emacs daemon per tmux session
+# Use a single emacs daemon process per tmux session
 #
+if [ -z "$TMUX"]; then
+    >&2 echo "Not running under a tmux session, exiting"
+    exit 1
+fi
 
-EMACS_SOCKET="/tmp/emx-tmux-$(tmux display -p '#{client_tty}' | cut -d/ -f4)"
+EMACS_SOCKET="/tmp/emx-tmux-$(tmux display -p '#{pid}')"
 
 client () {
   set -x
@@ -18,11 +22,13 @@ server () {
 if [[ ! -S "${EMACS_SOCKET}" ]]; then
     echo "Starting emacs daemon with socket: ${EMACS_SOCKET}"
     server &
+    sleep 1
 fi
 
 while true
 do
     if [[ -S "${EMACS_SOCKET}" ]]; then
+        sleep 0.01
         client "$@"
         break
     fi
