@@ -348,7 +348,7 @@
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
  '(org-agenda-files (quote ("~/doc/org/agendas.org")))
- '(package-selected-packages (quote (magit-gh-pulls jupyter htmlize)))
+ '(package-selected-packages (quote (direx dired-k magit-gh-pulls jupyter htmlize)))
  '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
