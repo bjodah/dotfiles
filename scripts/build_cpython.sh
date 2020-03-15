@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 branch="$1"
-SRCROOT=~/rovc/cpython
+SRCROOT=${SRCROOT:~/rovc/cpython}
 cd $SRCROOT
 git checkout "$branch"
 git pull
