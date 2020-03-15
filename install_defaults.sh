@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 ABS_REPO_PATH=$(unset CDPATH && cd "$(dirname "$0")" && echo $PWD)
 if ! grep bjodah/dotfiles $HOME/.profile >/dev/null; then
     cat "$ABS_REPO_PATH"/profile.append >>$HOME/.profile
@@ -14,6 +14,8 @@ for f in $(find . -type f); do
     DESTDIR="$HOME/$(dirname "$f")"
     DESTFILE="$DESTDIR/$(basename $f)"
     if [ -e "$DESTFILE" ]; then
+	rm "$DESTFILE"
+    fi
         echo "File already exists, skipping: $DESFILE"
         continue
     else
