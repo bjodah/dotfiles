@@ -24,11 +24,11 @@
 (el-get-bundle mmm-mode)
 
 ;(el-get-bundle websocket)     ; ein req
-(el-get-bundle request)       ; ein req
-(el-get-bundle dash)          ; ein req
-(el-get-bundle s)             ; ein req
-(el-get-bundle auto-complete) ; ein req
-(el-get-bundle skewer-mode)   ; ein req
+;(el-get-bundle request)       ; ein req
+;(el-get-bundle dash)          ; ein req
+;(el-get-bundle s)             ; ein req
+;(el-get-bundle auto-complete) ; ein req
+;(el-get-bundle skewer-mode)   ; ein req
 (el-get-bundle ein)
 
 (el-get-bundle python-pep8)
