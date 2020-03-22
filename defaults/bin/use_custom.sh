@@ -57,8 +57,8 @@ if [[ "$(hostname)" == "urania" ]]; then
         echo "Got \$PY=$PY, using python3.5"
     fi
 elif [[ "$(hostname)" == "yoga720" ]]; then
-    export CC=gcc-8 CXX=g++-8 FC=gfortran-8
-    export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-3.2.1}
+    export CC=gcc-10 CXX=g++-10 FC=gfortran-10
+    export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-5.1.0}
 
     if [[ ! -z ${PY} ]]; then
         CANIDATE_CPY_BIN_DIR="/opt/cpython-$PY/bin"
@@ -71,17 +71,15 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         echo "Not using any particular python version"
     fi
 
-    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-d0b1932}
+    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-14a6bad-rel}
     if [[ ! -d $SYMENGINE_DIR ]]; then
         >&2 echo "No such directory: $SYMENGINE_DIR"
     fi
-    for PREFIX in /opt/openblas-master /opt/boost_1_70_0 $SYMENGINE_DIR $SUNDIALS_INSTALL_DIR; do
+    for PREFIX in /opt/openblas-master /opt/boost_1_72_p $SYMENGINE_DIR $SUNDIALS_INSTALL_DIR; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     sundials_fix
-    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:$SYMENGINE_DIR
-
+    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-10:$SYMENGINE_DIR
     export OPENBLAS_NUM_THREADS=1
-
     export MPLBACKEND=TkAgg
 fi
