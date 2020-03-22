@@ -2,7 +2,7 @@
 #
 # Use a single emacs daemon process per tmux session
 #
-if [ -z "$TMUX"]; then
+if [ -z "$TMUX" ]; then
     >&2 echo "Not running under a tmux session, exiting"
     exit 1
 fi
