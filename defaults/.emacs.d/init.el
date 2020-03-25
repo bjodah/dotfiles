@@ -13,12 +13,16 @@
 ;; Get packages
 (use-package yasnippet :ensure t)
 (use-package cython-mode :ensure t)
-(use-package auctex :ensure t)
 (use-package mmm-mode :ensure t)
 (use-package magit :ensure t)
 (use-package magit-gh-pulls :ensure t)
 (use-package ein :ensure t)
 (use-package jupyter :ensure t)
+(use-package tex
+  :defer t
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
