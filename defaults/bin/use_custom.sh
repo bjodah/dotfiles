@@ -58,7 +58,7 @@ if [[ "$(hostname)" == "urania" ]]; then
     fi
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-10 CXX=g++-10 FC=gfortran-10
-    export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-5.1.0}
+    export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-5.1.0-klu-lapack}
 
     if [[ ! -z ${PY} ]]; then
         CANIDATE_CPY_BIN_DIR="/opt/cpython-$PY/bin"
