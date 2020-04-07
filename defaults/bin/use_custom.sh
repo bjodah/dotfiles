@@ -25,7 +25,7 @@ export PATH=$HOME/bin/custom:$PATH
 # cpython: curl -Ls https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tar.xz | tar xJ && cd Python-3.8.1 && mkdir build && cd build && CFLAGS="-O2 -march=native" .././configure --prefix=/opt/cpython-3.8 --enable-loadable-sqlite-extensions --enable-shared --with-ensurepip=yes LDFLAGS=-Wl,-rpath=/opt/cpython-3.8/lib && make install && /opt/cpython-3.8/bin/python3 -c "import sqlite3, uuid, lzma, bz2"
 
 if [[ "$(hostname)" == "urania" ]]; then
-    export CC=gcc-8 CXX=g++-8 FC=gfortran-8
+    export CC=gcc-9 CXX=g++-9 FC=gfortran-9
     export CPLUS_INCLUDE_PATH=/opt/eigen-3.3.7/include
     export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-3.2.1}
 
