@@ -1,3 +1,8 @@
+(if window-system
+    (toggle-scroll-bar -1)
+    (tool-bar-mode -1)
+)
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
@@ -14,8 +19,11 @@
 (use-package yasnippet :ensure t)
 (use-package cython-mode :ensure t)
 (use-package mmm-mode :ensure t)
-(use-package magit :ensure t)
-(use-package magit-gh-pulls :ensure t)
+(use-package magit
+  :defer t
+  :ensure forge)
+;; (use-package forge
+;;   :after magit)
 (use-package ein :ensure t)
 (use-package jupyter :ensure t)
 (use-package tex
@@ -275,12 +283,19 @@
 ;; mmm-mako
 (require 'mmm-mode)
 (load-file "~/.emacs.d/lisp/mmm-mako.el")
+;; - Makefile
 (add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . makefile-gmake-mode))
 (mmm-add-mode-ext-class 'makefile-gmake-mode "\\.mk.mako\\'" 'mako)
+;; - C++
 (add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . c++-mode))
 (mmm-add-mode-ext-class 'c++-mode "\\.cpp.mako\\'" 'mako)
 (add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . c++-mode))
 (mmm-add-mode-ext-class 'c++-mode "\\.hpp.mako\\'" 'mako)
+;; - C
+(add-to-list 'auto-mode-alist '("\\.c.mako\\'" . c-mode))
+(mmm-add-mode-ext-class 'c-mode "\\.c.mako\\'" 'mako)
+(add-to-list 'auto-mode-alist '("\\.h.mako\\'" . c-mode))
+(mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
 
 
 
@@ -312,9 +327,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
- '(org-agenda-files (quote ("~/doc/org/agendas.org")))
- '(package-selected-packages (quote (direx dired-k magit-gh-pulls jupyter htmlize)))
- '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate)))))
+ '(org-agenda-files '("~/doc/org/agendas.org"))
+ '(package-selected-packages '(yaml-mode cmake-mode mmm-mode use-package))
+ '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -415,24 +430,10 @@
   (org-babel-eval "mako-render" body))
 (setq org-babel-python-command "python3")
 
-;; https://github.com/sigma/magit-gh-pulls
-(require 'magit-gh-pulls)
-(add-hook 'magit-mode-hook 'turn-on-magit-gh-pulls)
-
 (setq python-shell-interpreter "python3")
 
 
 (fset 'comment-c-word
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([47 kp-multiply 32 134217848 134217840 134217840 return 91 44 41 93 return 2 32 42 47] 0 "%d")) arg)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages '(mmm-mode use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
+
