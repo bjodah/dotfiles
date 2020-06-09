@@ -2,6 +2,9 @@
     (toggle-scroll-bar -1)
 )
 (if (functionp 'tool-bar-mode) (tool-bar-mode 0))
+(unless window-system
+  (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
+  (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
 (package-initialize)
 (require 'package)
 (add-to-list 'package-archives
