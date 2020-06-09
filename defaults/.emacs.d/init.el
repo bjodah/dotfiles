@@ -2,7 +2,7 @@
     (toggle-scroll-bar -1)
 )
 (if (functionp 'tool-bar-mode) (tool-bar-mode 0))
-
+(package-initialize)
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
