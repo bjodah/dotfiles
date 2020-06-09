@@ -34,15 +34,15 @@ export PATH=$HOME/bin/custom:$PATH
 if [[ "$(hostname)" == "urania" ]]; then
     export CC=gcc-9 CXX=g++-9 FC=gfortran-9
     export CPLUS_INCLUDE_PATH=/opt/eigen-3.3.7/include
-    export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-3.2.1}
+    export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-5.3.0-rel-klu-lapack}
 
-    export SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-6847e8a}
+    export SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-0e3b6f5-rel}
     if [[ ! -d $SYMENGINE_DIR ]]; then
         >&2 echo "No such directory: $SYMENGINE_DIR"
     fi
     export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:$SYMENGINE_DIR
 
-    for PREFIX in /opt/openblas-0.3.6 $SUNDIALS_INSTALL_DIR /opt/boost_1_72_p /opt/py36; do
+    for PREFIX in /opt/openblas-0.3.9 $SUNDIALS_INSTALL_DIR /opt/boost_1_73_p /opt/py36; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     sundials_fix
