@@ -1,7 +1,7 @@
 (if window-system
     (toggle-scroll-bar -1)
-    (tool-bar-mode -1)
 )
+(if (functionp 'tool-bar-mode) (tool-bar-mode 0))
 
 (require 'package)
 (add-to-list 'package-archives
