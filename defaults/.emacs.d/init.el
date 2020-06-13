@@ -1,8 +1,11 @@
 (if window-system
     (toggle-scroll-bar -1)
-    (tool-bar-mode -1)
 )
-
+(if (functionp 'tool-bar-mode) (tool-bar-mode 0))
+(unless window-system
+  (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
+  (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
+(package-initialize)
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
@@ -49,11 +52,20 @@
 
 (add-hook 'gdb-mode-hook
     (function (lambda ()
-		(define-key gud-minor-mode-map [(f5)] #'gud-step)
-		(define-key gud-minor-mode-map [(f6)] #'gud-next)
-		(define-key gud-minor-mode-map [(f7)] #'gud-finish)
-		(define-key gud-minor-mode-map [(f8)] #'gud-cont)
-		(define-key gud-minor-mode-map [(f11)] #'gud-run)
+		(define-key gud-minor-mode-map (kbd "<f4>") #'gud-print)
+		(define-key gud-minor-mode-map (kbd "<f5>") #'gud-step)
+		(define-key gud-minor-mode-map (kbd "C-<f5>") #'gud-stepi)
+		(define-key gud-minor-mode-map (kbd "<f6>") #'gud-next)
+		(define-key gud-minor-mode-map (kbd "<f7>") #'gud-finish)
+		(define-key gud-minor-mode-map (kbd "<f8>") #'gud-cont)
+		(define-key gud-minor-mode-map (kbd "<f9>") #'gud-break)
+		(define-key gud-minor-mode-map (kbd "C-<f9>") #'gud-tbreak)
+		(define-key gud-minor-mode-map (kbd "<f10>") #'gud-until)
+		(define-key gud-minor-mode-map (kbd "M-<f10>") #'gud-jump)
+		(define-key gud-minor-mode-map (kbd "<f11>") #'gud-run)
+		(define-key gud-minor-mode-map (kbd "M-<f11>") #'gud-kill)
+		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "<next>") #'gud-down)
 )))
 
 ;; This is the proper way to rebind yasnippet key
