@@ -24,6 +24,13 @@
   :ensure forge)
 ;; (use-package forge
 ;;   :after magit)
+(use-package realgud :ensure t)
+(use-package jedi
+  :ensure t
+  :bind ("C-<tab>" . jedi:complete)
+  :init
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t)) 
 (use-package ein :ensure t)
 (use-package jupyter :ensure t)
 (use-package tex
@@ -329,7 +336,8 @@
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages '(yaml-mode cmake-mode mmm-mode use-package))
- '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate))))
+ '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
+ '(vc-follow-symlinks t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

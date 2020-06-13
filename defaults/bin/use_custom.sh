@@ -23,7 +23,10 @@ export PATH=$HOME/bin/custom:$PATH
 # openblas: make && make install PREFIX=/opt/openblas-0.3.9
 # numpy: export OPENBLAS_STATIC_LIB=/opt/openblas-0.3.6/lib/libopenblas.a && BLAS=$OPENBLAS_STATIC_LIB LAPACK=$OPENBLAS_STATIC_LIB setup.py install
 # boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_72_p --toolset=gcc-9
-# symengine: cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-d0b1932 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=ON  ..
+# symengine:
+#  - asan: CXXFLAGS="-fsanitize=address" CXX=clang++-10 CC=clang-10 cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-3c27463-asan -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=ON  ..
+#  - dbg: CXXFLAGS="-D_FORTIFY_SOURCE=2 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC" CXX=g++-10 cmake \
+#             -DCMAKE_INSTALL_PREFIX=/opt/symengine-3c27463-dbg -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=OFF  ..
 # sundials:
 #  - msan: CFLAGS="-fsanitize=memory" CC=clang-10 cmake -DCMAKE_INSTALL_PREFIX=/opt/sundials-5.2.0-msan -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DEXAMPLES_ENABLE_C=ON -DEXAMPLES_INSTALL=ON -DOPENMP_ENABLE=OFF -DLAPACK_ENABLE:BOOL=OFF -DKLU_ENABLE:BOOL=OFF -DSUNDIALS_INDEX_SIZE=32 ../sundials-5.2.0/
 #  - asan: CFLAGS="-fsanitize=address" CC=clang-10 cmake -DCMAKE_INSTALL_PREFIX=/opt/sundials-5.2.0-asan -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DEXAMPLES_ENABLE_C=ON -DEXAMPLES_INSTALL=ON -DOPENMP_ENABLE=OFF -DLAPACK_ENABLE:BOOL=OFF -DKLU_ENABLE:BOOL=OFF -DSUNDIALS_INDEX_SIZE=32 ../sundials-5.2.0/ && make -j 8 && ctest && make install
