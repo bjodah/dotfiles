@@ -1,3 +1,4 @@
+#!/bin/bash
 alias g='git'
 alias ll='ls -laFrth --color=auto'
 rmb() {  # "remove build"
@@ -8,10 +9,11 @@ cbd() {  # "create build"
     cd ./build
 }
 rcbd() { # "recreate build"
-    if [[ $(basename $PWD) == "build" ]]; then
-        cd ../; rm -r ./build/; mkdir ./build; cd ./build
+    BASEPWD=$(basename $PWD)
+    if [[ $BASEPWD == build* ]]; then
+        cd ../; rm -r "./$BASEPWD/"; mkdir "./$BASEPWD"; cd "./$BASEPWD"
     else
-        >&2 echo "Not in a directory named 'build'"
+        >&2 echo "Not in a directory named 'build*'"
     fi
 }
 rmtmp() {

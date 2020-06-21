@@ -1,3 +1,5 @@
+(if (< emacs-major-version 27)
+    (package-initialize))
 (if window-system
     (toggle-scroll-bar -1)
 )
@@ -5,7 +7,7 @@
 (unless window-system
   (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
   (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
-(package-initialize)
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
