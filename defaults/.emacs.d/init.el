@@ -21,6 +21,21 @@
 (eval-when-compile (require 'use-package))
 
 ;; Get packages
+(setq lsp-keymap-prefix "C-c l")
+(use-package lsp-mode
+  :hook (
+         (python-mode . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+(use-package ccls
+  :hook ((c-mode c++-mode) .
+         (lambda () (require 'ccls) (lsp))))
+(use-package lsp-ui :commands lsp-ui-mode)
+(use-package dap-mode)
+(use-package which-key
+  :config
+  (which-key-mode))
+(setq ccls-executable "/opt/ccls/bin/ccls")
 (use-package yasnippet :ensure t)
 (use-package cython-mode :ensure t)
 (use-package mmm-mode :ensure t)
@@ -349,7 +364,8 @@
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
- '(package-selected-packages '(yaml-mode cmake-mode mmm-mode use-package))
+ '(package-selected-packages
+   '(which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t))
 (custom-set-faces
