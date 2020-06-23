@@ -454,6 +454,14 @@
 
 (setq python-shell-interpreter "python3")
 
+(defun other-window-backward (&optional n)
+  "like C-x o, but in the other direction"
+  (interactive "p")
+  (if n
+      (other-window (- n))
+  (other-window -1)))
+(global-set-key "\C-xp" 'other-window-backward)
+
 
 (fset 'comment-c-word
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([47 kp-multiply 32 134217848 134217840 134217840 return 91 44 41 93 return 2 32 42 47] 0 "%d")) arg)))
