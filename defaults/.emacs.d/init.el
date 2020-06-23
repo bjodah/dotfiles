@@ -31,6 +31,8 @@
   :hook ((c-mode c++-mode) .
          (lambda () (require 'ccls) (lsp))))
 (use-package lsp-ui :commands lsp-ui-mode)
+(use-package company-lsp :commands company-lsp)
+
 (use-package dap-mode)
 (use-package which-key
   :config
