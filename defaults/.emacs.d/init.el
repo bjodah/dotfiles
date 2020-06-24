@@ -21,6 +21,46 @@
 (eval-when-compile (require 'use-package))
 
 ;; Get packages
+
+;; treemacs
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :config
+  (progn
+    (setq treemacs-file-follow-delay             0.2
+          treemacs-width                         35)
+
+    ;; The default width and height of the icons is 22 pixels. If you are
+    ;; using a Hi-DPI display, uncomment this to double the icon size.
+    ;;(treemacs-resize-icons 44)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)
+    (treemacs-fringe-indicator-mode t)
+    (pcase (cons (not (null (executable-find "git")))
+                 (not (null treemacs-python-executable)))
+      (`(t . t)
+       (treemacs-git-mode 'deferred))
+      (`(t . _)
+       (treemacs-git-mode 'simple))))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t 1"   . treemacs-delete-other-windows)
+        ("C-x t t"   . treemacs)
+        ("C-x t B"   . treemacs-bookmark)
+        ("C-x t C-t" . treemacs-find-file)
+        ("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+
+;; lsp
 (setq lsp-keymap-prefix "C-c l")
 (use-package lsp-mode
   :hook (
@@ -365,10 +405,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
- '(org-agenda-files '("~/doc/org/agendas.org"))
+ '(org-agenda-files (quote ("~/doc/org/agendas.org")))
  '(package-selected-packages
-   '(which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
- '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
+   (quote
+    (treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package)))
+ '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate))))
  '(vc-follow-symlinks t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
