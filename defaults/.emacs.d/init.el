@@ -405,11 +405,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
- '(org-agenda-files (quote ("~/doc/org/agendas.org")))
+ '(lsp-file-watch-threshold 2000)
+ '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   (quote
-    (treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package)))
- '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate))))
+   '(company-lsp treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+ '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -444,30 +444,30 @@
 (put 'downcase-region 'disabled nil)
 
 
-(require 'use-package)
-(use-package company-rtags
-  :after company)
+;; (require 'use-package)
+;; (use-package company-rtags
+;;   :after company)
 
-(use-package rtags
-  :commands rtags-mode
-  :bind (("C-. r D" . rtags-dependency-tree)
-         ("C-. r F" . rtags-fixit)
-         ("C-. r R" . rtags-rename-symbol)
-         ("C-. r T" . rtags-tagslist)
-         ("C-. r d" . rtags-create-doxygen-comment)
-         ("C-. r c" . rtags-display-summary)
-         ("C-. r e" . rtags-print-enum-value-at-point)
-         ("C-. r f" . rtags-find-file)
-         ("C-. r i" . rtags-include-file)
-         ("C-. r i" . rtags-symbol-info)
-         ("C-. r m" . rtags-imenu)
-         ("C-. r n" . rtags-next-match)
-         ("C-. r p" . rtags-previous-match)
-         ("C-. r r" . rtags-find-references)
-         ("C-. r s" . rtags-find-symbol)
-         ("C-. r v" . rtags-find-virtuals-at-point))
-  :bind (:map c-mode-base-map
-              ("M-." . rtags-find-symbol-at-point)))
+;; (use-package rtags
+;;   :commands rtags-mode
+;;   :bind (("C-. r D" . rtags-dependency-tree)
+;;          ("C-. r F" . rtags-fixit)
+;;          ("C-. r R" . rtags-rename-symbol)
+;;          ("C-. r T" . rtags-tagslist)
+;;          ("C-. r d" . rtags-create-doxygen-comment)
+;;          ("C-. r c" . rtags-display-summary)
+;;          ("C-. r e" . rtags-print-enum-value-at-point)
+;;          ("C-. r f" . rtags-find-file)
+;;          ("C-. r i" . rtags-include-file)
+;;          ("C-. r i" . rtags-symbol-info)
+;;          ("C-. r m" . rtags-imenu)
+;;          ("C-. r n" . rtags-next-match)
+;;          ("C-. r p" . rtags-previous-match)
+;;          ("C-. r r" . rtags-find-references)
+;;          ("C-. r s" . rtags-find-symbol)
+;;          ("C-. r v" . rtags-find-virtuals-at-point))
+;;   :bind (:map c-mode-base-map
+;;               ("M-." . rtags-find-symbol-at-point)))
 
 ;; https://stackoverflow.com/a/13408008/790973
 (require 'ansi-color)

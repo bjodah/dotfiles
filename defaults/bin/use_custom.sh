@@ -1,5 +1,5 @@
-export CMAKE_GENERATOR=Ninja
-export CONAN_CMAKE_GENERATOR=Ninja
+# export CMAKE_GENERATOR=Ninja
+# export CONAN_CMAKE_GENERATOR=Ninja
 
 add_prefix_to_compiler_env_vars(){
     export CPATH=$1/include:$CPATH
@@ -21,8 +21,8 @@ export PATH=$HOME/bin/custom:$PATH
 
 
 # openblas: make && make install PREFIX=/opt/openblas-0.3.9
-# numpy: export OPENBLAS_STATIC_LIB=/opt/openblas-0.3.6/lib/libopenblas.a && BLAS=$OPENBLAS_STATIC_LIB LAPACK=$OPENBLAS_STATIC_LIB setup.py install
-# boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_72_p --toolset=gcc-9
+# numpy: export OPENBLAS_STATIC_LIB=/opt/openblas-0.3.9/lib/libopenblas.a && BLAS=$OPENBLAS_STATIC_LIB LAPACK=$OPENBLAS_STATIC_LIB setup.py install
+# boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_73_p --toolset=gcc-10
 # symengine:
 #  - asan: CXXFLAGS="-fsanitize=address" CXX=clang++-10 CC=clang-10 cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-3c27463-asan -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=ON  ..
 #  - dbg: CXXFLAGS="-D_FORTIFY_SOURCE=2 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC" CXX=g++-10 cmake \
@@ -82,7 +82,7 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         : # echo "Not using any particular python version"
     fi
 
-    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-14a6bad-rel}
+    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-5da3982-rel}
     if [[ ! -d $SYMENGINE_DIR ]]; then
         >&2 echo "No such directory: $SYMENGINE_DIR"
     fi
