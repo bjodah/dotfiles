@@ -8,6 +8,9 @@
   (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
   (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
 
+(savehist-mode 1)
+(setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
@@ -21,6 +24,15 @@
 (eval-when-compile (require 'use-package))
 
 ;; Get packages
+(use-package use-package-ensure-system-package
+  :ensure t)
+
+(use-package rg
+  :ensure-system-package
+  (rg . ripgrep)
+  :config
+  (global-set-key (kbd "M-s g") 'rg)
+  (global-set-key (kbd "M-s d") 'rg-dwim))
 
 ;; treemacs
 (use-package treemacs
@@ -57,35 +69,47 @@
         ("C-x t M-t" . treemacs-find-tag)))
 
 (use-package treemacs-magit
-  :after treemacs magit
-  :ensure t)
+  :ensure t
+  :after treemacs magit)
 
 ;; lsp
 (setq lsp-keymap-prefix "C-c l")
 (use-package lsp-mode
+  :ensure t
   :hook (
          (python-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package ccls
+  :ensure t
   :hook ((c-mode c++-mode) .
          (lambda () (require 'ccls) (lsp))))
-(use-package lsp-ui :commands lsp-ui-mode)
-(use-package company-lsp :commands company-lsp)
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+(use-package company-lsp
+  :ensure t
+  :commands company-lsp)
 
-(use-package dap-mode)
+(use-package dap-mode
+  :ensure t)
+  ;; :ensure dap-lldb
+  ;; :config
+  ;; (dap-lldb-debug-program "lldb-10")
+
 (use-package which-key
+  :ensure t
   :config
   (which-key-mode))
 (setq ccls-executable "/opt/ccls/bin/ccls")
 (use-package yasnippet :ensure t)
 (use-package cython-mode :ensure t)
-(use-package mmm-mode :ensure t)
+(use-package dockerfile-mode :ensure t)
 (use-package magit
   :defer t
   :ensure forge)
-;; (use-package forge
-;;   :after magit)
+(use-package forge
+  :after magit)
 (use-package realgud :ensure t)
 (use-package jedi
   :ensure t
@@ -100,6 +124,30 @@
   :ensure auctex
   :config
   (setq TeX-auto-save t))
+
+(use-package mmm-mode :ensure t)
+;; mmm-mako
+(load-file "~/.emacs.d/lisp/mmm-mako.el")
+;; - Makefile
+(add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . makefile-gmake-mode))
+(add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . mmm-mode))
+(mmm-add-mode-ext-class 'makefile-gmake-mode "\\.mk.mako\\'" 'mako)
+;; - C++
+(add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . mmm-mode))
+(mmm-add-mode-ext-class 'c++-mode "\\.cpp.mako\\'" 'mako)
+
+(add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . mmm-mode))
+(mmm-add-mode-ext-class 'c++-mode "\\.hpp.mako\\'" 'mako)
+;; - C
+(add-to-list 'auto-mode-alist '("\\.c.mako\\'" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.c.mako\\'" . mmm-mode))
+(mmm-add-mode-ext-class 'c-mode "\\.c.mako\\'" 'mako)
+
+(add-to-list 'auto-mode-alist '("\\.h.mako\\'" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.h.mako\\'" . mmm-mode))
+(mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
@@ -252,9 +300,6 @@
        (define-key LaTeX-mode-map "\C-c\C-t\C-x" 'TeX-toggle-escape)
        (setq fill-column 199))))
 
-(setq auto-mode-alist
-   (cons '("\\.tex" . LaTeX-mode) auto-mode-alist))
-
 
 ;; BEGIN AUCTEX MINTED FIX
 ; http://old.nabble.com/shell-escape-td1076639.html
@@ -352,41 +397,16 @@
     (interactive)
     (term "/usr/bin/ipython3")) ;; note: C-x becomes C-c in term
 
-
-;; cython-mode
-(require 'cython-mode)
-(setq auto-mode-alist
-   (cons '("\\.pyx" . cython-mode) auto-mode-alist))
-
-;; mmm-mako
-(require 'mmm-mode)
-(load-file "~/.emacs.d/lisp/mmm-mako.el")
-;; - Makefile
-(add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . makefile-gmake-mode))
-(mmm-add-mode-ext-class 'makefile-gmake-mode "\\.mk.mako\\'" 'mako)
-;; - C++
-(add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . c++-mode))
-(mmm-add-mode-ext-class 'c++-mode "\\.cpp.mako\\'" 'mako)
-(add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . c++-mode))
-(mmm-add-mode-ext-class 'c++-mode "\\.hpp.mako\\'" 'mako)
-;; - C
-(add-to-list 'auto-mode-alist '("\\.c.mako\\'" . c-mode))
-(mmm-add-mode-ext-class 'c-mode "\\.c.mako\\'" 'mako)
-(add-to-list 'auto-mode-alist '("\\.h.mako\\'" . c-mode))
-(mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
-
-
-
-;; From http://jblevins.org/projects/markdown-mode/
-;; markdown-mode available on Ubuntu/Debian as apt package: emacs-goodies-el
-(setq auto-mode-alist
-   (cons '("\\.md" . markdown-mode) auto-mode-alist))
-
 (add-hook 'markdown-mode-hook
     (function (lambda ()
         (flyspell-mode)
         (auto-fill-mode)
         )))
+
+(add-to-list 'auto-mode-alist '("\\.tex$" . LaTeX-mode))
+(add-to-list 'auto-mode-alist '("\\.ipp$" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
+(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 
 ; pylint pep8
 ;; (require 'tramp)
@@ -408,7 +428,7 @@
  '(lsp-file-watch-threshold 2000)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(company-lsp treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(dockerfile-mode rg dap-lldb flycheck lsp-ui company-lsp treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t))
 (custom-set-faces
@@ -522,8 +542,16 @@
 (global-set-key "\C-xp" 'other-window-backward)
 
 
+;; (fset 'mark-to-space
+;;    (kmacro-lambda-form [?\C-  ?\C-s ?  ?\C-b] 0 "%d"))
+(fset 'mark-to-space
+   (kmacro-lambda-form [?\C-  ?\M-x ?i ?s ?e tab ?- ?f ?o ?r tab ?- ?r ?e ?g tab return ?\\ ?s ?- ?\M-x ?i ?s tab ?r backspace ?e tab ?- ?b ?a ?c tab ?- ?r ?e tab return ?\\ ?w ?\C-f] 0 "%d"))
+(global-set-key (kbd "C-c SPC") 'mark-to-space)
+
+
 (fset 'comment-c-word
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([47 kp-multiply 32 134217848 134217840 134217840 return 91 44 41 93 return 2 32 42 47] 0 "%d")) arg)))
+(global-set-key (kbd "C-c c") 'comment-c-word)
 
 (let ((local-settings "~/.emacs.d/local-settings.el"))
  (when (file-exists-p local-settings)

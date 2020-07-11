@@ -73,3 +73,5 @@
     t = tag
 
     time-of-death = "!git show $(git rev-list --max-count=1 --all -- $1)~1:$1 #" # show latest revision before deletion of file
+[github]
+	user = bjodah
