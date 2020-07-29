@@ -68,13 +68,16 @@
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp)
 (use-package ccls
+  :ensure t
   :hook ((c-mode c++-mode) .
          (lambda () (require 'ccls) (lsp))))
 (use-package lsp-ui :commands lsp-ui-mode)
 (use-package company-lsp :commands company-lsp)
 
-(use-package dap-mode)
+(use-package dap-mode
+  :ensure t)
 (use-package which-key
+  :ensure t
   :config
   (which-key-mode))
 (setq ccls-executable "/opt/ccls/bin/ccls")
@@ -405,11 +408,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
- '(org-agenda-files (quote ("~/doc/org/agendas.org")))
+ '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   (quote
-    (treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package)))
- '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate))))
+   '(treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+ '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -14,21 +14,22 @@ for f in $(find . -type f); do
     DESTDIR="$HOME/$(dirname "$f")"
     DESTFILE="$DESTDIR/$(basename $f)"
     if [ -e "$DESTFILE" ]; then
-	rm "$DESTFILE"
-    fi
-        echo "File already exists, skipping: $DESFILE"
-        continue
-    else
-        if [ ! -e $DESTDIR ]; then
-            "Creating directory: $DESTDIR"
-            mkdir -p $DESTDIR
-        fi
-        ln -s "$ABS_REPO_PATH"/defaults/$f $DESTFILE
         if [ -L "$DESTFILE" ]; then
-            echo "Successfully symlinked $DESTFILE"
+	    rm "$DESTFILE"
         else
-            >&2 echo "ERROR: Exiting... Something went wrong creating symlink: $DESTFILE"
-            exit 1
+            echo "File already exists, skipping: $DESTFILE"
+            continue
         fi
+    fi
+    if [ ! -e $DESTDIR ]; then
+        "Creating directory: $DESTDIR"
+        mkdir -p $DESTDIR
+    fi
+    ln -s "$ABS_REPO_PATH"/defaults/$f $DESTFILE
+    if [ -L "$DESTFILE" ]; then
+        echo "Successfully symlinked $DESTFILE"
+    else
+        >&2 echo "ERROR: Exiting... Something went wrong creating symlink: $DESTFILE"
+        exit 1
     fi
 done
