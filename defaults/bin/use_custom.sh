@@ -1,5 +1,5 @@
-export CMAKE_GENERATOR=Ninja
-export CONAN_CMAKE_GENERATOR=Ninja
+# export CMAKE_GENERATOR=Ninja
+# export CONAN_CMAKE_GENERATOR=Ninja
 
 add_prefix_to_compiler_env_vars(){
     export CPATH=$1/include:$CPATH
@@ -20,8 +20,8 @@ fi
 export PATH=$HOME/bin/custom:$PATH
 
 
-# openblas: make && make install PREFIX=/opt/openblas-0.3.10
-# numpy: export OPENBLAS_STATIC_LIB=/opt/openblas-0.3.6/lib/libopenblas.a && BLAS=$OPENBLAS_STATIC_LIB LAPACK=$OPENBLAS_STATIC_LIB setup.py install
+# openblas: make && make install PREFIX=/opt/openblas-0.3.9
+# numpy: export OPENBLAS_STATIC_LIB=/opt/openblas-0.3.9/lib/libopenblas.a && BLAS=$OPENBLAS_STATIC_LIB LAPACK=$OPENBLAS_STATIC_LIB setup.py install
 # boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_73_p --toolset=gcc-10
 # symengine:
 #  - asan: CXXFLAGS="-fsanitize=address" CXX=clang++-10 CC=clang-10 cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-5da3982-asan -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DWITH_COTIRE=OFF -DWITH_LLVM=ON ~/vc/symengine
