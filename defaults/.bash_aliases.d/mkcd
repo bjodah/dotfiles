@@ -1,0 +1,4 @@
+# -*- mode: shell-script -*-
+mkcd() {
+   ( set -x; mkdir $@; cd ${@: -1} )
+}
