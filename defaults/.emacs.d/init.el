@@ -28,6 +28,7 @@
   :ensure t)
 
 (use-package rg
+  :ensure t
   :ensure-system-package
   (rg . ripgrep)
   :config
@@ -91,6 +92,9 @@
   :ensure t
   :commands company-lsp)
 
+;; (use-package dap-lldb
+;;   :ensure t)
+
 (use-package dap-mode
   :ensure t)
   ;; :ensure dap-lldb
@@ -126,7 +130,10 @@
   :ensure auctex
   :config
   (setq TeX-auto-save t))
-
+(use-package cmake-mode
+  :ensure t)
+(use-package yaml-mode
+  :ensure t)
 (use-package mmm-mode :ensure t)
 ;; mmm-mako
 (load-file "~/.emacs.d/lisp/mmm-mako.el")
@@ -173,8 +180,8 @@
 		(define-key gud-minor-mode-map (kbd "M-<f10>") #'gud-jump)
 		(define-key gud-minor-mode-map (kbd "<f11>") #'gud-run)
 		(define-key gud-minor-mode-map (kbd "M-<f11>") #'gud-kill)
-		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-up)
-		(define-key gud-minor-mode-map (kbd "<next>") #'gud-down)
+		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-down)
+		(define-key gud-minor-mode-map (kbd "<next>") #'gud-up)
 )))
 
 ;; This is the proper way to rebind yasnippet key

@@ -67,10 +67,12 @@ if [[ "$(hostname)" == "urania" ]]; then
     fi
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-10 CXX=g++-10 FC=gfortran-10
-    export SUNDIALS_ROOT=/opt/sundials-${SUNDIALS_VERSION:-5.3.0-rel-klu-lapack}
+    export SUNDIALS_ROOT=/opt/sundials-${SUNDIALS_VERSION:-5.3.0-klu-openblas}
     if [[ ! -d $SUNDIALS_ROOT ]]; then
         >&2 echo "No such directory: $SUNDIALS_ROOT"
     fi
+    export PYODESYS_CVODE_FLAGS="-isystem ${SUNDIALS_ROOT}/include" \
+    export PYODESYS_CVODE_LDFLAGS="-Wl,--disable-new-dtags -Wl,-rpath,${SUNDIALS_ROOT}/lib -L${SUNDIALS_ROOT}/lib"
 
     if [[ ! -z ${PY} ]]; then
         CANIDATE_CPY_BIN_DIR="/opt/cpython-$PY/bin"
@@ -93,6 +95,6 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
     sundials_fix
     export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-10:$SYMENGINE_DIR
     export OPENBLAS_NUM_THREADS=1
-    export MPLBACKEND=TkAgg
+    export MPLBACKEND=GTK3Agg
 fi
 
