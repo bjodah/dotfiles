@@ -91,7 +91,12 @@
 (use-package company-lsp
   :ensure t
   :commands company-lsp)
-
+(use-package lsp-jedi
+  :ensure t
+  :config
+  (with-eval-after-load "lsp-mode"
+    (add-to-list 'lsp-disabled-clients 'pyls)
+    (add-to-list 'lsp-enabled-clients 'jedi)))
 ;; (use-package dap-lldb
 ;;   :ensure t)
 
@@ -434,11 +439,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
- '(lsp-file-watch-threshold 2000)
- '(org-agenda-files '("~/doc/org/agendas.org"))
+ '(org-agenda-files (quote ("~/doc/org/agendas.org")))
  '(package-selected-packages
-   '(dockerfile-mode rg dap-lldb flycheck lsp-ui company-lsp treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
- '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
+   (quote
+    (company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package)))
+ '(safe-local-variable-values (quote ((eval read-only) (org-confirm-babel-evaluate))))
  '(vc-follow-symlinks t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
