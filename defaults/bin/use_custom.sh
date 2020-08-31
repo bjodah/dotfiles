@@ -88,8 +88,11 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
     SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-5da3982-rel}
     if [[ ! -d $SYMENGINE_DIR ]]; then
         >&2 echo "No such directory: $SYMENGINE_DIR"
+    else
+        export CMAKE_PREFIX_PATH=$SYMENGINE_DIR:$CMAKE_PREFIX_PATH
     fi
-    for PREFIX in /opt/openblas-0.3.10 /opt/boost_1_73_p $SYMENGINE_DIR $SUNDIALS_ROOT; do
+
+    for PREFIX in /opt/openblas-0.3.10 /opt/boost_1_73_p $SUNDIALS_ROOT; do
         add_prefix_to_compiler_env_vars $PREFIX
     done
     sundials_fix
