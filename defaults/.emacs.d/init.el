@@ -23,6 +23,15 @@
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
 
+(use-package flycheck
+  :ensure t
+  :hook (prog-mode . flycheck-mode))
+(use-package company
+  :ensure t
+  :hook (prog-mode . company-mode)
+  :config (setq company-tooltip-align-annotations t)
+          (setq company-minimum-prefix-length 1))
+
 ;; Get packages
 (use-package use-package-ensure-system-package
   :ensure t)
@@ -78,9 +87,13 @@
 (use-package lsp-mode
   :ensure t
   :hook (
+         (rust-mode . lsp)
          (python-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp)
+  :commands lsp
+                                        ;:config (require 'lsp-clients)
+  )
+
 (use-package ccls
   :ensure t
   :hook ((c-mode c++-mode) .
@@ -97,6 +110,12 @@
   (with-eval-after-load "lsp-mode"
     (add-to-list 'lsp-disabled-clients 'pyls)
     (add-to-list 'lsp-enabled-clients 'jedi)))
+
+(use-package rust-mode
+  :ensure t)
+;; (use-package flycheck-rust
+;; 	     :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
 ;; (use-package dap-lldb
 ;;   :ensure t)
 
@@ -441,7 +460,7 @@
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t))
 (custom-set-faces
