@@ -44,6 +44,8 @@
 
     f = fetch
 
+    gr = grep --recurse-submodules
+
     l  = log
     ll = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
 
@@ -69,9 +71,11 @@
     sed = "!git grep -I -z --full-name -l '.' | xargs -0 sed -i -e"
 
     sm = submodule
+    smu = submodule update --recursive --init
 
     t = tag
 
     time-of-death = "!git show $(git rev-list --max-count=1 --all -- $1)~1:$1 #" # show latest revision before deletion of file
+
 [github]
-	user = bjodah
+    user = bjodah
