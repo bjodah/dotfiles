@@ -23,6 +23,9 @@
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
 
+(use-package vterm
+  :ensure t)
+
 (use-package flycheck
   :ensure t
   :hook (prog-mode . flycheck-mode))
@@ -86,9 +89,15 @@
 (setq lsp-keymap-prefix "C-c l")
 (use-package lsp-mode
   :ensure t
+  ;; :custom
+  ;; (lsp-rust-server 'rls)
+  ;; (lsp-rust-rls-server-command "/opt/cargo/bin/rls")
   :hook (
+         (c-mode . lsp)
+         (c++-mode . lsp)
          (rust-mode . lsp)
          (python-mode . lsp)
+         (java-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :commands lsp
                                         ;:config (require 'lsp-clients)
@@ -97,7 +106,11 @@
 (use-package ccls
   :ensure t
   :hook ((c-mode c++-mode) .
-         (lambda () (require 'ccls) (lsp))))
+         (lambda () (require 'ccls) (lsp)))
+  :config
+  (with-eval-after-load "lsp-mode"
+    (add-to-list 'lsp-enabled-clients 'ccls))
+  )
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode)
@@ -112,7 +125,11 @@
     (add-to-list 'lsp-enabled-clients 'jedi)))
 
 (use-package rust-mode
-  :ensure t)
+  :ensure t
+    :config
+  (with-eval-after-load "lsp-mode"
+    (add-to-list 'lsp-enabled-clients 'rls))
+  )
 ;; (use-package flycheck-rust
 ;; 	     :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
@@ -131,7 +148,15 @@
   :ensure t
   :config
   (which-key-mode))
-(setq ccls-executable "/opt/ccls/bin/ccls")
+(setq ccls-executable "/usr/local/bin/ccls")
+
+(use-package lsp-java
+  :ensure t
+  :config
+  (with-eval-after-load "lsp-mode"
+    (add-to-list 'lsp-enabled-clients 'ccls))
+  )
+
 (use-package yasnippet :ensure t)
 (use-package cython-mode :ensure t)
 (use-package dockerfile-mode :ensure t)
@@ -460,7 +485,7 @@
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t))
 (custom-set-faces
