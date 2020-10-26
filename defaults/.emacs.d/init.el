@@ -1,9 +1,12 @@
 (if (< emacs-major-version 27)
-    (package-initialize))
+    (package-initialize)
+)
 (if window-system
     (toggle-scroll-bar -1)
 )
-(if (functionp 'tool-bar-mode) (tool-bar-mode 0))
+(if (functionp 'tool-bar-mode)
+    (tool-bar-mode 0)
+)
 (unless window-system
   (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
   (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
@@ -32,8 +35,11 @@
 (use-package company
   :ensure t
   :hook (prog-mode . company-mode)
-  :config (setq company-tooltip-align-annotations t)
-          (setq company-minimum-prefix-length 1))
+  :config
+  (add-to-list 'company-backends 'company-capf)
+  (setq company-tooltip-align-annotations t)
+  (setq company-minimum-prefix-length 1)
+  )
 
 ;; Get packages
 (use-package use-package-ensure-system-package
@@ -89,6 +95,7 @@
 (setq lsp-keymap-prefix "C-c l")
 (use-package lsp-mode
   :ensure t
+  :commands lsp
   ;; :custom
   ;; (lsp-rust-server 'rls)
   ;; (lsp-rust-rls-server-command "/opt/cargo/bin/rls")
@@ -99,9 +106,8 @@
          (python-mode . lsp)
          (java-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
-  :commands lsp
-                                        ;:config (require 'lsp-clients)
-  )
+  :config (require 'lsp-clients)
+)
 
 (use-package ccls
   :ensure t
@@ -113,10 +119,11 @@
   )
 (use-package lsp-ui
   :ensure t
+  :after lsp-mode
   :commands lsp-ui-mode)
-(use-package company-lsp
-  :ensure t
-  :commands company-lsp)
+;; (use-package company-lsp
+;;   :ensure t
+;;   :commands company-lsp)
 (use-package lsp-jedi
   :ensure t
   :config
@@ -152,10 +159,22 @@
 
 (use-package lsp-java
   :ensure t
+  ;; :after lsp
   :config
   (with-eval-after-load "lsp-mode"
-    (add-to-list 'lsp-enabled-clients 'ccls))
-  )
+    (add-to-list 'lsp-enabled-clients 'jdtls))
+  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
+        lsp-java-format-settings-profile "GoogleStyle"
+        lsp-java-save-actions-organize-imports t
+        lsp-java-references-code-lens-enabled t
+        lsp-java-implementations-code-lens-enabled t
+        lsp-file-watch-ignored
+        '(".idea" ".ensime_cache" ".eunit" "node_modules"
+          ".git" ".hg" ".fslckout" "_FOSSIL_"
+          ".bzr" "_darcs" ".tox" ".svn" ".stack-work"
+          "build"))
+)
+
 
 (use-package yasnippet :ensure t)
 (use-package cython-mode :ensure t)
