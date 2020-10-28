@@ -6,11 +6,10 @@
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
- '(vterm-always-compile-module t)
- )
+ '(vterm-always-compile-module t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -124,6 +123,7 @@
          (c-mode . lsp)
          (c++-mode . lsp)
          (rust-mode . lsp)
+         (typescript-mode . lsp)
          (python-mode . lsp)
          (java-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
@@ -157,6 +157,14 @@
   (with-eval-after-load "lsp-mode"
     (add-to-list 'lsp-enabled-clients 'rls))
   )
+
+(use-package typescript-mode
+  :ensure t
+    :config
+  (with-eval-after-load "lsp-mode"
+    (add-to-list 'lsp-enabled-clients 'ts-ls))
+  )
+
 ;; (use-package flycheck-rust
 ;; 	     :config (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
