@@ -1,3 +1,24 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(inhibit-startup-screen t)
+ '(org-agenda-files '("~/doc/org/agendas.org"))
+ '(package-selected-packages
+   '(lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+ '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
+ '(vc-follow-symlinks t)
+ '(vterm-always-compile-module t)
+ )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+
 (if (< emacs-major-version 27)
     (package-initialize)
 )
@@ -496,23 +517,6 @@
 
 (eval-after-load 'ox '(require 'ox-koma-letter))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(inhibit-startup-screen t)
- '(org-agenda-files '("~/doc/org/agendas.org"))
- '(package-selected-packages
-   '(lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
- '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
- '(vc-follow-symlinks t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 ;; XPPAUT (xpp.el) xpp - mode
 (autoload 'xpp-mode "xpp" "Enter XPP mode." t)
