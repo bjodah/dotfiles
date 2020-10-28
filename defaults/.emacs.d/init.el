@@ -127,7 +127,6 @@
          (python-mode . lsp)
          (java-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
-  :config (require 'lsp-clients)
 )
 
 (use-package ccls
