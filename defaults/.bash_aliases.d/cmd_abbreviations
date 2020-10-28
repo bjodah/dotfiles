@@ -2,6 +2,8 @@
 alias ..="cd .."
 alias g='git'
 alias ll='ls -laFrth --color=auto'
+alias la='ls -A'
+alias l='ls -CF'
 rmb() {  # "remove build"
     rm -r ./build/
 }
