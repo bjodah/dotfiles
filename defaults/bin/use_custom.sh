@@ -24,8 +24,8 @@ export PATH=$HOME/bin/custom:$PATH
 # numpy: export OPENBLAS_STATIC_LIB=/opt/openblas-0.3.9/lib/libopenblas.a && BLAS=$OPENBLAS_STATIC_LIB LAPACK=$OPENBLAS_STATIC_LIB setup.py install
 # boost: bootstrap.sh && ./b2 install --prefix=/opt/boost_1_73_p --toolset=gcc-10
 # symengine:
-#  - asan: CXXFLAGS="-fsanitize=address" CXX=clang++-11 CC=clang-11 cmake -DCMAKE_INSTALL_PREFIX=/opt/symengine-5da3982-asan -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DWITH_COTIRE=OFF -DWITH_LLVM=ON ~/vc/symengine
-#  - dbg: CXXFLAGS="-D_FORTIFY_SOURCE=2 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC" CC=gcc-10 CXX=g++-10 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_INSTALL_PREFIX=/opt/symengine-5da3982-dbg -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=OFF ~/vc/symengine
+#  - asan: CXXFLAGS="-fsanitize=address" CXX=clang++-11 CC=clang-11 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_INSTALL_PREFIX=/opt/symengine-46090cf-asan -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DWITH_COTIRE=OFF -DWITH_LLVM=ON ~/vc/symengine
+#  - dbg: CXXFLAGS="-D_FORTIFY_SOURCE=2 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC" CC=gcc-10 CXX=g++-10 cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_INSTALL_PREFIX=/opt/symengine-46090cf-dbg -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DWITH_LLVM=OFF ~/vc/symengine
 # sundials:
 #  - msan: CFLAGS="-fsanitize=memory" CC=clang-11 cmake -DCMAKE_INSTALL_PREFIX=/opt/sundials-5.4.0-msan -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DEXAMPLES_ENABLE_C=ON -DEXAMPLES_INSTALL=ON -DOPENMP_ENABLE=OFF -DLAPACK_ENABLE:BOOL=OFF -DKLU_ENABLE:BOOL=OFF -DSUNDIALS_INDEX_SIZE=32 ../sundials-5.4.0/
 #  - asan: CFLAGS="-fsanitize=address" CC=clang-11 cmake -DCMAKE_INSTALL_PREFIX=/opt/sundials-5.4.0-asan -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON -DBUILD_STATIC_LIBS=OFF -DEXAMPLES_ENABLE_C=ON -DEXAMPLES_INSTALL=ON -DOPENMP_ENABLE=OFF -DLAPACK_ENABLE:BOOL=OFF -DKLU_ENABLE:BOOL=OFF -DSUNDIALS_INDEX_SIZE=32 ../sundials-5.4.0/ && make -j 8 && ctest && make install
@@ -85,7 +85,7 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         : # echo "Not using any particular python version"
     fi
 
-    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-5da3982-rel}
+    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-46090cf-dbg}
     if [[ ! -d $SYMENGINE_DIR ]]; then
         >&2 echo "No such directory: $SYMENGINE_DIR"
     else
