@@ -25,6 +25,7 @@ rmtmp() {
 rmcm() {
       rm -r ./CMakeFiles/ ./CMakeCache.txt
 }
+alias ccat="batcat -pp"
 alias eem="emacs -l ~/.emacs-evil"
 alias ec="emacsclient"
 alias ecn="emacsclient -n"

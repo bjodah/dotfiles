@@ -4,9 +4,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(inhibit-startup-screen t)
+ '(lsp-file-watch-threshold 2500)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vterm-always-compile-module t))
@@ -253,6 +254,8 @@
 (add-to-list 'auto-mode-alist '("\\.h.mako\\'" . c-mode))
 (add-to-list 'auto-mode-alist '("\\.h.mako\\'" . mmm-mode))
 (mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
+
+(use-package monokai-theme :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
@@ -575,6 +578,8 @@
 ;;          ("C-. r v" . rtags-find-virtuals-at-point))
 ;;   :bind (:map c-mode-base-map
 ;;               ("M-." . rtags-find-symbol-at-point)))
+
+
 
 ;; https://stackoverflow.com/a/13408008/790973
 (require 'ansi-color)
