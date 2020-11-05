@@ -8,6 +8,10 @@ for VARIANT in debug release; do
     if [ ! -d ${BUILD_DIR} ]; then
         mkdir ${BUILD_DIR}
     fi
+    if [ -d "${INSTALL_DIR}" ]; then
+        >&2 echo "Install dir already exists: ${INSTALL_DIR} (please delete first)"
+        exit 1
+    fi
     cd ${BUILD_DIR}
     cmake -G Ninja \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
@@ -17,6 +21,5 @@ for VARIANT in debug release; do
           ${SRC_DIR}
     cmake --build .
     cmake --install .
-    ln -s ${BUILD_DIR}/compile_commands.json ${INSTALL_DIR}/
+    ln -sf ${BUILD_DIR}/compile_commands.json ${INSTALL_DIR}/
 done
-

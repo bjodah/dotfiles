@@ -58,8 +58,10 @@
   :hook (prog-mode . company-mode)
   :config
   (add-to-list 'company-backends 'company-capf)
+  (add-to-list 'company-backends 'company-files)
   (setq company-tooltip-align-annotations t)
   (setq company-minimum-prefix-length 1)
+  :bind ("C-," . 'company-files)
   )
 
 ;; Get packages
@@ -124,6 +126,7 @@
          (c-mode . lsp)
          (c++-mode . lsp)
          (rust-mode . lsp)
+         (sh-mode . lsp)
          (typescript-mode . lsp)
          (python-mode . lsp)
          (java-mode . lsp)
@@ -135,9 +138,9 @@
   :hook ((c-mode c++-mode) .
          (lambda () (require 'ccls) (lsp)))
   :config
-  (with-eval-after-load "lsp-mode"
-    (add-to-list 'lsp-enabled-clients 'ccls))
-  )
+  ;; (with-eval-after-load "lsp-mode"
+  ;;   (add-to-list 'lsp-enabled-clients 'ccls))
+)
 (use-package lsp-ui
   :ensure t
   :after lsp-mode
@@ -150,20 +153,21 @@
   :config
   (with-eval-after-load "lsp-mode"
     (add-to-list 'lsp-disabled-clients 'pyls)
-    (add-to-list 'lsp-enabled-clients 'jedi)))
+    ;; (add-to-list 'lsp-enabled-clients 'jedi)
+    ))
 
 (use-package rust-mode
   :ensure t
-    :config
-  (with-eval-after-load "lsp-mode"
-    (add-to-list 'lsp-enabled-clients 'rls))
+  ;;   :config
+  ;; (with-eval-after-load "lsp-mode"
+  ;;   (add-to-list 'lsp-enabled-clients 'rls))
   )
 
 (use-package typescript-mode
   :ensure t
-    :config
-  (with-eval-after-load "lsp-mode"
-    (add-to-list 'lsp-enabled-clients 'ts-ls))
+  ;;   :config
+  ;; (with-eval-after-load "lsp-mode"
+  ;;   (add-to-list 'lsp-enabled-clients 'ts-ls))
   )
 
 ;; (use-package flycheck-rust
@@ -190,8 +194,8 @@
   :ensure t
   ;; :after lsp
   :config
-  (with-eval-after-load "lsp-mode"
-    (add-to-list 'lsp-enabled-clients 'jdtls))
+  ;; (with-eval-after-load "lsp-mode"
+  ;;   (add-to-list 'lsp-enabled-clients 'jdtls))
   (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
         lsp-java-format-settings-profile "GoogleStyle"
         lsp-java-save-actions-organize-imports t
@@ -204,8 +208,6 @@
           "build"))
 )
 
-
-(use-package yasnippet :ensure t)
 (use-package cython-mode :ensure t)
 (use-package dockerfile-mode :ensure t)
 (use-package magit
@@ -257,13 +259,43 @@
 
 (use-package monokai-theme :ensure t)
 
+
+;; yasnippet
+(setq yas-indent-line 'fixed)
+;; This is the proper way to rebind yasnippet key
+;; (see https://github.com/capitaomorte/yasnippet/issues/296)
+; (define-key yas-minor-mode-map (kbd "C-@") 'yas/expand)
+; (define-key yas-minor-mode-map (kbd "TAB") nil)
+; (define-key yas-minor-mode-map (kbd "TAB") 'yas/expand)
+; (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand) 
+; ;next-field-or-maybe-expand <-- mark with space alt?.
+;(define-key yas-minor-mode-map (kbd "TAB") nil)
+(use-package validate
+  :ensure t)
+(require 'validate)
+
+(use-package yasnippet
+  :ensure t
+  :bind
+  ("C-c y s" . yas-insert-snippet)
+  ("C-c y v" . yas-visit-snippet-file)
+  :config
+  (validate-setq
+   ;; yas-verbosity 1
+   yas-wrap-around-region t)
+  (with-eval-after-load 'yasnippet
+    (validate-setq yas-snippet-dirs '(yasnippet-snippets-dir)))
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
+  (yas-reload-all)
+  )
+(use-package yasnippet-snippets
+  :ensure t)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
 
 ;(add-hook 'after-init-hook #'global-flycheck-mode)
-
-;; yasnippet
-(setq yas/indent-line 'fixed)
 
 (add-hook 'gdb-mode-hook
     (function (lambda ()
@@ -282,15 +314,6 @@
 		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-down)
 		(define-key gud-minor-mode-map (kbd "<next>") #'gud-up)
 )))
-
-;; This is the proper way to rebind yasnippet key
-;; (see https://github.com/capitaomorte/yasnippet/issues/296)
-; (define-key yas-minor-mode-map (kbd "C-@") 'yas/expand)
-; (define-key yas-minor-mode-map (kbd "TAB") nil)
-; (define-key yas-minor-mode-map (kbd "TAB") 'yas/expand)
-; (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand) 
-;; next-field-or-maybe-expand <-- mark with space alt? 
-;(define-key yas-minor-mode-map (kbd "TAB") nil)
 
 (add-hook 'c++-mode-hook
     (function (lambda ()
@@ -321,9 +344,9 @@
 
 ;; yas-next-field-or-maybe-expand
 
-;; For some reason the following can be
-;; done manually in e.g. *scratch* but I can't
-;; make it work in .emacs
+;; (add-hook 'sh-mode-hook
+;;           (function (lambda()
+;;                       (add-to-list 'lsp-enabled-clients 'bash-ls))))
 
 ;; (require 'smart-operator)
 ;; (add-hook 'python-mode-hook
@@ -338,12 +361,10 @@
 ;; (elpy-use-ipython)
 
 
-;; BEGIN OWN ADDITIONS
-
 ;; newline-withoug-break-of-line ;; http://stackoverflow.com/questions/5898448
 (defun newline-without-break-of-line ()
-  "1. move to end of the line.
-   2. insert indented newline"
+"1. move to end of the line.
+ 2. insert indented newline"
 
   (interactive)
   (let ((oldpos (point)))
@@ -352,6 +373,7 @@
 
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
+;(global-set-key (kbd "C-c C-l") 'compile)
 (global-set-key (kbd "C-c m") 'recompile)
 
 ; Let \C-cb insert buffer name
@@ -386,7 +408,6 @@
 (setq-default indent-tabs-mode nil)
 (setq-default c-basic-offset 4)
 
-;; END OWN ADDITIONS
 
 (add-hook 'ReST-mode-hook
     (function (lambda ()
@@ -423,8 +444,6 @@
 ;;     )
 ;;   )
 ;; END AUCTEX MINTED FIX
-
-;; END LATEX
 
 
 ;; === Spelling (grammar) ===
@@ -590,8 +609,8 @@
 (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 ;; https://stackoverflow.com/a/3592559/790973
-(add-hook 'c-mode-common-hook 
-          (lambda () (define-key c-mode-base-map (kbd "C-c C-l") 'compile)))
+;; (add-hook 'c-mode-common-hook 
+;;           (lambda () (define-key c-mode-base-map (kbd "C-c C-l") 'compile)))
 
 ;; https://www.emacswiki.org/emacs/WinnerMode
 (winner-mode 1)
