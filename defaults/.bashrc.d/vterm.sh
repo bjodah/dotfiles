@@ -10,3 +10,7 @@ vterm_printf(){
         printf "\e]%s\e\\" "$1"
     fi
 }
+
+if [[ "$INSIDE_EMACS" = "vterm" ]]; then
+    export GIT_PROMPT_THEME=Solarized
+fi
