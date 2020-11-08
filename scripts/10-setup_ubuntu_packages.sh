@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 sudo apt-get --assume-yes --no-install-recommends install \
      automake biber binutils-dev bison cmake coinor-libipopt-dev cppcheck \
-     curl dot2tex doxygen dpkg-dev dvipng expect ffmpeg flex fonts-dejavu \
+     curl dot2tex doxygen dpkg-dev dvipng expect fd-find ffmpeg flex fonts-dejavu \
      fonts-humor-sans freeglut3-dev g++-10 g++-10-multilib gcc-10 \
      gcc-10-multilib gcovr gdb gfortran-10 git gnupg2 gnuplot graphviz \
      hunspell imagemagick inkscape latexmk lcov less libacl1-dev libbz2-dev \

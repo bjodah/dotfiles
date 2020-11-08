@@ -7,7 +7,7 @@
  '(lsp-file-watch-threshold 2500)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(yasnippet-snippets yasnippet validate auctex jupyter ein jedi realgud forge cython-mode lsp-jedi lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein jedi realgud forge cython-mode lsp-jedi lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vterm-always-compile-module t))
@@ -176,14 +176,15 @@
 ;; (use-package dap-lldb
 ;;   :ensure t)
 
+
+;; (require 'dap-gdb-lldb)
+;; M-x dap-gdb-lldb-setup
 (use-package dap-mode
   :ensure t)
   ;; :ensure dap-lldb
   ;; :config
   ;; (dap-lldb-debug-program "lldb-10")
 
-(use-package dap-mode
-  :ensure t)
 (use-package which-key
   :ensure t
   :config
