@@ -144,7 +144,11 @@
 (use-package lsp-ui
   :ensure t
   :after lsp-mode
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :bind
+  ("C-<down>" . lsp-ui-find-next-reference)
+  ("C-<up>" . lsp-ui-find-prev-reference)
+  )
 ;; (use-package company-lsp
 ;;   :ensure t
 ;;   :commands company-lsp)
@@ -234,9 +238,16 @@
   :ensure t)
 (use-package yaml-mode
   :ensure t)
-(use-package mmm-mode :ensure t)
+(use-package mmm-mode
+  :ensure t)
 ;; mmm-mako
-(load-file "~/.emacs.d/lisp/mmm-mako.el")
+
+;http://www.emacswiki.org/emacs/LoadPath
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+
+(require 'mmm-mako)
+;; (require 'mmm-mode)
+;; (load-file "~/.emacs.d/lisp/mmm-mako.el")
 ;; - Makefile
 (add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . makefile-gmake-mode))
 (add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . mmm-mode))
@@ -332,15 +343,17 @@
         )))
 
 
-;; Python
-
-;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
-
-
 (add-hook 'cmake-mode-hook
     (function (lambda ()
         (setq cmake-tab-width 4)
         )))
+
+(make-variable-buffer-local 'compile-command)
+
+;; Python
+
+;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
+
 
 
 ;; yas-next-field-or-maybe-expand
@@ -376,6 +389,8 @@
 (global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
 ;(global-set-key (kbd "C-c C-l") 'compile)
 (global-set-key (kbd "C-c m") 'recompile)
+(global-set-key (kbd "C-x f") 'find-file-at-point)
+(global-set-key (kbd "C-c M-f") 'set-fill-column)
 
 ; Let \C-cb insert buffer name
 (global-set-key "\C-cb" 'insert-buffer-name)
@@ -493,8 +508,6 @@
    kept-old-versions 2
    version-control t)       ; use versioned backups
 
-;http://www.emacswiki.org/emacs/LoadPath
-(add-to-list 'load-path "~/.emacs.d/lisp/")
 
 ;(require 'python-mode)
 ;; Set minor modes for Python
@@ -616,6 +629,7 @@
 ;; https://www.emacswiki.org/emacs/WinnerMode
 (winner-mode 1)
 
+(show-paren-mode 1)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
