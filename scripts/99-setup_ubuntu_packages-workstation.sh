@@ -16,3 +16,6 @@ sudo apt-get update && sudo apt-get install spotify-client
 wget -O- https://updates.signal.org/desktop/apt/keys.asc |  sudo apt-key add -
 echo "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" |  sudo tee -a /etc/apt/sources.list.d/signal-xenial.list
 sudo apt update && sudo apt install signal-desktop
+
+cargo install gping
+python3 -m pip install twine && ln -s ~/doc/it/login/.pypirc ~/.pypirc

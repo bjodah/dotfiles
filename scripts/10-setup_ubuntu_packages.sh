@@ -12,7 +12,7 @@ sudo apt-get --assume-yes --no-install-recommends install \
      liblapack-dev liblzma-dev libmagick++-dev libmpfr-dev libncurses5-dev \
      libopenmpi-dev libpng-dev libreadline6-dev libsdl2-dev libsdl2-gfx-dev \
      libsdl2-image-dev libsdl2-mixer-dev libsdl2-net-dev libsdl2-ttf-dev \
-     libsqlite3-dev libssl-dev libsuitesparse-dev libtool libtool-bin \
+     libsqlite3-dev libssl-dev libsuitesparse-dev libtinfo5 libtool libtool-bin \
      libwebsockets-dev libxml2-dev libxrender1 libxslt1-dev libyaml-dev \
      libzmq3-dev libzstd-dev lmodern lzma lzma-dev make mingw-w64 \
      ninja-build nodejs npm pandoc parallel petsc-dev python2-dev \
@@ -31,4 +31,4 @@ sudo apt-get update
 sudo apt-get --assume-yes --no-install-recommends install \
     clang-11 libllvm11 libclang-11-dev lldb-11 llvm-11 llvm-11-dev llvm-11-runtime clang-format-11 clang-tidy-11 libomp-11-dev libclang-11-dev
 python3 -m pip install --upgrade-strategy=eager --upgrade pip setuptools wheel
-python3 -m pip install libclang && python3 -c "from clang.cindex import TypeKind"
+python3 -m pip install libclang && python3 -c "from clang.cindex import Index; Index.create()"

@@ -1,0 +1,12 @@
+diff --git a/boost_1_74_0/boost/rational.hpp b/boost_1_74_0/boost/rational.hpp
+index f33bc3b..afe9983 100644
+--- a/boost_1_74_0/boost/rational.hpp
++++ b/boost_1_74_0/boost/rational.hpp
+@@ -902,7 +902,7 @@ BOOST_CXX14_CONSTEXPR void rational<IntType>::normalize()
+     num /= g;
+     den /= g;
+ 
+-    if (den < -(std::numeric_limits<IntType>::max)()) {
++    if (std::numeric_limits<IntType>::is_bounded && den < -(std::numeric_limits<IntType>::max)()) {
+         BOOST_THROW_EXCEPTION(bad_rational("bad rational: non-zero singular denominator"));
+     }

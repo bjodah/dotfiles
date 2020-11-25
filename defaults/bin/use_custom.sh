@@ -67,11 +67,13 @@ if [[ "$(hostname)" == "urania" ]]; then
     fi
 elif [[ "$(hostname)" == "yoga720" ]]; then
     export CC=gcc-10 CXX=g++-10 FC=gfortran-10
-    export SUNDIALS_ROOT=/opt/sundials-${SUNDIALS_VERSION:-5.4.0-klu-openblas}
+    export BOOST_ROOT=/opt/boost-1.74.p
+    export CXXFLAGS="-isystem ${BOOST_ROOT}/include $CXXFLAGS"
+    export SUNDIALS_ROOT=/opt/sundials-${SUNDIALS_VERSION:-5.5.0-debug}
     if [[ ! -d $SUNDIALS_ROOT ]]; then
         >&2 echo "No such directory: $SUNDIALS_ROOT"
     fi
-    export PYODESYS_CVODE_FLAGS="-isystem ${SUNDIALS_ROOT}/include" \
+    export PYODESYS_CVODE_FLAGS="-isystem ${SUNDIALS_ROOT}/include -isystem /usr/include/suitesparse" \
     export PYODESYS_CVODE_LDFLAGS="-Wl,--disable-new-dtags -Wl,-rpath,${SUNDIALS_ROOT}/lib -L${SUNDIALS_ROOT}/lib"
 
     if [[ ! -z ${PY} ]]; then
@@ -92,11 +94,11 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         export CMAKE_PREFIX_PATH=$SYMENGINE_DIR:$CMAKE_PREFIX_PATH
     fi
 
-    for PREFIX in /opt/openblas-0.3.11pre /opt/boost_1_74_p $SUNDIALS_ROOT; do
-        add_prefix_to_compiler_env_vars $PREFIX
-    done
-    sundials_fix
-    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-11:$SYMENGINE_DIR
+    # for PREFIX in /opt/openblas-0.3.11pre /opt/boost_1_74_p $SUNDIALS_ROOT; do
+    #     add_prefix_to_compiler_env_vars $PREFIX
+    # done
+    # sundials_fix
+    export CMAKE_PREFIX_PATH=$SUNDIALS_ROOT:/usr/lib/llvm-11:$SYMENGINE_DIR
     export OPENBLAS_NUM_THREADS=1
     export MPLBACKEND=GTK3Agg
 fi

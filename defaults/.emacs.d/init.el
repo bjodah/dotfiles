@@ -332,6 +332,7 @@
         (yas-global-mode t)
 	(electric-pair-mode)
         (setq c-basic-offset 4)
+        (which-function-mode t)
         (add-hook 'write-contents-functions
                   (lambda()
                     (save-excursion
