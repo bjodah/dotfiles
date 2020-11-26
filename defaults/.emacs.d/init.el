@@ -226,7 +226,7 @@
   :bind ("C-<tab>" . jedi:complete)
   :init
   (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t)) 
+  (setq jedi:complete-on-dot t))
 (use-package ein :ensure t)
 (use-package jupyter :ensure t)
 (use-package tex
@@ -352,6 +352,7 @@
 (make-variable-buffer-local 'compile-command)
 
 ;; Python
+(setq python-shell-interpreter "python3")
 
 ;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
 
