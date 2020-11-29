@@ -1,4 +1,4 @@
-sudo apt-get --assume-yes --no-install-recommends install nvidia-cuda-toolkit gimp htop iotop docker.io aufs-tools libsfml-dev podman
+sudo apt-get --assume-yes --no-install-recommends install nvidia-cuda-toolkit gimp htop iotop docker.io aufs-tools libsfml-dev podman python3-pyglet python3-pygame-sdl2
 
 
 curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | sudo apt-key add -
