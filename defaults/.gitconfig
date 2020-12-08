@@ -31,7 +31,7 @@
 
     co   = commit --verbose
     coa  = commit -a --verbose
-    coaa = commit -a --verbose --amend
+    coaa = commit -a --verbose --amend --no-edit
     com  = commit -m
     coam = commit -a -m
 
