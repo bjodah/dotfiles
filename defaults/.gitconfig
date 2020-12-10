@@ -31,12 +31,13 @@
 
     co   = commit --verbose
     coa  = commit -a --verbose
-    coaa = commit -a --verbose --amend
+    coaa = commit -a --verbose --amend --no-edit
     com  = commit -m
     coam = commit -a -m
 
     ch  = checkout
     chb = checkout -b
+    chbo = checkout -b $1 --track refs/remotes/origin/$1
 
     d  = diff
     dc = diff --cached

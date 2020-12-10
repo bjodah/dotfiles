@@ -352,8 +352,6 @@
 
 (make-variable-buffer-local 'compile-command)
 
-;; Python
-(setq python-shell-interpreter "python3")
 
 ;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
 

@@ -7,7 +7,7 @@ if [ -z "$TMUX" ]; then
     exit 1
 fi
 
-EMACS_SOCKET="/tmp/emx-tmux-$(tmux display -p '#{pid}')"
+EMACS_SOCKET="/tmp/emx-tmux-$(tmux display -p '#{pid}')-$(tmux display -p '#S')"
 
 client () {
   set -x
@@ -35,5 +35,3 @@ do
     echo "...wating for emacs daemon to create socket: ${EMACS_SOCKET}"
     sleep 1
 done
-
-#client "$@" || ((server &) && (sleep 3; client "$@"))
