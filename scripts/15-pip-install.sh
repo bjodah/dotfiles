@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 # usage: pass --user flag if running on workstation, and not in docker build.
-python3 -m pip install \
+python3 -m pip install $@ \
         appdirs argh ase asv black bokeh bottle cclib check-manifest CherryPy \
         cython epc flake8 future git-archive-all holoviews[recommended] \
         ipykernel ipython ipywidgets isort jedi-language-server joblib jupyter \
@@ -9,7 +9,7 @@ python3 -m pip install \
         periodictable plotly pudb pulp pybind11 pycparser pycparser-fake-libc \
         "pygments>=2.4.1" pygraphviz pylatex pyparsing pytest pytest-cov \
         pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb \
-        pytest-xdist python-language-server[all] quantities rstcheck \
+        pytest-xdist python-language-server[all] pyyaml quantities rstcheck \
         scikit-image scikit-optimize scipy setuptools setuptools_scm sphinx \
         sphinx_rtd_theme statsmodels sympy termplotlib toolz tqdm trepan3k \
         virtualenv wheel wurlitzer xarray
