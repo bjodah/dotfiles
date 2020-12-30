@@ -296,13 +296,15 @@
   (validate-setq
    ;; yas-verbosity 1
    yas-wrap-around-region t)
-  (with-eval-after-load 'yasnippet
-    (validate-setq yas-snippet-dirs '(yasnippet-snippets-dir)))
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
-  (yas-reload-all)
+  ;; (with-eval-after-load 'yasnippet
+  ;;   (validate-setq yas-snippet-dirs '(yasnippet-snippets-dir)))
+  ;; (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
+  ;; (yas-reload-all)
   )
 (use-package yasnippet-snippets
-  :ensure t)
+  :ensure t
+  :defer t
+  )
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

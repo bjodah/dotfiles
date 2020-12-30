@@ -87,7 +87,7 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         : # echo "Not using any particular python version"
     fi
 
-    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-46090cf-dbg}
+    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-rel}  # 46090cf-dbg
     if [[ ! -d $SYMENGINE_DIR ]]; then
         >&2 echo "No such directory: $SYMENGINE_DIR"
     else

@@ -7,7 +7,7 @@ python3 -m pip install $@ \
         mako matplotlib mogli mpld3 mypy nbconvert nbsphinx networkx \
         Nikola[extras] numericalunits numpy numpydoc pandas param \
         periodictable plotly pudb pulp pybind11 pycparser pycparser-fake-libc \
-        "pygments>=2.4.1" pygraphviz pylatex pyparsing pytest pytest-cov \
+        "pygments>=2.4.1" pygraphviz pylatex pyparsing pytest pytest-black pytest-cov \
         pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb \
         pytest-xdist python-language-server[all] pyyaml quantities rstcheck \
         scikit-image scikit-optimize scipy setuptools setuptools_scm sphinx \
