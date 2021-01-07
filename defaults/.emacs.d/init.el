@@ -3,6 +3,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
  '(ein:output-area-inlined-images t)
  '(inhibit-startup-screen t)
  '(lsp-file-watch-threshold 2500)
@@ -17,7 +19,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 100 :width normal)))))
 
 
 (if (< emacs-major-version 27)
@@ -120,7 +122,8 @@
 (use-package lsp-mode
   :ensure t
   :commands lsp
-  ;; :custom
+  :custom
+  (lsp-file-watch-threshold 4000)
   ;; (lsp-rust-server 'rls)
   ;; (lsp-rust-rls-server-command "/opt/cargo/bin/rls")
   :hook (
@@ -215,6 +218,7 @@
 )
 
 (use-package cython-mode :ensure t)
+(add-hook 'cython-mode-hook (lambda () (which-function-mode -1))) ;; https://github.com/bbatsov/prelude/issues/940#issuecomment-210505475
 (use-package dockerfile-mode :ensure t)
 (use-package magit
   :defer t
@@ -310,7 +314,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
 
-;(add-hook 'after-init-hook #'global-flycheck-mode)
+(add-hook 'after-init-hook (lambda () (load-theme 'monokai)))
 
 (add-hook 'gdb-mode-hook
     (function (lambda ()

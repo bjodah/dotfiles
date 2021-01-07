@@ -41,11 +41,11 @@ if [[ "$(hostname)" == "urania" ]]; then
     export CPLUS_INCLUDE_PATH=/opt/eigen-3.3.7/include
     export SUNDIALS_INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION:-5.3.0-rel-klu-lapack}
 
-    export SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-0e3b6f5-rel}
-    if [[ ! -d $SYMENGINE_DIR ]]; then
-        >&2 echo "No such directory: $SYMENGINE_DIR"
+    export SymEngine_DIR=/opt/symengine-${SYMENGINE_VERSION:-0e3b6f5-rel}
+    if [[ ! -d $SymEngine_DIR ]]; then
+        >&2 echo "No such directory: $SymEngine_DIR"
     fi
-    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:$SYMENGINE_DIR
+    export CMAKE_PREFIX_PATH=$SUNDIALS_INSTALL_DIR:/usr/lib/llvm-8:$SymEngine_DIR
 
     for PREFIX in /opt/openblas-0.3.9 $SUNDIALS_INSTALL_DIR /opt/boost_1_73_p /opt/py36; do
         add_prefix_to_compiler_env_vars $PREFIX
@@ -87,18 +87,18 @@ elif [[ "$(hostname)" == "yoga720" ]]; then
         : # echo "Not using any particular python version"
     fi
 
-    SYMENGINE_DIR=/opt/symengine-${SYMENGINE_VERSION:-rel}  # 46090cf-dbg
-    if [[ ! -d $SYMENGINE_DIR ]]; then
-        >&2 echo "No such directory: $SYMENGINE_DIR"
+    SymEngine_DIR=/opt/symengine-${SYMENGINE_VERSION:-rel}  # 46090cf-dbg
+    if [[ ! -d $SymEngine_DIR ]]; then
+        >&2 echo "No such directory: $SymEngine_DIR"
     else
-        export CMAKE_PREFIX_PATH=$SYMENGINE_DIR:$CMAKE_PREFIX_PATH
+        export CMAKE_PREFIX_PATH=$SymEngine_DIR:$CMAKE_PREFIX_PATH
     fi
 
     # for PREFIX in /opt/openblas-0.3.11pre /opt/boost_1_74_p $SUNDIALS_ROOT; do
     #     add_prefix_to_compiler_env_vars $PREFIX
     # done
     # sundials_fix
-    export CMAKE_PREFIX_PATH=$SUNDIALS_ROOT:/usr/lib/llvm-11:$SYMENGINE_DIR
+    export CMAKE_PREFIX_PATH=$SUNDIALS_ROOT:/usr/lib/llvm-11:$SymEngine_DIR
     export OPENBLAS_NUM_THREADS=1
     export MPLBACKEND=GTK3Agg
 fi
