@@ -1,5 +1,5 @@
 #!/bin/bash -xe
-OPENBLAS_VERSION=${1:-0.3.12}
+OPENBLAS_VERSION=${1:-0.3.13}
 curl -Ls https://github.com/xianyi/OpenBLAS/releases/download/v${OPENBLAS_VERSION}/OpenBLAS-${OPENBLAS_VERSION}.tar.gz | tar xz -C /build
 for VARIANT in debug release; do
     SRC_DIR=/build/OpenBLAS-${OPENBLAS_VERSION}

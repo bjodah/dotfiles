@@ -1,5 +1,5 @@
 #!/bin/bash -xe
-SUNDIALS_VERSION=${1:-5.5.0}
+SUNDIALS_VERSION=${1:-5.6.1}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
 
 if [ ! -d $SRC_DIR ]; then
@@ -21,7 +21,11 @@ for VARIANT in debug release; do
     fi
     cd ${BUILD_DIR}
     if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
-        OPENBLAS_ROOT=/opt/openblas-0.3.12-${VARIANT}
+        OPENBLAS_ROOT=/opt/openblas-0.3.13-${VARIANT}
+        if [ ! -d "${OPENBLAS_ROOT}" ]; then
+            >&2 echo "Not a directory: ${OPENBLAS_ROOT}"
+            exit 1
+        fi
     fi
     export LDFLAGS=-Wl,-rpath-link,${OPENBLAS_ROOT}/lib
     if [[ $VARIANT == debug ]]; then
