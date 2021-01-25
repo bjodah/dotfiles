@@ -73,6 +73,7 @@
 
     sm = submodule
     smu = submodule update --recursive --init
+    smp = submodule foreach --recursive 'git pull'
 
     t = tag
 

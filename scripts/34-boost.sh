@@ -4,11 +4,11 @@ export CC=gcc-$GCC_MAJ
 export CXX=g++-$GCC_MAJ
 export FC=gfortran-$GCC_MAJ
 BOOST_MAJOR=1
-BOOST_MINOR=74
+BOOST_MINOR=75
 BOOST_PATCH=0
 VER_P=${BOOST_MAJOR}.${BOOST_MINOR}.${BOOST_PATCH}
 VER_U=${BOOST_MAJOR}_${BOOST_MINOR}_${BOOST_PATCH}
-PATCH=$(realpath $(dirname $BASH_SOURCE))/boost174-rational-gh41.patch
+PATCH=$(realpath $(dirname $BASH_SOURCE))/boost175-rational-gh41.patch
 cd /build
 #curl -Ls https://dl.bintray.com/boostorg/release/${VER_P}/source/boost_${VER_U}.tar.bz2 | tar xjv
 patch -p1 <$PATCH

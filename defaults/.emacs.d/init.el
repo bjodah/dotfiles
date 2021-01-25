@@ -4,13 +4,13 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
+   '("fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7" "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
  '(ein:output-area-inlined-images t)
  '(inhibit-startup-screen t)
  '(lsp-file-watch-threshold 2500)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein jedi realgud forge cython-mode lsp-jedi lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein jedi realgud forge cython-mode lsp-jedi lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vterm-always-compile-module t))
@@ -274,7 +274,8 @@
 (add-to-list 'auto-mode-alist '("\\.h.mako\\'" . mmm-mode))
 (mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
 
-(use-package monokai-theme :ensure t)
+;(use-package monokai-theme :ensure t)
+(use-package tangotango-theme :ensure t)
 
 
 ;; yasnippet
@@ -314,7 +315,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
 
-(add-hook 'after-init-hook (lambda () (load-theme 'monokai)))
+(add-hook 'after-init-hook (lambda () (load-theme 'tangotango)))
 
 (add-hook 'gdb-mode-hook
     (function (lambda ()
