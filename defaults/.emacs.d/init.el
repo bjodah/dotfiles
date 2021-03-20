@@ -153,16 +153,24 @@
   ("C-<down>" . lsp-ui-find-next-reference)
   ("C-<up>" . lsp-ui-find-prev-reference)
   )
-;; (use-package company-lsp
+;; (use-package company-lsp <--- deprecated apparently company-capf is used instead
 ;;   :ensure t
 ;;   :commands company-lsp)
-(use-package lsp-jedi
+
+;; (use-package lsp-jedi <--- I found jedi to be somewhat buggy, going to try ms instead
+;;   :ensure t
+;;   :config
+;;   (with-eval-after-load "lsp-mode"
+;;     (add-to-list 'lsp-disabled-clients 'pyls)
+;;     ;; (add-to-list 'lsp-enabled-clients 'jedi)
+;;     ))
+
+(use-package lsp-python-ms
   :ensure t
-  :config
-  (with-eval-after-load "lsp-mode"
-    (add-to-list 'lsp-disabled-clients 'pyls)
-    ;; (add-to-list 'lsp-enabled-clients 'jedi)
-    ))
+  :init (setq lsp-python-ms-auto-install-server t)
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-python-ms)
+                          (lsp))))  ; or lsp-deferred
 
 (use-package rust-mode
   :ensure t

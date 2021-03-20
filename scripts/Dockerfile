@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20210119
+FROM ubuntu:focal-20210217
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
@@ -16,7 +16,7 @@ RUN apt-get update && \
     locale-gen en_US.UTF-8 && \
     apt-get dist-upgrade -y && \
     /opt/10-setup_ubuntu_packages.sh && \
-    mkdir /build && /opt/13-build-emacs.sh && \
+    /opt/13-build-emacs.sh && \
     /opt/14-ccls.sh && \
     /opt/15-pip-install.sh && \
     /opt/19-java.sh && \
@@ -28,6 +28,4 @@ RUN apt-get update && \
     mkdir /opt/cargo /opt/rustup; CARGO_HOME=/opt/cargo PATH="$CARGO_HOME/bin:$PATH" RUSTUP_HOME=/opt/rustup /opt/67-rust.sh && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
-COPY *.diff /opt/
-RUN        ls -l /opt/*.diff; sed -i 's/\.patch/.diff/g; s/#curl/curl/g' /opt/34-boost.sh; /opt/34-boost.sh
 #RUN        /opt/70-julia.sh
