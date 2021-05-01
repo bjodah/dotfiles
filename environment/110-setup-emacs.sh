@@ -1,4 +1,8 @@
 #!/bin/bash
-rm -f ~/.emacs.d && \
-ln -s /opt/bjodah-dotfiles/defaults/.emacs.d ~/.emacs.d && \
+set -euxo pipefail
+TARGET=$1
+rm -f ~/.emacs.d
+[[ -f $TARGET/defaults/.emacs.d/init.el ]]
+ln -s $TARGET/defaults/.emacs.d ~/.emacs.d
+cd /opt
 emacs -nw --batch --eval '(load "110-setup-emacs.el")'
