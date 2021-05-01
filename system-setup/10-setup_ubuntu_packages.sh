@@ -15,7 +15,7 @@ sudo apt-get --assume-yes --no-install-recommends install \
      libsqlite3-dev libssl-dev libsuitesparse-dev libtinfo5 libtool libtool-bin \
      libwebsockets-dev libxml2-dev libxrender1 libxslt1-dev libyaml-dev \
      libzmq3-dev libzstd-dev lmodern lzma lzma-dev make mingw-w64 \
-     ninja-build nodejs npm pandoc parallel petsc-dev python2-dev \
+     ninja-build nodejs npm pandoc parallel petsc-dev poppler-utils python2-dev \
      python3-dev python3-pip python3-setuptools python3-wheel ripgrep rr \
      rsync scons ssh sudo texinfo texlive-bibtex-extra texlive-fonts-extra \
      texlive-fonts-recommended texlive-lang-european texlive-latex-extra \

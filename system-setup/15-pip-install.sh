@@ -1,7 +1,8 @@
 #!/bin/bash -xe
 # usage: pass --user flag if running on workstation, and not in docker build.
-python3 -m pip install $@ \
-        appdirs argh ase asv black bokeh bottle cclib check-manifest CherryPy \
+${PYTHON:-python3} -m pip install $@ --upgrade pip
+${PYTHON:-python3} -m pip install $@ \
+        appdirs argcomplete argh ase asv black bokeh bottle cclib check-manifest CherryPy \
         cython epc flake8 future git-archive-all holoviews[recommended] \
         ipykernel ipython ipywidgets isort jedi-language-server joblib jupyter \
         mako matplotlib mogli mpld3 mypy nbconvert nbsphinx networkx \
@@ -14,8 +15,8 @@ python3 -m pip install $@ \
         sphinx_rtd_theme statsmodels sympy termplotlib toolz tqdm trepan3k \
         virtualenv wheel wurlitzer xarray
 
-python3 -m pip install --no-use-pep517 sqlalchemy
-python3 -m ipykernel install $@
-python3 -m jupyter nbextension enable $@ --py widgetsnbextension
-python3 -c "import matplotlib.pyplot as plt"
+${PYTHON:-python3} -m pip install --no-use-pep517 sqlalchemy
+${PYTHON:-python3} -m ipykernel install $@
+${PYTHON:-python3} -m jupyter nbextension enable $@ --py widgetsnbextension
+${PYTHON:-python3} -c "import matplotlib.pyplot as plt"
 rm -r ~/.cache/pip
