@@ -201,10 +201,38 @@
 ;; (require 'dap-gdb-lldb)
 ;; M-x dap-gdb-lldb-setup
 (use-package dap-mode
-  :ensure t)
-  ;; :ensure dap-lldb
-  ;; :config
-  ;; (dap-lldb-debug-program "lldb-10")
+;;  :ensure t)
+  :ensure t
+  :defer
+  :custom
+  (dap-auto-configure-mode t                           "Automatically configure dap.")
+  (dap-auto-configure-features
+   '(sessions locals breakpoints expressions tooltip)  "Remove the button panel in the top.")
+  :config
+  (require 'dap-lldb)
+  (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode-11"))
+  (setq dap-lldb-debugged-program-function (lambda () (read-file-name "Select file to debug.")))
+
+  ;;; default debug template for (c++)
+  (dap-register-debug-template
+   "C++ LLDB dap"
+   (list :type "lldb-vscode"
+         :cwd nil
+         :args nil
+         :request "launch"
+         :program nil))
+  
+  (defun dap-debug-create-or-edit-json-template ()
+    "Edit the C++ debugging configuration or create + edit if none exists yet."
+    (interactive)
+    (let ((filename (concat (lsp-workspace-root) "/launch.json"))
+	  (default "~/.emacs.d/default-launch.json"))
+      (unless (file-exists-p filename)
+	(copy-file default filename))
+      (find-file-existing filename))))
+
+
+
 
 (use-package which-key
   :ensure t
