@@ -1,6 +1,7 @@
 #!/bin/bash -xe
-SUNDIALS_VERSION=${1:-5.6.1}
+SUNDIALS_VERSION=${1:-5.7.0}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
+export CC=${CC:-"gcc-11"}
 
 if [ ! -d $SRC_DIR ]; then
     curl -Ls https://github.com/llnl/sundials/releases/download/v${SUNDIALS_VERSION}/sundials-${SUNDIALS_VERSION}.tar.gz | tar xz -C /build
@@ -21,7 +22,7 @@ for VARIANT in debug release; do
     fi
     cd ${BUILD_DIR}
     if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
-        OPENBLAS_ROOT=/opt/openblas-0.3.13-${VARIANT}
+        OPENBLAS_ROOT=/opt/openblas-0.3.15-${VARIANT}
         if [ ! -d "${OPENBLAS_ROOT}" ]; then
             >&2 echo "Not a directory: ${OPENBLAS_ROOT}"
             exit 1

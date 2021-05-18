@@ -22,23 +22,3 @@ sudo apt-get --assume-yes --no-install-recommends install \
      texlive-latex-recommended texlive-science texlive-xetex time tk-dev \
      tmux tree trilinos-dev unzip valgrind wget wine-stable wkhtmltopdf \
      xorg-dev xutils-dev zip zlib1g-dev zstd
-
-wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
-UBUNTU_CODENAME=$(grep UBUNTU_CODENAME /etc/os-release | cut -d= -f2)
-echo "deb http://apt.llvm.org/$UBUNTU_CODENAME/ llvm-toolchain-$UBUNTU_CODENAME-11 main" | sudo tee -a /etc/apt/sources.list
-echo "deb-src http://apt.llvm.org/$UBUNTU_CODENAME/ llvm-toolchain-$UBUNTU_CODENAME-11 main" | sudo tee -a /etc/apt/sources.list
-sudo apt-get update
-sudo apt-get --assume-yes --no-install-recommends install \
-    clang-11 libllvm11 libclang-11-dev lldb-11 llvm-11 llvm-11-dev llvm-11-runtime clang-format-11 clang-tidy-11 libomp-11-dev libclang-11-dev
-python3 -m pip install --upgrade-strategy=eager --upgrade pip setuptools wheel
-python3 -m pip install libclang && python3 -c "from clang.cindex import Index; Index.create()"
-
-wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
-echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
-sudo apt-get update
-sudo apt-get -y install \
-     intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic \
-     intel-oneapi-compiler-fortran
-sudo apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

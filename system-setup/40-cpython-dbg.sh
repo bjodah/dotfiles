@@ -4,7 +4,7 @@ mkdir -p $BUILD_DIR
 cd $BUILD_DIR
 if [ ! -e $BUILD_DIR/config.status ]; then
     curl -Ls https://www.github.com/python/cpython/archive/3.9.tar.gz | tar xz -C $BUILD_DIR --strip-components=1 
-    CC=gcc-10 CXX=g++-10 CFLAGS="-Og -g -ggdb3" ./configure \
+    CC=gcc-11 CXX=g++-11 CFLAGS="-Og -g -ggdb3" ./configure \
       --without-pymalloc \
       --with-valgrind \
       --with-pydebug \
