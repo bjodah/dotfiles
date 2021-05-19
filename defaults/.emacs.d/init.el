@@ -10,7 +10,7 @@
  '(lsp-file-watch-threshold 2500)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein jedi realgud forge cython-mode lsp-jedi lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vterm-always-compile-module t))
@@ -170,6 +170,16 @@
 ;;     ;; (add-to-list 'lsp-enabled-clients 'jedi)
 ;;     ))
 
+;; (use-package jedi
+;;   :ensure t
+;;   :bind ("C-<tab>" . jedi:complete)
+;;   :init
+;;   (add-hook 'python-mode-hook 'jedi:setup)
+;;   (setq jedi:complete-on-dot t))
+
+;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
+
+
 (use-package lsp-python-ms
   :ensure t
   :init (setq lsp-python-ms-auto-install-server t)
@@ -267,12 +277,7 @@
 (use-package forge
   :after magit)
 (use-package realgud :ensure t)
-(use-package jedi
-  :ensure t
-  :bind ("C-<tab>" . jedi:complete)
-  :init
-  (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t))
+
 (use-package ein :ensure t)
 (use-package jupyter :ensure t)
 (use-package tex
@@ -401,7 +406,6 @@
 (make-variable-buffer-local 'compile-command)
 
 
-;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
 
 
 
