@@ -13,6 +13,8 @@
    '(all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
+ '(vc-git-grep-template
+   "git --no-pager grep --recurse-submodules -n <C> -e <R> -- <F>")
  '(vterm-always-compile-module t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

@@ -65,6 +65,8 @@
 
     rbip = "!git rebase -i $(git parent)"
     re = remote -v
+    #root = "!f() { ROOT=`git rev-parse --show-superproject-working-tree`; [ -z \"$ROOT\" ] && git rev-parse --show-toplevel || echo \"$ROOT\"; }; f"
+    recursive-root = "!git-recursive-root"
 
     s  = status
     ss = status -s

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+ROOT=`git rev-parse --show-superproject-working-tree`
+COUNTER=1
+while [ ! -z "$ROOT" ]
+do
+    cd "$ROOT"
+    ROOT=`git rev-parse --show-superproject-working-tree`
+    COUNTER=$(($COUNTER+1))
+    if [ $COUNTER -gt 100 ]; then
+        >&2 echo "Maximum recursion depth in $0 reached"
+        exit 1
+    fi
+done
+git rev-parse --show-toplevel
