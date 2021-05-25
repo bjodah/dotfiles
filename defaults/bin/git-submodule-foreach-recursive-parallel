@@ -1,0 +1,8 @@
+#!/bin/sh
+# -*- mode: shell-script -*-
+
+# This script requires xargs, if unavailable perhaps look at:
+# https://github.com/stt-systems/parallel_foreach_submodule
+git submodule foreach --recursive --quiet pwd | xargs -P`nproc` -I{} $0 -c "cd {} && $*"
+
+# TODO: this will fail if the command executed changes what submodules are present
