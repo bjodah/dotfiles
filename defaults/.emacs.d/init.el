@@ -29,6 +29,7 @@
 )
 (if window-system
     (toggle-scroll-bar -1)
+  (xterm-mouse-mode)
 )
 (if (functionp 'tool-bar-mode)
     (tool-bar-mode 0)
