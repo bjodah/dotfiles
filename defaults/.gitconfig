@@ -48,7 +48,8 @@
     gr = grep --recurse-submodules
 
     l  = log
-    ll = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=short
+    ll = log --decorate --date=short --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]"
+    lt = log --decorate --date=short --graph --format="%C(auto)%h%C(reset) %C(green)%ar%C(reset) %C(blue)(%an)%C(reset) %C(auto)%d%C(reset) - %s"
 
     # list aliases
     la = "!git config -l | grep alias | cut -c 7-"
