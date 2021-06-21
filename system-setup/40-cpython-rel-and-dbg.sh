@@ -17,9 +17,9 @@ fi
 for VARIANT in debug release; do
     if [[ $VARIANT == debug ]]; then
         CONFIGURE_FLAGS="--without-pymalloc --with-valgrind --with-pydebug"
-        export CFLAGS="-Og -g -ggdb3 ${CFLAGS:-}"
+        export CFLAGS="-Og -g3 ${CFLAGS:-}"
     elif [[ $VARIANT == release ]]; then
-        CONFIGURE_FLAGS=
+        CONFIGURE_FLAGS=""
         export CFLAGS="-O2 ${CFLAGS:-}"
     else
         >&2 echo "Unkown VARIANT: $VARIANT"
@@ -33,7 +33,7 @@ for VARIANT in debug release; do
     cp -ra $SRC_DIR $BUILD_DIR
     cd $BUILD_DIR
     if [ ! -e $BUILD_DIR/config.status ]; then
-        CFLAGS="-Og -g -ggdb3" ./configure \
+        ./configure \
               ${CONFIGURE_FLAGS} \
               --verbose \
               --prefix=${INSTALL_DIR} \
