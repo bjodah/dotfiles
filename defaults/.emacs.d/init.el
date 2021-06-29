@@ -301,7 +301,7 @@
 
 ;http://www.emacswiki.org/emacs/LoadPath
 (add-to-list 'load-path "~/.emacs.d/lisp/")
-
+(require 'sln-mode)
 (require 'mmm-mako)
 ;; (require 'mmm-mode)
 ;; (load-file "~/.emacs.d/lisp/mmm-mako.el")
