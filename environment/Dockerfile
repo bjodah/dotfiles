@@ -21,7 +21,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
 RUN \
-    CPATH=/opt/eigen-3.4-rc1/include/eigen3 python3 -m pip install accupy
+    CPATH=/opt/eigen-3.4-rc1/include/eigen3 CC=gcc-10 CXX=g++-10 python3 -m pip install accupy
 # RUN \
 #         cd /tmp && \
 #         git clone --branch clang_12 git://github.com/include-what-you-use/include-what-you-use && \

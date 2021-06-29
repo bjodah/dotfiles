@@ -16,13 +16,15 @@
  '(vc-git-grep-template
    "git --no-pager grep --recurse-submodules -n <C> -e <R> -- <F>")
  '(vterm-always-compile-module t))
+(if (string-match-p "^Linux" (shell-command-to-string "uname"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 100 :width normal)))))
-
+    (message "on MS Windows?")
+)
 
 (if (< emacs-major-version 27)
     (package-initialize)
@@ -53,8 +55,54 @@
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
 
-(use-package vterm
-  :ensure t)
+(if (string-match-p "^Linux" (shell-command-to-string "uname"))
+    (progn 
+
+      (use-package vterm
+        :ensure t)
+
+      (use-package rg
+        :ensure t
+        :ensure-system-package
+        (rg . ripgrep)
+        :config
+        (global-set-key (kbd "M-s g") 'rg)
+        (global-set-key (kbd "M-s d") 'rg-dwim))
+
+      ;; (require 'dap-gdb-lldb)
+      ;; M-x dap-gdb-lldb-setup
+      (use-package dap-mode
+        ;;  :ensure t)
+        :ensure t
+        :defer
+        :custom
+        (dap-auto-configure-mode t                           "Automatically configure dap.")
+        (dap-auto-configure-features
+         '(sessions locals breakpoints expressions tooltip)  "Remove the button panel in the top.")
+        :config
+        (require 'dap-lldb)
+        (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode-11"))
+        (setq dap-lldb-debugged-program-function (lambda () (read-file-name "Select file to debug.")))
+
+  ;;; default debug template for (c++)
+        (dap-register-debug-template
+         "C++ LLDB dap"
+         (list :type "lldb-vscode"
+               :cwd nil
+               :args nil
+               :request "launch"
+               :program nil))
+        
+        (defun dap-debug-create-or-edit-json-template ()
+          "Edit the C++ debugging configuration or create + edit if none exists yet."
+          (interactive)
+          (let ((filename (concat (lsp-workspace-root) "/launch.json"))
+	        (default "~/.emacs.d/default-launch.json"))
+            (unless (file-exists-p filename)
+	      (copy-file default filename))
+            (find-file-existing filename))))
+
+))
 
 (use-package flycheck
   :ensure t
@@ -73,14 +121,6 @@
 ;; Get packages
 (use-package use-package-ensure-system-package
   :ensure t)
-
-(use-package rg
-  :ensure t
-  :ensure-system-package
-  (rg . ripgrep)
-  :config
-  (global-set-key (kbd "M-s g") 'rg)
-  (global-set-key (kbd "M-s d") 'rg-dwim))
 
 ;; treemacs
 (use-package treemacs
@@ -209,43 +249,6 @@
 
 ;; (use-package dap-lldb
 ;;   :ensure t)
-
-
-;; (require 'dap-gdb-lldb)
-;; M-x dap-gdb-lldb-setup
-(use-package dap-mode
-;;  :ensure t)
-  :ensure t
-  :defer
-  :custom
-  (dap-auto-configure-mode t                           "Automatically configure dap.")
-  (dap-auto-configure-features
-   '(sessions locals breakpoints expressions tooltip)  "Remove the button panel in the top.")
-  :config
-  (require 'dap-lldb)
-  (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode-11"))
-  (setq dap-lldb-debugged-program-function (lambda () (read-file-name "Select file to debug.")))
-
-  ;;; default debug template for (c++)
-  (dap-register-debug-template
-   "C++ LLDB dap"
-   (list :type "lldb-vscode"
-         :cwd nil
-         :args nil
-         :request "launch"
-         :program nil))
-  
-  (defun dap-debug-create-or-edit-json-template ()
-    "Edit the C++ debugging configuration or create + edit if none exists yet."
-    (interactive)
-    (let ((filename (concat (lsp-workspace-root) "/launch.json"))
-	  (default "~/.emacs.d/default-launch.json"))
-      (unless (file-exists-p filename)
-	(copy-file default filename))
-      (find-file-existing filename))))
-
-
-
 
 (use-package which-key
   :ensure t
