@@ -11,7 +11,7 @@ fi
 
 cd "$ABS_REPO_PATH"/defaults
 for f in $(find . -maxdepth 1 -type f); do
-    DESTFILE="$HOME/$(basename \"$f\")"
+    DESTFILE="$HOME/$(basename "$f")"
     if [ -e "$DESTFILE" ]; then
         if [ -L "$DESTFILE" ]; then
 	    rm "$DESTFILE"
