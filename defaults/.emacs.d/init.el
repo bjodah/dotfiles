@@ -323,6 +323,10 @@
 (add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . mmm-mode))
 (mmm-add-mode-ext-class 'c++-mode "\\.hpp.mako\\'" 'mako)
+
+(add-to-list 'auto-mode-alist '("\\.ipp.mako\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.ipp.mako\\'" . mmm-mode))
+(mmm-add-mode-ext-class 'c++-mode "\\.ipp.mako\\'" 'mako)
 ;; - C
 (add-to-list 'auto-mode-alist '("\\.c.mako\\'" . c-mode))
 (add-to-list 'auto-mode-alist '("\\.c.mako\\'" . mmm-mode))
