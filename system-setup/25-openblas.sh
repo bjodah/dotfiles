@@ -18,7 +18,7 @@ for VARIANT in debug release; do
           -DCMAKE_BUILD_TYPE=${VARIANT^^} \
           -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
           -DBUILD_SHARED_LIBS=ON \
-          ${SRC_DIR}
+          ${@:2} ${SRC_DIR}
     cmake --build .
     cmake --install .
     ln -sf ${BUILD_DIR}/compile_commands.json ${INSTALL_DIR}/

@@ -24,7 +24,7 @@ RUN apt-get update && \
     /opt/17-build-emacs.sh && \
     /opt/19-java.sh && \
     /opt/21-npm-language-servers.sh && \
-    /opt/25-openblas.sh && \
+    /opt/25-openblas.sh -DTARGET=NEHALEM -DARCH=x86_64 && \
     CFLAGS_RELEASE="-march=nehalem -O3" /opt/27-sundials.sh && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
