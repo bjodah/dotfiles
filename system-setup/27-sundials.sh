@@ -33,7 +33,7 @@ for VARIANT in debug release; do
         OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas_d.so
     elif [[ $VARIANT == release ]]; then
         OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas.so
-        export CFLAGS="-march=native -O3" 
+        export CFLAGS=${CFLAGS_RELEASE:-"-O3"}
     else
         >&2 echo "Unkown VARIANT: $VARIANT"
         exit 1

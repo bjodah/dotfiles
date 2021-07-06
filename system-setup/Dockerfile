@@ -25,7 +25,7 @@ RUN apt-get update && \
     /opt/19-java.sh && \
     /opt/21-npm-language-servers.sh && \
     /opt/25-openblas.sh && \
-    /opt/27-sundials.sh && \
+    CFLAGS_RELEASE="-march=nehalem -O3" /opt/27-sundials.sh && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
 COPY 3?-*.sh 4?-*.sh 6?-*.sh *.patch /opt/
