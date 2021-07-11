@@ -37,3 +37,6 @@ RUN /opt/33-libcxx-msan.sh && \
 
 COPY 7?-*.sh /opt/
 RUN /opt/75-boost.sh
+
+COPY 8?-*.sh /opt/
+RUN /opt/80-ispc.sh
