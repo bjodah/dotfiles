@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 sudo apt-get --assume-yes --no-install-recommends install \
-     automake bear biber binutils-dev bison ccache cmake coinor-libipopt-dev cppcheck \
+     automake bat bear biber binutils-dev bison ccache cmake coinor-libipopt-dev cppcheck \
      curl dot2tex doxygen dpkg-dev dvipng expect fd-find ffmpeg flex fonts-dejavu \
      fonts-humor-sans freeglut3-dev g++-10 g++-10-multilib gcc-10 \
      gcc-10-multilib gcovr gdb gfortran-10 git gnupg2 gnuplot graphviz \

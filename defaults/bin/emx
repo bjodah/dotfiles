@@ -10,13 +10,15 @@ fi
 EMACS_SOCKET="/tmp/emx-tmux-$(tmux display -p '#{pid}')-$(tmux display -p '#S')"
 
 client () {
-  set -x
-  emacsclient -nw --socket-name=$EMACS_SOCKET "$@"
-  set +x
+    set -x
+    emacsclient -nw --socket-name=$EMACS_SOCKET "$@"
+    set +x
 }
 
 server () {
-  emacs -nw --daemon=$EMACS_SOCKET
+    set -x
+    emacs -nw --daemon=$EMACS_SOCKET
+    set +x
 }
 
 if [[ ! -S "${EMACS_SOCKET}" ]]; then
