@@ -22,7 +22,7 @@ for VARIANT in debug release; do
     fi
     cd ${BUILD_DIR}
     if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
-        OPENBLAS_ROOT=/opt/openblas-0.3.15-${VARIANT}
+        OPENBLAS_ROOT=/opt/openblas-0.3.16-${VARIANT}
         if [ ! -d "${OPENBLAS_ROOT}" ]; then
             >&2 echo "Not a directory: ${OPENBLAS_ROOT}"
             exit 1
@@ -58,5 +58,6 @@ for VARIANT in debug release; do
           ${SRC_DIR}
     cmake --build .
     cmake --install .
+    cmake --build . --target clean
     ln -s ${BUILD_DIR}/compile_commands.json ${INSTALL_DIR}/
 done

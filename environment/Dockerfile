@@ -1,4 +1,4 @@
-FROM bjodah/bjodahimg20:21.5
+FROM bjodah/bjodahimg20:21.7
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
 COPY ???-*.sh *.el /opt/

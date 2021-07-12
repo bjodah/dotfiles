@@ -10,6 +10,7 @@ CC=clang-12 CXX=clang++-12 cmake \
   -DCLANG_RESOURCE_DIR=$(clang-12 -print-resource-dir)
         
 cmake --build Release 
-sudo cmake --build Release --target install 
+sudo cmake --build Release --target install
+cmake --build . --target clean
 cd /tmp
 rm -r ./ccls/

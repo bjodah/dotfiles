@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 export CC=clang-12 CXX=clang++-12
-export LLVM_ORG_VER=12.0.0
+export LLVM_ORG_VER=12.0.1
 export LLVM_MAJOR=$(echo $LLVM_ORG_VER | cut -f1 -d.)
 SRC_DIR=/build/llvm-project-llvmorg-${LLVM_ORG_VER}
 LIBCXXABI_INCLUDE=$SRC_DIR/libcxxabi/include
@@ -49,6 +49,7 @@ for VARIANT in debug release msan; do
         $SRC_DIR/libcxxabi
     cmake --build .
     cmake --build . --target install
+    cmake --build . --target clean
 
     cp $LIBCXXABI_INCLUDE/* /opt/libcxx${LLVM_MAJOR}-${VARIANT}/include/
 done

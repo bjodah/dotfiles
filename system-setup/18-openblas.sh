@@ -1,5 +1,5 @@
 #!/bin/bash -xe
-OPENBLAS_VERSION=${1:-0.3.15}
+OPENBLAS_VERSION=${1:-0.3.16}
 curl -Ls https://github.com/xianyi/OpenBLAS/releases/download/v${OPENBLAS_VERSION}/OpenBLAS-${OPENBLAS_VERSION}.tar.gz | tar xz -C /build
 for VARIANT in debug release; do
     SRC_DIR=/build/OpenBLAS-${OPENBLAS_VERSION}
@@ -21,5 +21,6 @@ for VARIANT in debug release; do
           ${@:2} ${SRC_DIR}
     cmake --build .
     cmake --install .
+    cmake --build . --target clean
     ln -sf ${BUILD_DIR}/compile_commands.json ${INSTALL_DIR}/
 done

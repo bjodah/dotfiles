@@ -2,7 +2,7 @@
 which make
 which bear
 set -x
-CPYTHON_VERSION=${1:-3.10}
+CPYTHON_VERSION=${1:-3.9}
 export CC=${CC:-"gcc-11"}
 export CXX=${CXX:-"g++-11"}
 set -u
@@ -51,5 +51,5 @@ for VARIANT in debug release; do
     ${INSTALL_DIR}/bin/python3 -m pip install cython pytest 
     ${INSTALL_DIR}/bin/python3 -m pip install numpy scipy matplotlib plotly tqdm ipywidgets notebook ipympl wheel appdirs ptvsd scikit-optimize
     make clean
-    ln -s $BUILD_DIR/compile_commands.json /opt/cpython-${VERSION}-${VARIANT}/
+    ln -s $BUILD_DIR/compile_commands.json /opt/cpython-${CPYTHON_VERSION}-${VARIANT}/
 done
