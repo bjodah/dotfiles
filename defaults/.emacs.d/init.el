@@ -6,6 +6,7 @@
  '(custom-safe-themes
    '("fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7" "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
  '(ein:output-area-inlined-images t)
+ '(flycheck-c/c++-gcc-executable "gcc-10")
  '(inhibit-startup-screen t)
  '(lsp-file-watch-threshold 2500)
  '(org-agenda-files '("~/doc/org/agendas.org"))
