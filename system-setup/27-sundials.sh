@@ -10,7 +10,7 @@ if [ ! -z "$OPENBLAS_ROOT" ]; then
     OPENBLAS_OVERRIDE=1
 fi
 
-for VARIANT in debug release; do
+for VARIANT in debug release single extended; do
     BUILD_DIR=/build/sundials-${SUNDIALS_VERSION}-${VARIANT}
     INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION}-${VARIANT}
     if [ -d "${INSTALL_DIR}" ]; then
@@ -29,18 +29,35 @@ for VARIANT in debug release; do
         fi
     fi
     export LDFLAGS=-Wl,-rpath-link,${OPENBLAS_ROOT}/lib
-    if [[ $VARIANT == debug ]]; then
-        OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas_d.so
-    elif [[ $VARIANT == release ]]; then
-        OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas.so
-        export CFLAGS=${CFLAGS_RELEASE:-"-O3"}
+    if [[ $VARIANT == extended ]]; then
+        CMAKE_ARGS='\
+                -DLAPACK_ENABLE=OFF \
+                -DKLU_ENABLE=OFF \
+                -DSUNDIALS_PRECISION:STRING="extended" \
+                -DSUNDIALS_INDEX_SIZE=64'
     else
-        >&2 echo "Unkown VARIANT: $VARIANT"
-        exit 1
+        if [[ $VARIANT == debug ]]; then
+            BUILD_TYPE=${VARIANT^}
+            OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas_d.so
+        else
+            export CFLAGS=${CFLAGS_RELEASE:-"-O3"}
+            BUILD_TYPE=Release
+            OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas.so
+            if [[ $VARIANT == single ]]; then
+                CMAKE_ARGS='-DSUNDIALS_PRECISION:STRING="single"'
+            fi
+        fi
+        CMAKE_ARGS="${CMAKE_ARGS} \
+          -DENABLE_LAPACK=ON \
+          -DLAPACK_LIBRARIES=${OPENBLAS_SO} \
+          -DSUNDIALS_INDEX_SIZE=32 \
+          -DENABLE_KLU=ON \
+          -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
+          -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu"
     fi
     cmake -G ${CMAKE_GENERATOR:-Ninja} \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-          -DCMAKE_BUILD_TYPE=${VARIANT^^} \
+          -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
           -DCMAKE_INSTALL_RPATH="${INSTALL_DIR}/lib;${OPENBLAS_ROOT}/lib" \
           -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
@@ -48,12 +65,6 @@ for VARIANT in debug release; do
           -DBUILD_STATIC_LIBS=OFF \
           -DEXAMPLES_ENABLE_C=ON \
           -DEXAMPLES_INSTALL=ON \
-          -DENABLE_LAPACK=ON \
-          -DLAPACK_LIBRARIES=${OPENBLAS_SO} \
-          -DSUNDIALS_INDEX_SIZE=32 \
-          -DENABLE_KLU=ON \
-          -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
-          -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu \
           ${CMAKE_ARGS} \
           ${SRC_DIR}
     cmake --build .
