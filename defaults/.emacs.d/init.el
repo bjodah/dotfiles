@@ -461,7 +461,7 @@
 (global-set-key (kbd "C-c m") 'recompile)
 (global-set-key (kbd "C-x f") 'find-file-at-point)
 (global-set-key (kbd "C-c M-f") 'set-fill-column)
-(global-set-key (kbd "C-c l") 'hl-line-mode)
+(global-set-key (kbd "C-c C-l") 'hl-line-mode)
 
 ; Let \C-cb insert buffer name
 (global-set-key "\C-cb" 'insert-buffer-name)
