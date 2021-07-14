@@ -22,6 +22,12 @@ RUN \
 
 RUN \
     CPATH=/opt/eigen-3.4-rc1/include/eigen3 CC=gcc-10 CXX=g++-10 python3 -m pip install accupy
+
+
+# Mistakes were made, we need sundials in a few more configs
+COPY 27-sundials-fix.sh /opt/
+RUN /opt/27-sundials-fix.sh
+
 # RUN \
 #         cd /tmp && \
 #         git clone --branch clang_12 git://github.com/include-what-you-use/include-what-you-use && \
