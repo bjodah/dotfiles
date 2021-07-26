@@ -28,6 +28,8 @@ RUN \
 COPY 27-sundials-fix.sh /opt/
 RUN /opt/27-sundials-fix.sh
 
+RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get install fish && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # RUN \
 #         cd /tmp && \
 #         git clone --branch clang_12 git://github.com/include-what-you-use/include-what-you-use && \
