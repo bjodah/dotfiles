@@ -28,7 +28,16 @@ RUN \
 COPY 27-sundials-fix.sh /opt/
 RUN /opt/27-sundials-fix.sh
 
-RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get install fish && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get --assume-yes install fish && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY init.el_ /root/emacs.d/init.el
+RUN emacs --batch --eval '(progn \
+(require (quote package))\
+(package-initialize)\
+(package-refresh-contents)\
+(package-install (quote use-package))\
+(load-file "~/.emacs.d/init.el"))'
+#RUN /root/1000a-fix-emacs.sh
 
 # RUN \
 #         cd /tmp && \
