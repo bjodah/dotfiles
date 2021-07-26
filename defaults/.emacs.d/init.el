@@ -462,6 +462,15 @@
 (global-set-key (kbd "C-x f") 'find-file-at-point)
 (global-set-key (kbd "C-c M-f") 'set-fill-column)
 (global-set-key (kbd "C-c C-l") 'hl-line-mode)
+(global-set-key (kbd "<f2>") 'other-window)
+(defun other-window-backward (&optional n)
+  "like C-x o, but in the other direction"
+  (interactive "p")
+  (if n
+      (other-window (- n))
+  (other-window -1)))
+(global-set-key (kbd "<f1>") 'other-window-backward)
+(global-set-key "\C-xp" 'other-window-backward)
 
 ; Let \C-cb insert buffer name
 (global-set-key "\C-cb" 'insert-buffer-name)
@@ -729,14 +738,6 @@
 (setq org-babel-python-command "python3")
 
 (setq python-shell-interpreter "python3")
-
-(defun other-window-backward (&optional n)
-  "like C-x o, but in the other direction"
-  (interactive "p")
-  (if n
-      (other-window (- n))
-  (other-window -1)))
-(global-set-key "\C-xp" 'other-window-backward)
 
 
 ;; (fset 'mark-to-space
