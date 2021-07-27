@@ -4,7 +4,7 @@ sudo apt-get --assume-yes --no-install-recommends install \
      curl dirmngr dot2tex doxygen dpkg-dev dvipng expect ffmpeg flex fonts-dejavu \
      fonts-humor-sans freeglut3-dev g++-10 g++-10-multilib gcc-10 \
      gcc-10-multilib gcovr gdb gfortran-10 git gnupg2 gnuplot graphviz \
-     hunspell imagemagick inkscape latexmk lcov less libacl1-dev libatomic1 libbz2-dev \
+     htop hunspell imagemagick inkscape latexmk lcov less libacl1-dev libatomic1 libbz2-dev \
      libc-dev libc6-dev-i386 libfontconfig1 libfreetype6-dev libgdbm-dev \
      libgif-dev libgit2-dev libgl1-mesa-dev libglfw3-dev libgmp-dev \
      libgnutls28-dev libgoogle-perftools-dev libgraphviz-dev libgsl-dev \

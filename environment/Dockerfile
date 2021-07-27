@@ -36,7 +36,16 @@ RUN emacs --batch --eval '(progn \
 (package-initialize)\
 (package-refresh-contents)\
 (package-install (quote use-package))\
-(load-file "~/.emacs.d/init.el"))'
+        (load-file "~/.emacs.d/init.el"))' && \
+        update-alternatives --install  /usr/bin/python python /usr/bin/python3 1000 && \
+        update-alternatives --install  /usr/bin/gcc gcc /usr/bin/gcc-11 1000 && \
+        update-alternatives --install  /usr/bin/g++ g++ /usr/bin/g++-11 1000 && \
+        update-alternatives --install  /usr/bin/gfortran gfortran /usr/bin/gfortran-11 1000 && \
+        update-alternatives --install  /usr/bin/clang clang /usr/bin/clang-12 1000 && \
+        update-alternatives --install  /usr/bin/clang++ clang++ /usr/bin/clang++-12 1000 && \
+        update-alternatives --install  /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000 && \
+        update-alternatives --install  /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 1000
+
 #RUN /root/1000a-fix-emacs.sh
 
 # RUN \
