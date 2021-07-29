@@ -2,7 +2,7 @@
 sudo apt-get --assume-yes --no-install-recommends install \
      automake bat bear biber binutils-dev bison ca-certificates ccache cmake coinor-libipopt-dev cppcheck \
      curl dirmngr dot2tex doxygen dpkg-dev dvipng expect ffmpeg flex fonts-dejavu \
-     fonts-humor-sans freeglut3-dev g++-10 g++-10-multilib gcc-10 \
+     fonts-humor-sans freeglut3-dev fzf g++-10 g++-10-multilib gcc-10 \
      gcc-10-multilib gcovr gdb gfortran-10 git gnupg2 gnuplot graphviz \
      htop hunspell imagemagick inkscape latexmk lcov less libacl1-dev libatomic1 libbz2-dev \
      libc-dev libc6-dev-i386 libfontconfig1 libfreetype6-dev libgdbm-dev \
