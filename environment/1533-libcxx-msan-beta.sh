@@ -1,9 +1,13 @@
 #!/bin/bash -eux
 LLVM_MAJOR=13  #$(echo $LLVM_ORG_VER | cut -f1 -d.)
 export CC=clang-${LLVM_MAJOR} CXX=clang++-${LLVM_MAJOR}
-BETA_VER=$LLVM_MAJOR
-LLVM_ORG_VER=13.x
-SRC_DIR=/build/llvm-project-llvmorg-${LLVM_ORG_VER}
+RELEASE_VER=$LLVM_MAJOR.x
+if [[ $RELEASE_VER == *.x ]]; then
+    LLVM_ORG_VER=release-$RELEASE_VER
+else
+    LLVM_ORG_VER=llvmorg-$RELEASE_VER
+fi
+SRC_DIR=/build/llvm-project-${LLVM_ORG_VER}
 LIBCXXABI_INCLUDE=$SRC_DIR/libcxxabi/include
 
 for VARIANT in debug release msan; do
@@ -26,7 +30,7 @@ for VARIANT in debug release msan; do
     BUILD_DIR_LIBCXXABI=/build/libcxxabi${LLVM_MAJOR}-${VARIANT}
     INSTALL_DIR_LIBCXXABI=/opt/libcxxabi${LLVM_MAJOR}-${VARIANT}
     if [ ! -d $LIBCXXABI_INCLUDE ]; then
-        curl -Ls https://github.com/llvm/llvm-project/archive/refs/heads/release/${BETA_VER}.x.tar.gz | tar xz -C /build
+        curl -Ls https://github.com/llvm/llvm-project/archive/refs/heads/release/${RELEASE_VER}.tar.gz | tar xz -C /build
     fi
     mkdir $BUILD_DIR_LIBCXX
     cd $BUILD_DIR_LIBCXX
@@ -46,7 +50,7 @@ for VARIANT in debug release msan; do
         -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_MAJOR} \
         -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR_LIBCXX \
         -DLIBCXXABI_LIBCXX_INCLUDES=$INSTALL_DIR_LIBCXX/include/c++/v1 \
-        -DLIBCXXABI_LIBCXX_PATH=/tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx \
+        -DLIBCXXABI_LIBCXX_PATH=$SRC_DIR/libcxx \
         $SRC_DIR/libcxxabi
     cmake --build .
     cmake --build . --target install
