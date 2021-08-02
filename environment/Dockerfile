@@ -51,6 +51,13 @@ RUN \
         cd /build/qd-2.3.22/ && CXX=g++-11 CC=gcc-11 FC=gfortran-11 ./configure --enable-shared --prefix=/opt/qd-2.3.22 && \
         bear make && make install && ln -s /build/qd-2.3.22/compile_commands.json /opt/qd-2.3.22/
 
+
+COPY 1500-clang-13.sh /opt/
+RUN /opt/1500-clang-13.sh
+
+COPY 1533-libcxx-msan-beta.sh /opt/
+RUN /opt/1533-libcxx-msan-beta.sh
+
 #RUN /root/1000a-fix-emacs.sh
 
 # RUN \

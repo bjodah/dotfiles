@@ -459,8 +459,10 @@
     (newline-and-indent)))
 
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x v e") 'vc-git-grep)
 (global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
 ;(global-set-key (kbd "C-c C-l") 'compile)
+(global-set-key "\C-cb" 'insert-buffer-name)
 (global-set-key (kbd "C-c m") 'recompile)
 (global-set-key (kbd "C-x f") 'find-file-at-point)
 (global-set-key (kbd "C-c M-f") 'set-fill-column)
@@ -475,8 +477,6 @@
 (global-set-key (kbd "<f1>") 'other-window-backward)
 (global-set-key "\C-xp" 'other-window-backward)
 
-; Let \C-cb insert buffer name
-(global-set-key "\C-cb" 'insert-buffer-name)
 
 (defun insert-buffer-name () (interactive)
   (insert (buffer-name))
