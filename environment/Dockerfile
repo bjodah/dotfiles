@@ -46,6 +46,11 @@ RUN emacs --batch --eval '(progn \
         update-alternatives --install  /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000 && \
         update-alternatives --install  /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 1000
 
+RUN \
+        curl -Ls https://www.davidhbailey.com/dhbsoftware/qd-2.3.22.tar.gz | tar xz -C /build && \
+        cd /build/qd-2.3.22/ && CXX=g++-11 CC=gcc-11 FC=gfortran-11 ./configure --enable-shared --prefix=/opt/qd-2.3.22 && \
+        bear make && make install && ln -s /build/qd-2.3.22/compile_commands.json /opt/qd-2.3.22/
+
 #RUN /root/1000a-fix-emacs.sh
 
 # RUN \
