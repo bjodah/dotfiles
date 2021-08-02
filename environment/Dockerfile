@@ -46,6 +46,13 @@ RUN emacs --batch --eval '(progn \
         update-alternatives --install  /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000 && \
         update-alternatives --install  /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 1000
 
+COPY 1500-clang-13.sh /opt/
+RUN /opt/1500-clang-13.sh
+
+COPY 1533-libcxx-msan-beta.sh /opt/
+RUN /opt/1533-libcxx-msan-beta.sh
+
+
 #RUN /root/1000a-fix-emacs.sh
 
 # RUN \

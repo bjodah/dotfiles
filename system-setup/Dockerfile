@@ -16,7 +16,7 @@ RUN apt-get update && \
     locale-gen en_US.UTF-8 && \
     apt-get dist-upgrade -y && \
     /opt/10-setup_ubuntu_packages.sh && \
-    /opt/11-setup_llvm_clang.sh && \
+    /opt/11-setup_llvm_clang.sh 12 && \
     /opt/12-setup-gcc.sh && \
     /opt/13-setup_intel_compilers.sh && \
     /opt/14-tools.sh && \
