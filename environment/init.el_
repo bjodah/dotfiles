@@ -5,13 +5,14 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7" "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
+ '(ein:jupyter-server-args '("--no-browser --allow-root"))
  '(ein:output-area-inlined-images t)
  '(flycheck-c/c++-gcc-executable "gcc-10")
  '(inhibit-startup-screen t)
  '(lsp-file-watch-threshold 2500)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(ispc-mode all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(lsp-pyright ispc-mode all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vc-git-grep-template
@@ -232,11 +233,11 @@
 ;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
 
 
-(use-package lsp-python-ms
+(use-package lsp-pyright
   :ensure t
-  :init (setq lsp-python-ms-auto-install-server t)
+  :init (setq lsp-pyright-auto-install-server t)
   :hook (python-mode . (lambda ()
-                          (require 'lsp-python-ms)
+                          (require 'lsp-pyright)
                           (lsp))))  ; or lsp-deferred
 
 (use-package rust-mode
@@ -458,8 +459,10 @@
     (newline-and-indent)))
 
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x v e") 'vc-git-grep)
 (global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
 ;(global-set-key (kbd "C-c C-l") 'compile)
+(global-set-key "\C-cb" 'insert-buffer-name)
 (global-set-key (kbd "C-c m") 'recompile)
 (global-set-key (kbd "C-x f") 'find-file-at-point)
 (global-set-key (kbd "C-c M-f") 'set-fill-column)
@@ -474,8 +477,6 @@
 (global-set-key (kbd "<f1>") 'other-window-backward)
 (global-set-key "\C-xp" 'other-window-backward)
 
-; Let \C-cb insert buffer name
-(global-set-key "\C-cb" 'insert-buffer-name)
 
 (defun insert-buffer-name () (interactive)
   (insert (buffer-name))

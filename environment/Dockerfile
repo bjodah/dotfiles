@@ -71,3 +71,7 @@ RUN /opt/1533-libcxx-msan-beta.sh
 
 COPY 2020-nodejs-lts.sh /opt/
 RUN /opt/2020-nodejs-lts.sh
+
+RUN \
+        python3 -m pip uninstall -y python-language-server && \
+        python3 -m pip install python-lsp-server

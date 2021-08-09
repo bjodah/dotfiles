@@ -7,7 +7,7 @@
 (load "~/.emacs.d/init.el")
 ;; (require 'jedi)
 ;; (jedi:install-server)
-(require 'lsp-python-ms)
+(require 'lsp-pyright)
 (let ((client (gethash 'pyright lsp-clients)))
   (lsp--install-server-internal client nil)
   (while (lsp--client-download-in-progress? client)
