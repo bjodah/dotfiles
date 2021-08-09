@@ -12,7 +12,7 @@
  '(lsp-file-watch-threshold 2500)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(ispc-mode all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(lsp-pyright ispc-mode all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vc-git-grep-template
@@ -233,11 +233,11 @@
 ;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
 
 
-(use-package lsp-python-ms
+(use-package lsp-pyright
   :ensure t
-  :init (setq lsp-python-ms-auto-install-server t)
+  :init (setq lsp-pyright-auto-install-server t)
   :hook (python-mode . (lambda ()
-                          (require 'lsp-python-ms)
+                          (require 'lsp-pyright)
                           (lsp))))  ; or lsp-deferred
 
 (use-package rust-mode

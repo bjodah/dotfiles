@@ -68,3 +68,6 @@ RUN /opt/1533-libcxx-msan-beta.sh
 #         cmake --install /tmp/include-what-you-use/build && \
 #         rm -r /tmp/include-what-you-use/ && \
 #         include-what-you-use --help
+
+COPY 2020-nodejs-lts.sh /opt/
+RUN /opt/2020-nodejs-lts.sh

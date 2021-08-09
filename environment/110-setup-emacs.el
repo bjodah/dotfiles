@@ -8,7 +8,7 @@
 ;; (require 'jedi)
 ;; (jedi:install-server)
 (require 'lsp-python-ms)
-(let ((client (gethash 'mspyls lsp-clients)))
+(let ((client (gethash 'pyright lsp-clients)))
   (lsp--install-server-internal client nil)
   (while (lsp--client-download-in-progress? client)
     (sit-for 1)))
