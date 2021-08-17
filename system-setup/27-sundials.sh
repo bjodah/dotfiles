@@ -70,5 +70,6 @@ for VARIANT in debug release single extended; do
     cmake --build .
     cmake --install .
     cmake --build . --target clean
+    chmod a+r -R ${BUILD_DIR}
     ln -s ${BUILD_DIR}/compile_commands.json ${INSTALL_DIR}/
 done

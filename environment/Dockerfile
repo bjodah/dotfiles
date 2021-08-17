@@ -24,19 +24,7 @@ RUN \
     CPATH=/opt/eigen-3.4-rc1/include/eigen3 CC=gcc-10 CXX=g++-10 python3 -m pip install accupy
 
 
-# Mistakes were made, we need sundials in a few more configs
-COPY 27-sundials-fix.sh /opt/
-RUN /opt/27-sundials-fix.sh
-
-RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get --assume-yes install fish && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-COPY init.el_ /root/emacs.d/init.el
-RUN emacs --batch --eval '(progn \
-(require (quote package))\
-(package-initialize)\
-(package-refresh-contents)\
-(package-install (quote use-package))\
-        (load-file "~/.emacs.d/init.el"))' && \
+RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get --assume-yes install fish  && \
         update-alternatives --install  /usr/bin/python python /usr/bin/python3 1000 && \
         update-alternatives --install  /usr/bin/gcc gcc /usr/bin/gcc-11 1000 && \
         update-alternatives --install  /usr/bin/g++ g++ /usr/bin/g++-11 1000 && \
@@ -44,7 +32,8 @@ RUN emacs --batch --eval '(progn \
         update-alternatives --install  /usr/bin/clang clang /usr/bin/clang-12 1000 && \
         update-alternatives --install  /usr/bin/clang++ clang++ /usr/bin/clang++-12 1000 && \
         update-alternatives --install  /usr/bin/clang-format clang-format /usr/bin/clang-format-12 1000 && \
-        update-alternatives --install  /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 1000
+        update-alternatives --install  /usr/bin/clang-tidy clang-tidy /usr/bin/clang-tidy-12 1000 && \
+        apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN \
         curl -Ls https://www.davidhbailey.com/dhbsoftware/qd-2.3.22.tar.gz | tar xz -C /build && \
@@ -75,3 +64,15 @@ RUN /opt/2020-nodejs-lts.sh
 RUN \
         python3 -m pip uninstall -y python-language-server && \
         python3 -m pip install python-lsp-server
+
+COPY init.el_ /root/emacs.d/init.el
+RUN emacs --batch --eval '(progn \
+(require (quote package))\
+(package-initialize)\
+(package-refresh-contents)\
+(package-install (quote use-package))\
+        (load-file "~/.emacs.d/init.el"))'
+
+# Mistakes were made, we need sundials in a few more configs
+COPY 27-sundials-fix.sh /opt/
+RUN /opt/27-sundials-fix.sh
