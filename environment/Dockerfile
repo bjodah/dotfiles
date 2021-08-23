@@ -76,3 +76,8 @@ RUN emacs --batch --eval '(progn \
 # Mistakes were made, we need sundials in a few more configs
 COPY 27-sundials-fix.sh /opt/
 RUN /opt/27-sundials-fix.sh
+
+RUN python3 -m pip install poetry shed && \
+    /opt/cpython-3.9-release/bin/python3.9 -m pip install poetry shed && \
+    /opt/cpython-3.9-debug/bin/python3.9 -m pip install poetry shed && \
+    rm -rf /tmp/* /var/tmp/* ~/.cache/pip
