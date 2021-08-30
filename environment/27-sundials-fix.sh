@@ -9,7 +9,7 @@ if [ ! -z "$OPENBLAS_ROOT" ]; then
     OPENBLAS_OVERRIDE=1
 fi
 
-for VARIANT in msan single extended; do
+for VARIANT in msan; do
     if [[ ${VARIANT} == msan ]]; then
         export CC=${CC:-"clang-12"}
     else

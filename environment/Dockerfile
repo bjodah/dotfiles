@@ -57,9 +57,6 @@ RUN /opt/1500-clang-13.sh && \
 COPY 2020-nodejs-lts.sh /opt/
 RUN /opt/2020-nodejs-lts.sh
 
-RUN \
-
-
 # Mistakes were made, we need sundials in a few more configs
 COPY 27-sundials-fix.sh /opt/
 RUN /opt/27-sundials-fix.sh
