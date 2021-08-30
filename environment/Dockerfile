@@ -82,4 +82,6 @@ RUN python3 -m pip install poetry shed && \
     /opt/cpython-3.9-debug/bin/python3.9 -m pip install poetry shed && \
     rm -rf /tmp/* /var/tmp/* ~/.cache/pip
 
-RUN yes | unminimize
+RUN yes | unminimize && \
+        python3 -m pip install symengine && \
+    rm -rf /tmp/* /var/tmp/* ~/.cache/pip
