@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20210609
+FROM ubuntu:focal-20210723
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
@@ -25,6 +25,7 @@ RUN apt-get update && \
     /opt/17-build-emacs.sh && \
     /opt/18-openblas.sh 0.3.16 -DTARGET=NEHALEM -DARCH=x86_64 && \
     /opt/19-java.sh && \
+    yes | unminimize && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
 COPY 2?-*.sh /opt/

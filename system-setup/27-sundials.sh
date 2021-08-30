@@ -1,13 +1,16 @@
 #!/bin/bash -xe
+if [ ! -z "$OPENBLAS_ROOT" ]; then
+    OPENBLAS_OVERRIDE=1
+else
+    OPENBLAS_OVERRIDE=0
+fi
+set -u
 SUNDIALS_VERSION=${1:-5.7.0}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
 export CC=${CC:-"gcc-11"}
 
 if [ ! -d $SRC_DIR ]; then
     curl -Ls https://github.com/llnl/sundials/releases/download/v${SUNDIALS_VERSION}/sundials-${SUNDIALS_VERSION}.tar.gz | tar xz -C /build
-fi
-if [ ! -z "$OPENBLAS_ROOT" ]; then
-    OPENBLAS_OVERRIDE=1
 fi
 
 for VARIANT in debug release single extended; do
@@ -22,38 +25,43 @@ for VARIANT in debug release single extended; do
     fi
     cd ${BUILD_DIR}
     if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
-        OPENBLAS_ROOT=/opt/openblas-0.3.16-${VARIANT}
+        if [[ $VARIANT == "debug" ]]; then
+            OPENBLAS_ROOT=/opt/openblas-0.3.16-${VARIANT}
+        else
+            OPENBLAS_ROOT=/opt/openblas-0.3.16-release
+        fi
         if [ ! -d "${OPENBLAS_ROOT}" ]; then
             >&2 echo "Not a directory: ${OPENBLAS_ROOT}"
             exit 1
         fi
     fi
     export LDFLAGS=-Wl,-rpath-link,${OPENBLAS_ROOT}/lib
+    if [[ $VARIANT == extended || $VARIANT == single ]]; then
+        CMAKE_ARGS="-DENABLE_KLU=OFF -DSUNDIALS_PRECISION:STRING=$VARIANT"
+    else
+        CMAKE_ARGS="-DENABLE_KLU=ON \
+                  -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
+                  -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu"
+    fi
+      
     if [[ $VARIANT == extended ]]; then
-        CMAKE_ARGS='\
-                -DLAPACK_ENABLE=OFF \
-                -DKLU_ENABLE=OFF \
-                -DSUNDIALS_PRECISION:STRING="extended" \
-                -DSUNDIALS_INDEX_SIZE=64'
+        CMAKE_ARGS='$CMAKE_ARGS -DSUNDIALS_INDEX_SIZE=64'
     else
         if [[ $VARIANT == debug ]]; then
             BUILD_TYPE=${VARIANT^}
             OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas_d.so
         else
-            export CFLAGS=${CFLAGS_RELEASE:-"-O3"}
+            export CFLAGS=${CFLAGS_RELEASE:-"-O3 -march=nehalem"}
             BUILD_TYPE=Release
             OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas.so
             if [[ $VARIANT == single ]]; then
-                CMAKE_ARGS='-DSUNDIALS_PRECISION:STRING="single"'
+                CMAKE_ARGS='$CMAKE_ARGS'
             fi
         fi
         CMAKE_ARGS="${CMAKE_ARGS} \
           -DENABLE_LAPACK=ON \
           -DLAPACK_LIBRARIES=${OPENBLAS_SO} \
-          -DSUNDIALS_INDEX_SIZE=32 \
-          -DENABLE_KLU=ON \
-          -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
-          -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu"
+          -DSUNDIALS_INDEX_SIZE=32"
     fi
     cmake -G ${CMAKE_GENERATOR:-Ninja} \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \

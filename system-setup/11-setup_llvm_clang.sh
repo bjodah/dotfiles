@@ -7,7 +7,7 @@ if [[ $MAJOR_VERSION != "" ]]; then
     APT_LIST_DISTRIBUTION=$APT_LIST_DISTRIBUTION-${MAJOR_VERSION}
 fi
 echo "deb http://apt.llvm.org/$UBUNTU_CODENAME/ $APT_LIST_DISTRIBUTION main" | sudo tee -a /etc/apt/sources.list
-echo "deb-src http://apt.llvm.org/$UBUNTU_CODENAME/l $APT_LIST_DISTRIBUTION main" | sudo tee -a /etc/apt/sources.list
+echo "deb-src http://apt.llvm.org/$UBUNTU_CODENAME/ $APT_LIST_DISTRIBUTION main" | sudo tee -a /etc/apt/sources.list
 sudo apt-get update
 sudo apt-get --assume-yes --no-install-recommends install \
     clang-${MAJOR_VERSION} \

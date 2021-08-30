@@ -10,7 +10,7 @@ ${PYTHON:-python3} -m pip install $@ \
         periodictable plotly pudb pulp pybind11 pycparser pycparser-fake-libc \
         "pygments>=2.4.1" pygraphviz pylatex pyparsing pytest pytest-black pytest-cov \
         pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb \
-        pytest-xdist python-language-server[all] pyyaml quantities rstcheck \
+        pytest-xdist pyyaml quantities rstcheck \
         scikit-image scikit-optimize scipy setuptools setuptools_scm sphinx \
         sphinx_rtd_theme statsmodels sympy termplotlib toolz tqdm trepan3k \
         virtualenv wheel wurlitzer xarray

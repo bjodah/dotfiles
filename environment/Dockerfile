@@ -1,4 +1,4 @@
-FROM bjodah/bjodahimg20:21.7
+FROM bjodah/bjodahimg20:21.8
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
 COPY ???-*.sh *.el /opt/
@@ -14,14 +14,12 @@ RUN \
     git clone --branch clang_12 https://github.com/include-what-you-use/include-what-you-use.git /build/iwyu-12-src && \
     CXX=clang++-12 CC=clang-12 cmake -S /build/iwyu-12-src -B /build/iwyu-12-bld -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/lib/llvm-12 && \
     cmake --build /build/iwyu-12-bld && cmake --install /build/iwyu-12-bld && \
-    curl -Ls https://gitlab.com/libeigen/eigen/-/archive/3.4-rc1/eigen-3.4-rc1.tar.bz2 | tar xj -C /build && \
-    CXX=clang++-12 CC=clang-12 cmake -S /build/eigen-3.4-rc1/ -B /build/eigen-3.4-rc1-bld -DCMAKE_INSTALL_PREFIX=/opt/eigen-3.4-rc1 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && \
-    cmake --build /build/eigen-3.4-rc1-bld && cmake --install /build/eigen-3.4-rc1-bld && \
+    curl -Ls https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.bz2 | tar xj -C /build && \
+    CXX=clang++-12 CC=clang-12 cmake -S /build/eigen-3.4.0/ -B /build/eigen-3.4.0-bld -DCMAKE_INSTALL_PREFIX=/opt/eigen-3.4.0 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && \
+    cmake --build /build/eigen-3.4.0-bld && cmake --install /build/eigen-3.4.0-bld && \
     python3 -m pip install conan && \
+        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-10 CXX=g++-10 python3 -m pip install accupy && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
-
-RUN \
-    CPATH=/opt/eigen-3.4-rc1/include/eigen3 CC=gcc-10 CXX=g++-10 python3 -m pip install accupy
 
 
 RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get --assume-yes install fish  && \
@@ -41,11 +39,9 @@ RUN \
         bear make && make install && ln -s /build/qd-2.3.22/compile_commands.json /opt/qd-2.3.22/
 
 
-COPY 1500-clang-13.sh /opt/
-RUN /opt/1500-clang-13.sh
-
-COPY 1533-libcxx-msan-beta.sh /opt/
-RUN /opt/1533-libcxx-msan-beta.sh
+COPY 15??-*.sh /opt/
+RUN /opt/1500-clang-13.sh && \
+    /opt/1533-libcxx-msan-beta.sh
 
 #RUN /root/1000a-fix-emacs.sh
 
@@ -62,26 +58,29 @@ COPY 2020-nodejs-lts.sh /opt/
 RUN /opt/2020-nodejs-lts.sh
 
 RUN \
-        python3 -m pip uninstall -y python-language-server && \
-        python3 -m pip install python-lsp-server
 
-COPY init.el_ /root/emacs.d/init.el
-RUN emacs --batch --eval '(progn \
-(require (quote package))\
-(package-initialize)\
-(package-refresh-contents)\
-(package-install (quote use-package))\
-        (load-file "~/.emacs.d/init.el"))'
 
 # Mistakes were made, we need sundials in a few more configs
 COPY 27-sundials-fix.sh /opt/
 RUN /opt/27-sundials-fix.sh
 
-RUN python3 -m pip install poetry shed && \
-    /opt/cpython-3.9-release/bin/python3.9 -m pip install poetry shed && \
-    /opt/cpython-3.9-debug/bin/python3.9 -m pip install poetry shed && \
-    rm -rf /tmp/* /var/tmp/* ~/.cache/pip
+RUN \
+        python3 -m pip uninstall -y python-language-server && \
+        /opt/cpython-3.9-release/bin/python3.9 -m pip uninstall -y python-language-server && \
+        /opt/cpython-3.9-debug/bin/python3.9 -m pip uninstall -y python-language-server && \
+        python3 -m pip install poetry shed symengine python-lsp-server && \
+        /opt/cpython-3.9-release/bin/python3.9 -m pip install poetry shed symengine python-lsp-server && \
+        /opt/cpython-3.9-debug/bin/python3.9 -m pip install poetry shed symengine python-lsp-server && \
+        rm -rf /tmp/* /var/tmp/* ~/.cache/pip
 
-RUN yes | unminimize && \
-        python3 -m pip install symengine && \
-    rm -rf /tmp/* /var/tmp/* ~/.cache/pip
+
+#yes | unminimize && \
+
+
+# COPY init.el_ /root/emacs.d/init.el
+# RUN emacs --batch --eval '(progn \
+# (require (quote package))\
+# (package-initialize)\
+# (package-refresh-contents)\
+# (package-install (quote use-package))\
+#         (load-file "~/.emacs.d/init.el"))'

@@ -4,11 +4,10 @@ export CC=gcc-$GCC_MAJ
 export CXX=g++-$GCC_MAJ
 export FC=gfortran-$GCC_MAJ
 BOOST_MAJOR=1
-BOOST_MINOR=76
+BOOST_MINOR=77
 BOOST_PATCH=0
 VER_P=${BOOST_MAJOR}.${BOOST_MINOR}.${BOOST_PATCH}
 VER_U=${BOOST_MAJOR}_${BOOST_MINOR}_${BOOST_PATCH}
-#PATCH=$(realpath $(dirname $BASH_SOURCE))/boost175-rational-gh41.patch
 cd /build
 curl -Ls https://boostorg.jfrog.io/artifactory/main/release/${VER_P}/source/boost_${VER_U}.tar.bz2 | tar xj
 #patch -p1 <$PATCH
