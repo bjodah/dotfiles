@@ -18,11 +18,11 @@ RUN \
     CXX=clang++-12 CC=clang-12 cmake -S /build/eigen-3.4.0/ -B /build/eigen-3.4.0-bld -DCMAKE_INSTALL_PREFIX=/opt/eigen-3.4.0 -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && \
     cmake --build /build/eigen-3.4.0-bld && cmake --install /build/eigen-3.4.0-bld && \
     python3 -m pip install conan && \
-        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-10 CXX=g++-10 python3 -m pip install accupy && \
+        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-11 CXX=g++-11 python3 -m pip install accupy dufte perfplots && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
 
-RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get --assume-yes install fish  && \
+RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get --assume-yes install fish pngquant pv && \
         update-alternatives --install  /usr/bin/python python /usr/bin/python3 1000 && \
         update-alternatives --install  /usr/bin/gcc gcc /usr/bin/gcc-11 1000 && \
         update-alternatives --install  /usr/bin/g++ g++ /usr/bin/g++-11 1000 && \
@@ -68,6 +68,9 @@ RUN \
         python3 -m pip install poetry shed symengine python-lsp-server && \
         /opt/cpython-3.9-release/bin/python3.9 -m pip install poetry shed symengine python-lsp-server && \
         /opt/cpython-3.9-debug/bin/python3.9 -m pip install poetry shed symengine python-lsp-server && \
+        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-11 CXX=g++-11 /opt/cpython-3.9-release/bin/python3.9 -m pip install accupy dufte perfplots && \
+        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-11 CXX=g++-11 /opt/cpython-3.9-debug/bin/python3.9 -m pip install accupy dufte perfplots && \
+        git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 && \
         rm -rf /tmp/* /var/tmp/* ~/.cache/pip
 
 
