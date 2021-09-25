@@ -477,6 +477,8 @@
   (other-window -1)))
 (global-set-key (kbd "<f1>") 'other-window-backward)
 (global-set-key "\C-xp" 'other-window-backward)
+(global-set-key (kbd "C-<f1>") 'previous-buffer)
+(global-set-key (kbd "C-<f2>") 'next-buffer)
 
 
 (defun insert-buffer-name () (interactive)
