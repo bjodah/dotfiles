@@ -73,6 +73,8 @@ RUN \
         git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 && \
         rm -rf /tmp/* /var/tmp/* ~/.cache/pip
 
+RUN \
+        curl -Ls https://software.intel.com/content/dam/develop/external/us/en/documents/downloads/sde-external-8.69.1-2021-07-18-lin.tar.bz2 | tar xj -C /opt/intel-sde --strip-components=1
 
 #yes | unminimize && \
 
