@@ -13,6 +13,7 @@
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
    '(lsp-pyright ispc-mode all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+ '(preview-scale-function 2)
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vc-git-grep-template
@@ -477,6 +478,8 @@
   (other-window -1)))
 (global-set-key (kbd "<f1>") 'other-window-backward)
 (global-set-key "\C-xp" 'other-window-backward)
+(global-set-key (kbd "C-<f1>") 'previous-buffer)
+(global-set-key (kbd "C-<f2>") 'next-buffer)
 
 
 (defun insert-buffer-name () (interactive)
