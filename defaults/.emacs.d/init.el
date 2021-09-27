@@ -397,6 +397,7 @@
 		(define-key gud-minor-mode-map (kbd "M-<f10>") #'gud-jump)
 		(define-key gud-minor-mode-map (kbd "<f11>") #'gud-run)
 		(define-key gud-minor-mode-map (kbd "M-<f11>") #'gud-kill)
+		(define-key gud-minor-mode-map (kbd "<f12>") #'gdb-many-windows)
 		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-down)
 		(define-key gud-minor-mode-map (kbd "<next>") #'gud-up)
 )))
