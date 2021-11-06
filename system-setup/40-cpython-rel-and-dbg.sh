@@ -2,7 +2,7 @@
 which make
 which bear
 set -x
-CPYTHON_VERSION=${1:-3.9}
+CPYTHON_VERSION=${1:-3.10}
 export CC=${CC:-"gcc-11"}
 export CXX=${CXX:-"g++-11"}
 set -u

@@ -5,7 +5,7 @@ else
     OPENBLAS_OVERRIDE=0
 fi
 set -u
-SUNDIALS_VERSION=${1:-5.7.0}
+SUNDIALS_VERSION=${1:-5.8.0}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
 export CC=${CC:-"gcc-11"}
 
@@ -26,9 +26,9 @@ for VARIANT in debug release single extended; do
     cd ${BUILD_DIR}
     if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
         if [[ $VARIANT == "debug" ]]; then
-            OPENBLAS_ROOT=/opt/openblas-0.3.16-${VARIANT}
+            OPENBLAS_ROOT=/opt/openblas-0.3.18-${VARIANT}
         else
-            OPENBLAS_ROOT=/opt/openblas-0.3.16-release
+            OPENBLAS_ROOT=/opt/openblas-0.3.18-release
         fi
         if [ ! -d "${OPENBLAS_ROOT}" ]; then
             >&2 echo "Not a directory: ${OPENBLAS_ROOT}"

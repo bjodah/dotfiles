@@ -23,7 +23,7 @@ RUN apt-get update && \
     /opt/15-pip-install.sh && \
     /opt/16-ccls.sh && \
     /opt/17-build-emacs.sh && \
-    /opt/18-openblas.sh 0.3.16 -DTARGET=NEHALEM -DARCH=x86_64 && \
+    /opt/18-openblas.sh 0.3.18 -DTARGET=NEHALEM -DARCH=x86_64 && \
     /opt/19-java.sh && \
     yes | unminimize && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
@@ -39,7 +39,7 @@ RUN \
 COPY 3?-*.sh 4?-*.sh 6?-*.sh 7?-*.sh /opt/
 
 RUN /opt/33-libcxx-msan.sh && \
-    /opt/40-cpython-rel-and-dbg.sh && \
+    /opt/40-cpython-rel-and-dbg.sh 3.10 && \
     /opt/75-boost.sh && \
     mkdir /opt/cargo /opt/rustup && CARGO_HOME=/opt/cargo PATH="$CARGO_HOME/bin:$PATH" RUSTUP_HOME=/opt/rustup /opt/67-rust.sh && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip

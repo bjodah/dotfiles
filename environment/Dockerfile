@@ -63,16 +63,19 @@ RUN /opt/27-sundials-fix.sh
 
 RUN \
         python3 -m pip uninstall -y python-language-server && \
-        /opt/cpython-3.9-release/bin/python3.9 -m pip uninstall -y python-language-server && \
-        /opt/cpython-3.9-debug/bin/python3.9 -m pip uninstall -y python-language-server && \
+        /opt/cpython-3.10-release/bin/python3.10 -m pip uninstall -y python-language-server && \
+        /opt/cpython-3.10-debug/bin/python3.10 -m pip uninstall -y python-language-server && \
         python3 -m pip install poetry shed symengine python-lsp-server && \
-        /opt/cpython-3.9-release/bin/python3.9 -m pip install poetry shed symengine python-lsp-server && \
-        /opt/cpython-3.9-debug/bin/python3.9 -m pip install poetry shed symengine python-lsp-server && \
-        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-11 CXX=g++-11 /opt/cpython-3.9-release/bin/python3.9 -m pip install accupy dufte perfplots && \
-        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-11 CXX=g++-11 /opt/cpython-3.9-debug/bin/python3.9 -m pip install accupy dufte perfplots && \
+        /opt/cpython-3.10-release/bin/python3.10 -m pip install poetry shed symengine python-lsp-server && \
+        /opt/cpython-3.10-debug/bin/python3.10 -m pip install poetry shed symengine python-lsp-server && \
+        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-11 CXX=g++-11 /opt/cpython-3.10-release/bin/python3.10 -m pip install accupy dufte perfplots && \
+        CPATH=/opt/eigen-3.4.0/include/eigen3 CC=gcc-11 CXX=g++-11 /opt/cpython-3.10-debug/bin/python3.10 -m pip install accupy dufte perfplots && \
         git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 && \
         rm -rf /tmp/* /var/tmp/* ~/.cache/pip
 
+RUN \
+        mkdir /opt/intel-sde && \
+        curl -Ls https://software.intel.com/content/dam/develop/external/us/en/documents/downloads/sde-external-8.69.1-2021-07-18-lin.tar.bz2 | tar xj -C /opt/intel-sde --strip-components=1
 
 #yes | unminimize && \
 
