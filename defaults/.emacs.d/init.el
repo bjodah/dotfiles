@@ -479,6 +479,15 @@
 (global-set-key "\C-xp" 'other-window-backward)
 (global-set-key (kbd "C-<f1>") 'previous-buffer)
 (global-set-key (kbd "C-<f2>") 'next-buffer)
+(global-set-key (kbd "ESC <f1>") 'delete-other-windows)
+(global-set-key (kbd "ESC <f2>") 'split-window-below)
+(global-set-key (kbd "ESC <f3>") 'split-window-right)
+(global-set-key (kbd "ESC <f4>") 'delete-window)
+(global-set-key (kbd "M-<left>") 'previous-buffer)
+(global-set-key (kbd "M-<right>") 'next-buffer)
+(global-set-key (kbd "M-<up>") 'winner-undo)
+(global-set-key (kbd "M-<down>") 'winner-redo)
+
 
 
 (defun insert-buffer-name () (interactive)
