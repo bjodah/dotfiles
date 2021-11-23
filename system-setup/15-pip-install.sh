@@ -5,7 +5,7 @@ ${PYTHON:-python3} -m pip install $@ \
         appdirs argcomplete argh ase asv black bokeh bottle cclib check-manifest CherryPy \
         cython epc flake8 future git-archive-all holoviews[recommended] \
         ipykernel ipython ipywidgets isort jedi-language-server joblib jupyter \
-        mako matplotlib mogli mpld3 mypy nbconvert nbsphinx networkx \
+        mako matplotlib mogli mpld3 mypy nbconvert nbsphinx nbstripout networkx \
         Nikola[extras] numericalunits numpy numpydoc pandas param \
         periodictable plotly pudb pulp pybind11 pycparser pycparser-fake-libc \
         "pygments>=2.4.1" pygraphviz pylatex pyparsing pytest pytest-black pytest-cov \
