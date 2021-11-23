@@ -4,14 +4,14 @@ ${PYTHON:-python3} -m pip install $@ --upgrade pip
 ${PYTHON:-python3} -m pip install $@ \
         appdirs argcomplete argh ase asv black bokeh bottle cclib check-manifest CherryPy \
         cython epc flake8 future git-archive-all holoviews[recommended] \
-        ipykernel ipython ipywidgets isort jedi-language-server joblib jupyter \
-        mako matplotlib mogli mpld3 mypy nbconvert nbsphinx nbstripout networkx \
+        ipykernel ipython ipywidgets ipympl isort jedi-language-server joblib jupyter \
+        mako matplotlib mogli mpld3 mypy nbconvert nbsphinx nbstripout notebook networkx \
         Nikola[extras] numericalunits numpy numpydoc pandas param \
-        periodictable plotly pudb pulp pybind11 pycparser pycparser-fake-libc \
+        periodictable plotly ptvsd pudb pulp pybind11 pycparser pycparser-fake-libc \
         "pygments>=2.4.1" pygraphviz pylatex pyparsing pytest pytest-black pytest-cov \
         pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb \
         pytest-xdist pyyaml quantities rstcheck \
-        scikit-image scikit-optimize scipy setuptools setuptools_scm sphinx \
+        SciencePlots scikit-image scikit-optimize scipy setuptools setuptools_scm sphinx \
         sphinx_rtd_theme statsmodels sympy termplotlib toolz tqdm trepan3k \
         virtualenv wheel wurlitzer xarray
 

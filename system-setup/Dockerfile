@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20210723
+FROM ubuntu:focal-20211006
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true

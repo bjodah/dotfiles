@@ -24,4 +24,4 @@ sudo apt-get --assume-yes --no-install-recommends install \
     libclang-common-${MAJOR_VERSION}-dev
 
 python3 -m pip install --upgrade-strategy=eager --upgrade pip setuptools wheel
-python3 -m pip install libclang==12.0.0 && python3 -c "from clang.cindex import Index; Index.create()"
+python3 -m pip install libclang==$MAJOR_VERSION.0.0 && python3 -c "from clang.cindex import Index; Index.create()"  # https://pypi.org/project/libclang/#history
