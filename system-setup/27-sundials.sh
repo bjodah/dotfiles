@@ -26,9 +26,9 @@ for VARIANT in debug release single extended; do
     cd ${BUILD_DIR}
     if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
         if [[ $VARIANT == "debug" ]]; then
-            OPENBLAS_ROOT=/opt/openblas-0.3.18-${VARIANT}
+            OPENBLAS_ROOT=/opt/openblas-0.3.19-${VARIANT}
         else
-            OPENBLAS_ROOT=/opt/openblas-0.3.18-release
+            OPENBLAS_ROOT=/opt/openblas-0.3.19-release
         fi
         if [ ! -d "${OPENBLAS_ROOT}" ]; then
             >&2 echo "Not a directory: ${OPENBLAS_ROOT}"

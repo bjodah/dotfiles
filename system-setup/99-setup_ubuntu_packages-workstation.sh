@@ -22,3 +22,6 @@ sudo apt update && sudo apt install signal-desktop
 
 cargo install gping
 python3 -m pip install twine && ln -s ~/doc/it/login/.pypirc ~/.pypirc
+
+
+curl -Ls https://github.com/ankitrohatgi/WebPlotDigitizer/archive/refs/tags/v4.5.tar.gz | tar xz -C /opt/

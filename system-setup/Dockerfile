@@ -23,7 +23,7 @@ RUN apt-get update && \
     /opt/15-pip-install.sh && \
     /opt/16-ccls.sh && \
     /opt/17-build-emacs.sh && \
-    /opt/18-openblas.sh 0.3.18 -DTARGET=NEHALEM -DARCH=x86_64 && \
+    /opt/18-openblas.sh 0.3.19 -DTARGET=NEHALEM -DARCH=x86_64 && \
     /opt/19-java.sh && \
     yes | unminimize && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip

@@ -8,3 +8,10 @@
 #https://github.com/adoptium/installer/issues/330#issuecomment-926987965
 
 java --version
+
+# wget -qO - https://adoptium.jfrog.io/artifactory/api/security/keypair/default-gpg-key/public  | apt-key add -
+# echo "deb https://adoptium.jfrog.io/artifactory/deb focal main" > /etc/apt/sources.list.d/adoptium.list
+# apt update
+# apt install temurin-17-jdk
+# [[ $(java --version | head -n 1) ~= "^openjdk 17*" ]]
+
