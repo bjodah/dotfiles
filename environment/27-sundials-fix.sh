@@ -1,5 +1,5 @@
 #!/bin/bash -xe
-SUNDIALS_VERSION=${1:-5.8.0}
+SUNDIALS_VERSION=${1:-6.0.0}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
 
 if [ ! -d $SRC_DIR ]; then
@@ -11,7 +11,7 @@ fi
 
 for VARIANT in msan; do
     if [[ ${VARIANT} == msan ]]; then
-        export CC=${CC:-"clang-12"}
+        export CC=${CC:-"clang-13"}
     else
         export CC=${CC:-"gcc-11"}
     fi

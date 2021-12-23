@@ -48,8 +48,6 @@ for VARIANT in debug release; do
     make install
     ${INSTALL_DIR}/bin/python3 -c "import sqlite3, uuid, lzma, bz2" 
     ${INSTALL_DIR}/bin/python3 -m pip install --upgrade --upgrade-strategy=eager pip 
-    #${INSTALL_DIR}/bin/python3 -m pip install cython pytest 
-    #${INSTALL_DIR}/bin/python3 -m pip install numpy scipy matplotlib plotly tqdm ipywidgets notebook ipympl wheel appdirs ptvsd scikit-optimize
     PYTHON=${INSTALL_DIR}/bin/python3 /opt/15-pip-install.sh
     make clean
     ln -s $BUILD_DIR/compile_commands.json /opt/cpython-${CPYTHON_VERSION}-${VARIANT}/

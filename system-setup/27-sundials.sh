@@ -5,7 +5,7 @@ else
     OPENBLAS_OVERRIDE=0
 fi
 set -u
-SUNDIALS_VERSION=${1:-5.8.0}
+SUNDIALS_VERSION=${1:-6.0.0}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
 export CC=${CC:-"gcc-11"}
 

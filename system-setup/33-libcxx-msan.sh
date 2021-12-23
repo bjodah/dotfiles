@@ -1,5 +1,5 @@
 #!/bin/bash -eux
-export CC=clang-12 CXX=clang++-12
+export CC=clang-13 CXX=clang++-13
 export LLVM_ORG_VER=12.0.1
 export LLVM_MAJOR=$(echo $LLVM_ORG_VER | cut -f1 -d.)
 SRC_DIR=/build/llvm-project-llvmorg-${LLVM_ORG_VER}

@@ -2,12 +2,12 @@
 # usage: pass --user flag if running on workstation, and not in docker build.
 ${PYTHON:-python3} -m pip install $@ --upgrade pip
 ${PYTHON:-python3} -m pip install $@ \
-        appdirs argcomplete argh ase asv black bokeh bottle cclib check-manifest CherryPy \
-        cython epc flake8 future git-archive-all holoviews[recommended] \
+        accupy appdirs argcomplete argh ase asv black bokeh bottle cclib check-manifest CherryPy \
+        conan cython dufte epc flake8 future git-archive-all holoviews[recommended] \
         ipykernel ipython ipywidgets ipympl isort jedi-language-server joblib jupyter \
         mako matplotlib mogli mpld3 mypy nbconvert nbsphinx nbstripout notebook networkx \
         Nikola[extras] numericalunits numpy numpydoc pandas param \
-        periodictable plotly ptvsd pudb pulp pybind11 pycparser pycparser-fake-libc \
+        perfplots periodictable plotly ptvsd pudb pulp pybind11 pycparser pycparser-fake-libc \
         "pygments>=2.4.1" pygraphviz pylatex pyparsing pytest pytest-black pytest-cov \
         pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb \
         pytest-xdist pyyaml quantities rstcheck \

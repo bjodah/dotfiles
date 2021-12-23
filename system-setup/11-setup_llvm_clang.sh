@@ -11,7 +11,7 @@ echo "deb-src http://apt.llvm.org/$UBUNTU_CODENAME/ $APT_LIST_DISTRIBUTION main"
 sudo apt-get update
 sudo apt-get --assume-yes --no-install-recommends install \
     clang-${MAJOR_VERSION} \
-    libllvm11 \
+    libllvm${MAJOR_VERSION} \
     libclang-${MAJOR_VERSION}-dev \
     lldb-${MAJOR_VERSION} \
     llvm-${MAJOR_VERSION} \

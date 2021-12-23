@@ -1,4 +1,4 @@
-FROM ubuntu:focal-20211006
+FROM ubuntu:22.04
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 ARG DEBIAN_FRONTEND=noninteractive
 ARG DEBCONF_NONINTERACTIVE_SEEN=true
@@ -16,10 +16,8 @@ RUN apt-get update && \
     locale-gen en_US.UTF-8 && \
     apt-get dist-upgrade -y && \
     /opt/10-setup_ubuntu_packages.sh && \
-    /opt/11-setup_llvm_clang.sh 12 && \
-    /opt/12-setup-gcc.sh && \
+    /opt/11-setup_llvm_clang.sh 13 && \
     /opt/13-setup_intel_compilers.sh && \
-    /opt/14-tools.sh && \
     /opt/15-pip-install.sh && \
     /opt/16-ccls.sh && \
     /opt/17-build-emacs.sh && \
@@ -27,6 +25,9 @@ RUN apt-get update && \
     /opt/19-java.sh && \
     yes | unminimize && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+
+#    /opt/14-tools.sh && \
+#     /opt/12-setup-gcc.sh && \
 
 COPY 2?-*.sh /opt/
 
@@ -43,6 +44,3 @@ RUN /opt/33-libcxx-msan.sh && \
     /opt/75-boost.sh && \
     mkdir /opt/cargo /opt/rustup && CARGO_HOME=/opt/cargo PATH="$CARGO_HOME/bin:$PATH" RUSTUP_HOME=/opt/rustup /opt/67-rust.sh && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
-
-COPY 8?-*.sh /opt/
-RUN /opt/80-ispc.sh
