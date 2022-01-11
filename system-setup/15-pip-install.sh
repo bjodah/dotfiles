@@ -13,7 +13,7 @@ ${PYTHON:-python3} -m pip install $@ \
         pytest-xdist pyyaml quantities rstcheck \
         SciencePlots scikit-image scikit-optimize scipy setuptools setuptools_scm sphinx \
         sphinx_rtd_theme statsmodels sympy termplotlib toolz tqdm trepan3k \
-        virtualenv wheel wurlitzer xarray
+        virtualenv websockets wheel wurlitzer xarray
 
 ${PYTHON:-python3} -m pip install --no-use-pep517 sqlalchemy
 ${PYTHON:-python3} -m ipykernel install $@
