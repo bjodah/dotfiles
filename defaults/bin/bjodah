@@ -1,17 +1,63 @@
 #!/bin/bash
 # -*- mode: shell-script-mode -*-
+#
+# The curly braces on the line below allows us to edit this file without worrying
+# if doing so while the script is running.
+{
+    IMAGE=bjodahimg20dot:21.8.a
+    show_help(){
+        echo "Usage:"
+        echo "--image     name of containerimage, default: $IMAGE"
+        echo ""
+        echo "Example:"
+        echo ' $ bjodah -- emacs ~/.bashrc '
+    }
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            -h|--help|\?)
+                show_help
+                exit 0
+                ;;
+            --image)
+                shift
+                IMAGE=$1
+                shift
+                ;;
+            --args)
+                shift
+                ARGS=$1
+                shift
+                ;;
+            --)
+                shift
+                break
+                ;;
+            *)
+                show_help
+                exit 1
+                ;;
+        esac
+    done
 
-IMAGE=${IMAGE:-bjodahimg20dot:21.8.a}
+    if [ $# -eq 0 ]; then
+        >&2 echo "No command to execute, exiting."
+        exit 1
+    fi
 
-podman run \
-       -e TERM=xterm-256color\
-       -e DISPLAY\
-       -v /tmp/.X11-unix:/tmp/.X11-unix:rw\
-       -v "$PWD":"$PWD" \
-       -w "$PWD" \
-       --detach-keys=ctrl-\] \
-       --security-opt seccomp=unconfined \
-       --rm \
-       --name "bjodah" \
-       -it ${IMAGE} \
-       "$@"
+#           --user $UID:$GID \
+#	   -e LOGNAME \
+
+    podman run \
+           -e TERM=xterm-256color\
+           -e DISPLAY\
+           -v /tmp/.X11-unix:/tmp/.X11-unix:rw\
+           -v "$PWD":"$PWD" \
+           -w "$PWD" \
+           --detach-keys=ctrl-\] \
+           --security-opt seccomp=unconfined \
+           --rm \
+           --name "bjodah" \
+           -it ${IMAGE} \
+           "$@"
+    exit
+}
