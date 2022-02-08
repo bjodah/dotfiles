@@ -10,4 +10,6 @@ function include_dir {
 
 include_dir .bashrc.d
 include_dir .bash_completion.d
-include_dir .bash_aliases.d
+if [ -f ~/.bash_functions ]; then
+    . ~/.bash_functions
+fi

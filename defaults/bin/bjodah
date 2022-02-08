@@ -12,6 +12,7 @@
         echo "Example:"
         echo ' $ bjodah -- emacs ~/.bashrc '
     }
+    declare -a PODMAN_ARGS
     while [ $# -gt 0 ]; do
         case "$1" in
             -h|--help|\?)
@@ -23,19 +24,17 @@
                 IMAGE=$1
                 shift
                 ;;
-            --args)
-                shift
-                ARGS=$1
-                shift
-                ;;
             --)
                 shift
                 break
                 ;;
             *)
-                show_help
-                exit 1
+                PODMAN_ARGS+=("$1")
+                shift
                 ;;
+                # show_help
+                # exit 1
+                # ;;
         esac
     done
 
@@ -46,8 +45,9 @@
 
 #           --user $UID:$GID \
 #	   -e LOGNAME \
-
+    set -x
     podman run \
+           ${PODMAN_ARGS[@]} \
            -e TERM=xterm-256color\
            -e DISPLAY\
            -v /tmp/.X11-unix:/tmp/.X11-unix:rw\

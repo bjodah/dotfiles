@@ -1,1 +1,0 @@
-alias tmx='export MPLBACKEND=Agg; tmux'
