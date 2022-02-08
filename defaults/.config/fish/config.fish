@@ -1,5 +1,5 @@
 if status is-interactive
-    set -U fish_color_autosuggestion      brblack
+    set -U fish_color_autosuggestion      AAA
     set -U fish_color_cancel              -r
     set -U fish_color_command             brgreen
     set -U fish_color_comment             brmagenta
@@ -26,4 +26,4 @@ if status is-interactive
     set -U fish_pager_color_prefix        'white' '--bold' '--underline'
     set -U fish_pager_color_progress      'brwhite' '--background=cyan'
 end
-source ~/.bash_aliases.d/*
+source ~/.bash_aliases

@@ -5,6 +5,7 @@
 # if doing so while the script is running.
 {
     IMAGE=bjodahimg20dot:21.8.a
+    MOUNT_HOME=0
     show_help(){
         echo "Usage:"
         echo "--image     name of containerimage, default: $IMAGE"
@@ -22,6 +23,10 @@
             --image)
                 shift
                 IMAGE=$1
+                shift
+                ;;
+            --mount-home)
+                MOUNT_HOME=1
                 shift
                 ;;
             --)
@@ -42,6 +47,11 @@
         >&2 echo "No command to execute, exiting."
         exit 1
     fi
+    if [[ $MOUNT_HOME == 1 ]]; then
+        cd HOME
+        PODMAN_ARGS+=("-e HOME")
+        PRE_CMD="ln -s ~/.ssh /root/.ssh; ln -s ~/.gnupg /root/.gnupg;"
+    fi
 
 #           --user $UID:$GID \
 #	   -e LOGNAME \
@@ -58,6 +68,6 @@
            --rm \
            --name "bjodah" \
            -it ${IMAGE} \
-           "$@"
+           bash -c "$PRE_CMD $@"
     exit
 }
