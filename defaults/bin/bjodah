@@ -68,6 +68,6 @@
            --rm \
            --name "bjodah" \
            -it ${IMAGE} \
-           bash -c "$PRE_CMD $@"
+           bash -c "${PRE_CMD:-}$*"
     exit
 }
