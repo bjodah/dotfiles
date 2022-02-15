@@ -10,12 +10,13 @@ COPY 1?-*.sh /opt/
 
 RUN apt-get update && \
     apt-get --quiet --assume-yes --no-install-recommends install locales man manpages sudo tzdata && \
-    echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
+    echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \op
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
     echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
     locale-gen en_US.UTF-8 && \
     apt-get dist-upgrade -y && \
     /opt/10-setup_ubuntu_packages.sh && \
+    update-ca-certificates && \
     /opt/11-setup_llvm_clang.sh 12 && \
     /opt/12-setup-gcc.sh && \
     /opt/13-setup_intel_compilers.sh && \

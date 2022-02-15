@@ -57,6 +57,15 @@
 #	   -e LOGNAME \
 #          --cap-add=SYS_PTRACE \
     set -x
+    
+    IMAGE_CANDIDATE_FOLDER="$(dirname $(realpath $BASH_SOURCE))/../../environments/$IMAGE"
+    if [[ -d "$IMAGE_CANDIDATE_FOLDER" ]]; then
+	ENV_HASH=$(cat "$IMAGE_CANDIDATE_FOLDER"/* | openssl sha256 | cut -f2 -d' ')
+	IMAGE="${IMAGE}:${ENV_HASH:0:8}"
+	if ! podman image ls | grep $IMAGE; then
+	    podman build -t $IMAGE "$IMAGE_CANDIDATE_FOLDER" # | tee /dev/tty | tail -1 | cut -d' ' -f3
+	fi
+    fi
 
     podman run \
            ${PODMAN_ARGS[@]} \
@@ -69,7 +78,7 @@
            --security-opt seccomp=unconfined \
            --rm \
            --name "bjodah" \
-           -it ${IMAGE} \
+           -it "$IMAGE" \
            bash -c "${PRE_CMD:-}$*"
     exit
 }
