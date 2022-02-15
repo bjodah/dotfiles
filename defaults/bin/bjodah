@@ -53,9 +53,11 @@
         PRE_CMD="ln -s ~/.ssh /root/.ssh; ln -s ~/.gnupg /root/.gnupg;"
     fi
 
-#           --user $UID:$GID \
+#          --user $UID:$GID \
 #	   -e LOGNAME \
+#          --cap-add=SYS_PTRACE \
     set -x
+
     podman run \
            ${PODMAN_ARGS[@]} \
            -e TERM=xterm-256color\
