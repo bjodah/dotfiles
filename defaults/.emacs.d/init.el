@@ -11,13 +11,14 @@
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(lsp-pyright ispc-mode all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
+   '(evil lsp-pyright ispc-mode all-the-icons tangotango-theme dakrone-theme darkburn-theme gruber-darker-theme soothe-theme moe-theme glsl-mode cuda-mode yasnippet-snippets yasnippet validate auctex jupyter ein realgud forge cython-mode lsp-mode treemacs rg use-package-ensure-system-package vterm monokai-theme monokai typescript-mode lsp-java rust-mode company flycheck lsp-ui dockerfile-mode treemacs-magit which-key dap-mode ccls realgud-lldb yaml-mode cmake-mode mmm-mode use-package))
  '(preview-scale-function 2)
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vc-git-grep-template
    "git --no-pager grep --recurse-submodules -n <C> -e <R> -- <F>")
- '(vterm-always-compile-module t))
+ '(vterm-always-compile-module t)
+ '(vterm-shell "/usr/bin/fish"))
 (if (string-match-p "^Linux" (shell-command-to-string "uname"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -113,6 +114,21 @@
             (find-file-existing filename))))
 
 ))
+
+(use-package evil
+  :ensure t ;; install the evil package if not installed
+  :init ;; tweak evil's configuration before loading it
+  (setq evil-search-module 'evil-search)
+  (setq evil-ex-complete-emacs-commands nil)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
+  (setq evil-shift-round nil)
+  (setq evil-want-C-u-scroll t)
+  :config ;; tweak evil after loading it
+  (evil-mode)
+
+  ;; example how to map a command in normal mode (called 'normal state' in evil)
+  (define-key evil-normal-state-map (kbd ", w") 'evil-window-vsplit))
 
 (use-package flycheck
   :ensure t
@@ -773,3 +789,9 @@
   ;;   (find-file "//ODEN/Profile\$/bjorningvar/Documents/main.org"))
   ;; (open-main-org)
 )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 85 :width normal)))))

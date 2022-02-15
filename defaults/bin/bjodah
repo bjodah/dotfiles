@@ -5,24 +5,37 @@
 # if doing so while the script is running.
 {
     IMAGE=bjodahimg20dot:21.8.a
+    CONTAINER_FOLDER=""
     MOUNT_HOME=0
+    NAME=bjodah
     show_help(){
         echo "Usage:"
-        echo "--image     name of containerimage, default: $IMAGE"
+        echo "--image             name of containerimage, default: $IMAGE"
+        echo "--container-folder  name of container folder to build image from."
         echo ""
         echo "Example:"
         echo ' $ bjodah -- emacs ~/.bashrc '
     }
-    declare -a PODMAN_ARGS
+    declare -a PODMAN_RUN_ARGS
     while [ $# -gt 0 ]; do
         case "$1" in
             -h|--help|\?)
                 show_help
                 exit 0
                 ;;
+            --name)
+                shift
+                NAME=$1
+                shift
+                ;;
             --image)
                 shift
                 IMAGE=$1
+                shift
+                ;;
+            --container-folder)
+                shift
+                CONTAINER_FOLDER=$1
                 shift
                 ;;
             --mount-home)
@@ -34,7 +47,7 @@
                 break
                 ;;
             *)
-                PODMAN_ARGS+=("$1")
+                PODMAN_RUN_ARGS+=("$1")
                 shift
                 ;;
                 # show_help
@@ -49,26 +62,37 @@
     fi
     if [[ $MOUNT_HOME == 1 ]]; then
         cd $HOME
-        PODMAN_ARGS+=("-e HOME")
+        PODMAN_RUN_ARGS+=("-e HOME")
         PRE_CMD="ln -s ~/.ssh /root/.ssh; ln -s ~/.gnupg /root/.gnupg;"
     fi
 
 #          --user $UID:$GID \
 #	   -e LOGNAME \
 #          --cap-add=SYS_PTRACE \
-    set -x
+    set -euxo pipefail
     
-    IMAGE_CANDIDATE_FOLDER="$(dirname $(realpath $BASH_SOURCE))/../../environments/$IMAGE"
-    if [[ -d "$IMAGE_CANDIDATE_FOLDER" ]]; then
-	ENV_HASH=$(cat "$IMAGE_CANDIDATE_FOLDER"/* | openssl sha256 | cut -f2 -d' ')
-	IMAGE="${IMAGE}:${ENV_HASH:0:8}"
+    if [[ ! -z "$CONTAINER_FOLDER" ]]; then
+        if [[ ! -d "$CONTAINER_FOLDER/env" ]]; then
+            CANDIDATE_FOLDER="$(dirname $(realpath $BASH_SOURCE))/../../containers/$CONTAINER_FOLDER/"
+            if [[ ! -d "$CANDIDATE_FOLDER/env" ]]; then
+                >&2 echo "Found no container folder, looked for: $CANDIDATE_FOLDER/env"
+                exit 1
+            else
+                CONTAINER_FOLDER="$CANDIDATE_FOLDER"
+            fi
+        fi
+        if [[ -e $CONTAINER_FOLDER/run-args.sh ]]; then
+            source $CONTAINER_FOLDER/run-args.sh
+        fi
+	ENV_HASH=$(cat "$CONTAINER_FOLDER"/env/* | openssl sha256 | cut -f2 -d' ')
+	IMAGE="localhost/$(basename ${CONTAINER_FOLDER}):${ENV_HASH:0:8}"
 	if ! podman image ls | grep $IMAGE; then
-	    podman build -t $IMAGE "$IMAGE_CANDIDATE_FOLDER" # | tee /dev/tty | tail -1 | cut -d' ' -f3
+	    podman build -t $IMAGE "$CONTAINER_FOLDER/env"
 	fi
     fi
 
     podman run \
-           ${PODMAN_ARGS[@]} \
+           ${PODMAN_RUN_ARGS[@]} \
            -e TERM=xterm-256color\
            -e DISPLAY\
            -v /tmp/.X11-unix:/tmp/.X11-unix:rw\
@@ -77,7 +101,7 @@
            --detach-keys=ctrl-\] \
            --security-opt seccomp=unconfined \
            --rm \
-           --name "bjodah" \
+           --name "$NAME" \
            -it "$IMAGE" \
            bash -c "${PRE_CMD:-}$*"
     exit

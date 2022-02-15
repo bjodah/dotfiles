@@ -52,3 +52,9 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+(after! flycheck
+        (setq flycheck-c/c++-clang-executable "clang++-14"))
+
+(after! vterm
+        (setq vterm-shell "/usr/bin/fish"))

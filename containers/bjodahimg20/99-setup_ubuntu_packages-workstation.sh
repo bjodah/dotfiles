@@ -1,4 +1,4 @@
-sudo apt-get --assume-yes --no-install-recommends install apt-file nvidia-cuda-toolkit gimp git rsync curl gnupg2 iotop htop podman aufs-tools libsfml-dev python3-pyglet python3-pygame-sdl2 kdenlive gocryptfs kitty trickle qemu-system-ppc64 qemu-utils cloud-image-utils likwid
+sudo apt-get --assume-yes --no-install-recommends install apt-file nvidia-cuda-toolkit gimp git rsync curl gnupg2 iotop htop podman aufs-tools libsfml-dev python3-pyglet python3-pygame-sdl2 kdenlive gocryptfs kitty trickle qemu-system-ppc64 qemu-utils cloud-image-utils likwid xcape
 sudo apt-file update
 
 curl -sS https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg | sudo apt-key add - 
