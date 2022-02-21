@@ -33,8 +33,18 @@ set -g remain-on-exit on  # cf. respawn-pane & respawn-pane -k
 set -g history-limit 15000  # default is 2000 lines
 EOF
 
+cat <<EOF>$THIS_RUNDIR/launch-emacs.sh
+#!/bin/bash
+set -euxo pipefail
+mkdir -p ~/.cache/clangd
+ln -fs ~/.cache/clangd $(pwd)/$THIS_BUILD/clangd
+while ! test -e $(pwd)/compile_commands.json; do sleep 1; done
+/install_dir/bin/emacs --eval '(load \"/opt/my-rundir/launch-emacs.el\")'
+EOF
+chmod +x $THIS_RUNDIR/launch-emacs.sh
 cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
 #!/bin/bash
+set -euxo pipefail
 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
      new -s ${CONTAINER_FOLDER}-$(basename $(dirname $(realpath $BASH_SOURCE))) \
      "cmake \\
@@ -45,7 +55,7 @@ tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
              -B $THIS_BUILD \\
              -S $(pwd) ; \\
       ln -fs $THIS_BUILD/compile_commands.json . && cmake --build $THIS_BUILD" \; \
-     new-window "emacs --eval '(load \"/opt/my-rundir/launch-emacs.el\")'" \; \
+     new-window "/opt/my-rundir/launch-emacs.sh" \; \
      new-window "ttyd --port 7682 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock"
 EOF
 chmod +x $THIS_RUNDIR/launch-tmux.sh
