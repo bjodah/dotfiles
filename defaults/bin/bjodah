@@ -4,14 +4,21 @@
 # The curly braces on the line below allows us to edit this file without worrying
 # if doing so while the script is running.
 {
-    IMAGE=bjodahimg20dot:21.8.a
+    IMAGE=bjodahimg20dot:21.8.a   # the default image
     CONTAINER_FOLDER=""
     MOUNT_HOME=0
     NAME=bjodah
+    WITH_X11=1
     show_help(){
+        echo "Launch a container using podman run with some nice defaults"
+        echo "also supports building container images on-the-fly."
+        echo ""
         echo "Usage:"
+        echo "--name              name of containerimage, default: $NAME"
         echo "--image             name of containerimage, default: $IMAGE"
         echo "--container-folder  name of container folder to build image from."
+        echo "--no-x11            do not set DISPLAY, do not mount X11 socket folder."
+        echo "--mount-home        Mount home folder *AND* symlink ~/.ssh ~/.gnupg folders"
         echo ""
         echo "Example:"
         echo ' $ bjodah -- emacs ~/.bashrc '
@@ -36,6 +43,10 @@
             --container-folder)
                 shift
                 CONTAINER_FOLDER=$1
+                shift
+                ;;
+            --no-x11)
+                WITH_X11=0
                 shift
                 ;;
             --mount-home)
@@ -64,6 +75,10 @@
         cd $HOME
         PODMAN_RUN_ARGS+=("-e HOME")
         PRE_CMD="ln -s ~/.ssh /root/.ssh; ln -s ~/.gnupg /root/.gnupg;"
+    fi
+    if [[ $WITH_X11 == 1 ]]; then
+        PODMAN_RUN_ARGS+=("-e DISPLAY")
+        PODMAN_RUN_ARGS+=("-v /tmp/.X11-unix:/tmp/.X11-unix:rw")
     fi
 
 #          --user $UID:$GID \
@@ -94,8 +109,6 @@
     podman run \
            ${PODMAN_RUN_ARGS[@]} \
            -e TERM=xterm-256color\
-           -e DISPLAY\
-           -v /tmp/.X11-unix:/tmp/.X11-unix:rw\
            -v "$PWD":"$PWD" \
            -w "$PWD" \
            --detach-keys=ctrl-\] \
