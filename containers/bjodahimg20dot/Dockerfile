@@ -4,7 +4,7 @@ MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 COPY ???-*.sh *.el /opt/
 
 RUN \
-    /opt/100-clone-dotfiles.sh /opt/bjodah-dotfiles && \
+    git clone --depth=1 https://github.com/bjodah/dotfiles /opt/bjodah-dotfiles && \
     /opt/110-setup-emacs.sh    /opt/bjodah-dotfiles && \
     chmod 666 -R               /opt/bjodah-dotfiles && \
     find                       /opt/bjodah-dotfiles -type d | xargs chmod 777 && \
