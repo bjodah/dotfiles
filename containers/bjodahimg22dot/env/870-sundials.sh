@@ -1,4 +1,7 @@
 #!/bin/bash -xe
+
+# /usr/lib/x86_64-linux-gnu/libopenblas.so
+
 if [ ! -z "$OPENBLAS_ROOT" ]; then
     OPENBLAS_OVERRIDE=1
 else
@@ -51,7 +54,11 @@ for VARIANT in debug release single extended; do
             CFLAGS_DEBUG_DEFAULT="-Os -g3"
             export CFLAGS=${CFLAGS_DEBUG:-"${CFLAGS_DEBUG_DEFAULT}"}
             BUILD_TYPE=${VARIANT^}
-            OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas_d.so
+	    if [[ -e ${OPENBLAS_ROOT}/lib/libopenblas_d.so ]]; then
+		OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas_d.so
+	    else
+		OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas.so	
+	    fi
         else
             if [[ $(uname -m) == "x86_64" ]]; then
                 CFLAGS_RELEASE_DEFAULT="-O3 -march=nehalem -mtune=skylake"

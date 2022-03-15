@@ -14,9 +14,3 @@ RUN apt-get update \
     && /opt/330-libcxx-msan.sh \
     && /opt/750-boost.sh \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
-
-
-COPY 870-sundials.sh /opt/
-RUN env OPENBLAS_ROOT=/usr /opt/870-sundials.sh 6.1.1 \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
