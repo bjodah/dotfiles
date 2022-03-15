@@ -34,9 +34,9 @@ RUN apt-add-repository ppa:fish-shell/release-3 && apt-get update && apt-get --a
         apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN \
-        curl -Ls https://www.davidhbailey.com/dhbsoftware/qd-2.3.22.tar.gz | tar xz -C /build && \
-        cd /build/qd-2.3.22/ && CXX=g++-11 CC=gcc-11 FC=gfortran-11 ./configure --enable-shared --prefix=/opt/qd-2.3.22 && \
-        bear make && make install && ln -s /build/qd-2.3.22/compile_commands.json /opt/qd-2.3.22/
+        curl -Ls https://www.davidhbailey.com/dhbsoftware/qd-2.3.23.tar.gz | tar xz -C /build && \
+        cd /build/qd-2.3.23/ && CXX=g++-11 CC=gcc-11 FC=gfortran-11 ./configure --enable-shared --prefix=/opt/qd-2.3.23 && \
+        bear make && make install && ln -s /build/qd-2.3.23/compile_commands.json /opt/qd-2.3.23/
 
 
 COPY 15??-*.sh /opt/

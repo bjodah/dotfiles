@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 export CC=clang-14 CXX=clang++-14
-export LLVM_ORG_VER=13.0.1
+export LLVM_ORG_VER=14.0.0-rc1
 export LLVM_MAJOR=$(echo $LLVM_ORG_VER | cut -f1 -d.)
 SRC_DIR=/build/llvm-project-llvmorg-${LLVM_ORG_VER}
 LIBCXXABI_INCLUDE=$SRC_DIR/libcxxabi/include
@@ -42,11 +42,12 @@ for VARIANT in debug release msan; do
         $CMAKE_ARGS \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DCMAKE_MODULE_PATH=$SRC_DIR/libcxx/cmake/Modules \
-        -DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_MAJOR} \
         -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR_LIBCXX \
         -DLIBCXXABI_LIBCXX_INCLUDES=$INSTALL_DIR_LIBCXX/include/c++/v1 \
-        -DLIBCXXABI_LIBCXX_PATH=/tmp/llvm-project-llvmorg-${LLVM_ORG_VER}/libcxx \
+        -DLIBCXXABI_LIBCXX_PATH=$SRC_DIR/libcxx \
         $SRC_DIR/libcxxabi
+        #-DLLVM_CONFIG_PATH=/usr/bin/llvm-config-${LLVM_MAJOR} \
+
     cmake --build .
     cmake --build . --target install
     cmake --build . --target clean
