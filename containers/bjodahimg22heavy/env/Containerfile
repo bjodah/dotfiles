@@ -1,0 +1,19 @@
+# -*- mode: dockerfile -*-
+FROM bjodah/bjodahimg22dot:22.3.a
+
+MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
+
+COPY 10000-setup_ubuntu_packages.sh /opt/
+
+RUN apt-get update && \
+    /opt/10000-setup_ubuntu_packages.sh
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY 15000-pip-install.sh /opt/
+
+RUN /opt/15000-pip-install.sh && \
+    rm -rf ~/.cache/pip
+
+COPY 67000-rust.sh
+
+RUN mkdir /opt/cargo /opt/rustup && CARGO_HOME=/opt/cargo PATH="$CARGO_HOME/bin:$PATH" RUSTUP_HOME=/opt/rustup /opt/67000-rust.sh

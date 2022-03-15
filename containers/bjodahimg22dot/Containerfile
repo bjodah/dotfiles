@@ -1,0 +1,21 @@
+# -*- mode: dockerfile -*-
+FROM bjodah/bjodahimg22dev:22.3
+MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
+
+COPY ????-*.sh *.el /opt/
+
+RUN \
+    /opt/1000-clone-dotfiles.sh /opt/bjodah-dotfiles && \
+    /opt/1100-setup-emacs.sh    /opt/bjodah-dotfiles && \
+    chmod 666 -R               /opt/bjodah-dotfiles && \
+    find                       /opt/bjodah-dotfiles -type d | xargs chmod 777 && \
+    git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+
+RUN \
+    git clone --branch clang_13 https://github.com/include-what-you-use/include-what-you-use.git /build/iwyu-13-src && \
+    CXX=clang++-13 CC=clang-13 cmake -S /build/iwyu-13-src -B /build/iwyu-13-bld -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/lib/llvm-13 && \
+    cmake --build /build/iwyu-13-bld && cmake --install /build/iwyu-13-bld && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+

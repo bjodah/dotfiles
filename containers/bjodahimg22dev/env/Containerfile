@@ -1,0 +1,20 @@
+# -*- mode: dockerfile -*-
+FROM bjodah/bjodahimg22base:22.3.a
+MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
+
+COPY 100-setup_ubuntu_packages.sh 110-setup_llvm_clang.sh 130-setup_intel_compilers.sh 150-pip-install.sh 160-ccls.sh 250-libqd.sh 270-sundials.sh 330-libcxx-msan.sh 750-boost.sh /opt/
+
+RUN apt-get update
+RUN /opt/100-setup_ubuntu_packages.sh 
+RUN /opt/110-setup_llvm_clang.sh 14 
+RUN /opt/130-setup_intel_compilers.sh 
+RUN /opt/150-pip-install.sh 
+RUN /opt/160-ccls.sh 
+RUN /opt/250-libqd.sh 2.3.22 /opt/libqd-2.3.22 
+RUN /opt/270-sundials.sh 6.1.1
+RUN /opt/330-libcxx-msan.sh
+RUN /opt/750-boost.sh
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip ~/.cache/pip
+
