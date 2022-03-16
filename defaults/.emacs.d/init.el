@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("5e2cdea6453f8963037723ab91c779b203fb201bf5c377094440f0c465d688ec" "fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7" "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
- '(ein:jupyter-server-args '("--no-browser --allow-root"))
+ ;; '(ein:jupyter-server-args '("--no-browser --allow-root"))
  '(ein:output-area-inlined-images t)
  '(flycheck-c/c++-gcc-executable "gcc-10")
  '(inhibit-startup-screen t)
@@ -20,14 +20,14 @@
  '(vterm-always-compile-module t)
  '(vterm-shell "/usr/bin/fish"))
 (if (string-match-p "^Linux" (shell-command-to-string "uname"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 85 :width normal)))))
-    (message "on MS Windows?")
-)
+    (custom-set-faces
+     ;; custom-set-faces was added by Custom.
+     ;; If you edit it by hand, you could mess it up, so be careful.
+     ;; Your init file should contain only one such instance.
+     ;; If there is more than one, they won't work right.
+     '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 85 :width normal)))))
+  (message "on MS Windows?")
+  )
 
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/ ----------------------------------------
 (setq gc-cons-threshold 100000000)
@@ -388,6 +388,7 @@
   ;; (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets")
   ;; (yas-reload-all)
   )
+
 (use-package yasnippet-snippets
   :ensure t
   :defer t
