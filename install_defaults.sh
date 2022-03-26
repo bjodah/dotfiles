@@ -11,6 +11,16 @@ fi
 
 cd "$ABS_REPO_PATH"/defaults
 for f in $(find . -maxdepth 1 -type f); do
+    if [[ $f == ".gdbinit" ]]; then
+        if [ -e "$HOME/.gdbinit" ]; then
+            >&2 echo "~/.gdbinit already exists, skipping."
+        else
+            # echo "set auto-load safe-path /" >>~/.gdbinit
+            echo "add-auto-load-safe-path $ABS_REPO_PATH/defaults/.gdbinit" >>~/.gdbinit
+            echo "source \"$ABS_REPO_PATH/defaults/.gdbinit\""
+        fi
+        continue
+    fi
     DESTFILE="$HOME/$(basename "$f")"
     if [ -e "$DESTFILE" ]; then
         if [ -L "$DESTFILE" ]; then
