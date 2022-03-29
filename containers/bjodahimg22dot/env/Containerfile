@@ -2,27 +2,36 @@
 FROM bjodah/bjodahimg22dev:22.4.a.1
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY 870-sundials.sh /opt/
-RUN env OPENBLAS_ROOT=/usr /opt/870-sundials.sh 6.1.1 \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
-
-COPY ????-*.sh *.el /opt/
-
-
+COPY emacs-pgtk-gcc_29.0.50.deb emacs_28.0.92.deb 1000-apt-packages.sh 1500-sundials.sh /opt/
 
 RUN \
-    /opt/1000-clone-dotfiles.sh /opt/bjodah-dotfiles && \
-    /opt/1100-setup-emacs.sh    /opt/bjodah-dotfiles && \
+    dpkg-deb -x /opt/emacs-pgtk-gcc_29.0.50.deb /opt/emacs-pgtk-gcc_29/ && \
+    dpkg-deb -x /opt/emacs_28.0.92.deb /opt/emacs_28/ && \
+    apt-get --quiet update && \
+    /opt/1000-apt-packages.sh && \
+    OPENBLAS_LIBDIR=/usr/lib/x86_64-linux-gnu /opt/1500-sundials.sh && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+
+COPY 1600-ttyd.sh /opt
+
+RUN /opt/1600-ttyd.sh && which ttyd
+
+
+COPY 2???-*.sh *.el /opt/
+
+RUN \
+    /opt/2000-clone-dotfiles.sh /opt/bjodah-dotfiles && \
+    env EMACS_PREFIX="/opt/emacs*_28" /opt/2050-build-emacs-vterm.sh && \
+    env EMACS_PREFIX="/opt/emacs*_29" /opt/2050-build-emacs-vterm.sh && \
+    /opt/2100-setup-emacs.sh    /opt/bjodah-dotfiles && \
     chmod 666 -R               /opt/bjodah-dotfiles && \
     find                       /opt/bjodah-dotfiles -type d | xargs chmod 777 && \
     git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
-RUN \
-    git clone --branch clang_13 https://github.com/include-what-you-use/include-what-you-use.git /build/iwyu-13-src && \
-    CXX=clang++-13 CC=clang-13 cmake -S /build/iwyu-13-src -B /build/iwyu-13-bld -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/lib/llvm-13 && \
-    cmake --build /build/iwyu-13-bld && cmake --install /build/iwyu-13-bld && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
+# COPY 3???-*.sh /opt/
+
+# RUN \
+#     /opt/3100-iwyu.sh 14

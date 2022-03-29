@@ -7,9 +7,10 @@ show_help(){
     echo "--with-pgtk            Enable pure-gtk backend (req. gtk3)"
     echo "--build-root           emacs will be cloned from this dir"
     echo "--cflags               Specify CFLAGS, defaults to optimized build"
+    echo "--make-command         default: make, e.g.: 'bear -- make'"
     echo ""
     echo "One of:"
-    echo "--create-deb            Build a debian dpkg/apt package, or:..."
+    echo "--create-deb <outdir>  Build a debian dpkg/apt package, or:..."
     echo "--install <prefix>     Install into <prefix>"
 }
 EMACS_BRANCH="emacs-28"
@@ -19,6 +20,7 @@ CREATE_DEB=0
 INSTALL_PREFIX=""
 BUILD_ROOT=""
 CFLAGS_GIVEN=""
+MAKE_COMMAND="make"
 while [ $# -gt 0 ]; do
     case "$1" in
 	-h|--help|\?)
@@ -40,6 +42,11 @@ while [ $# -gt 0 ]; do
 	    BUILD_ROOT=$1
 	    shift
 	    ;;
+	--make-command)
+	    shift
+	    MAKE_COMMAND=$1
+	    shift
+	    ;;
 	--with-native-comp)
 	    WITH_NATIVE_COMP=1
 	    shift
@@ -50,6 +57,8 @@ while [ $# -gt 0 ]; do
 	    ;;
 	--create-deb)
 	    CREATE_DEB=1
+	    shift
+	    CREATE_DEB_OUTDIR="$1"
 	    shift
 	    ;;
 	--install)
@@ -73,6 +82,15 @@ if [[ $CREATE_DEB == 0 && $INSTALL_PREFIX == "" ]]; then
 elif [[ $CREATE_DEB != 0 && $INSTALL_PREFIX != "" ]]; then
     >&2 echo "Cannot have both --create-deb and --install <prefix> specified"
     exit 1
+fi
+if [[ $CREATE_DEB == 1 ]]; then
+    if [[ $CREATE_DEB_OUTDIR == "" ]]; then
+	>&2 echo "Got no --create-deb <dir>"
+    fi
+    if [[ ! -d "$CREATE_DEB_OUTDIR" ]]; then
+	>&2 echo "No such output directory (--create-deb <dir>): $CREATE_DEB_OUTDIR"
+	exit 1
+    fi
 fi
 if [[ $BUILD_ROOT == "" ]]; then
     >&2 echo "Need to specify build root dir --build-root"
@@ -117,13 +135,16 @@ CONFIGURE_FLAGS="--with-dbus \
  --with-imagemagick\
  --with-modules\
  --with-json"
+
 EMACS_FEATURES=""
+
 if [[ $WITH_PGTK == 1 ]]; then
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --with-pgtk"
     EMACS_FEATURES="${EMACS_FEATURES}-pgtk"
 else
-    CONFIGURE_FLAGS="$CONFIGURE_FLAGS --with-xwidgets"
+    CONFIGURE_FLAGS="$CONFIGURE_FLAGS"  #  --with-xwidgets
 fi
+
 if [[ $WITH_NATIVE_COMP == 1 ]]; then
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --with-native-compilation"
     EMACS_FEATURES="${EMACS_FEATURES}-gcc"
@@ -134,11 +155,9 @@ fi
 if [[ $INSTALL_PREFIX != "" ]]; then
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --prefix=$INSTALL_PREFIX"
 fi
-( set -x; \
-  CC=gcc-12 CXX=g++-12 CFLAGS="$CFLAGS_GIVEN" ./configure \
-    $CONFIGURE_FLAGS )
+( set -x; CC=gcc-12 CXX=g++-12 CFLAGS="$CFLAGS_GIVEN" ./configure $CONFIGURE_FLAGS )
 
-bear -- make -j $(nproc) $MAKE_FLAGS
+$MAKE_COMMAND -j $(nproc) $MAKE_FLAGS
 
 if [[ $CREATE_DEB == 1 ]]; then
     EMACS_VERSION=$(sed -ne 's/AC_INIT(GNU Emacs, \([0-9.]\+\), .*/\1/p' configure.ac)
@@ -146,7 +165,7 @@ if [[ $CREATE_DEB == 1 ]]; then
     mkdir -p $EMACS_DEB_ROOT/usr/local
     make install prefix=$EMACS_DEB_ROOT/usr/local
     mkdir $EMACS_DEB_ROOT/DEBIAN
-    EMACS_DEB_DEP="libgif7, libotf1, libm17n-0, librsvg2-2, libtiff5, libjansson4, libacl1, libgmp10, libwebp6, libsqlite3-0"
+    EMACS_DEB_DEP="libgif7, libotf1, libm17n-0, librsvg2-2, libtiff5, libjansson4, libacl1, libgmp10, libwebp7, libsqlite3-0"
     EMACS_DEB_DESCR="Emacs $EMACS_VERSION ($EMACS_BRANCH)"
     if [[ $WITH_NATIVE_COMP == 1 ]]; then
 	EMACS_DEB_DEP="$EMACS_DEB_DEP, libgccjit0"
@@ -155,20 +174,23 @@ if [[ $CREATE_DEB == 1 ]]; then
     if [[ $WITH_PGTK == 1 ]]; then
 	EMACS_DEB_DEP="$EMACS_DEB_DEP, libgtk-3-0"
 	EMACS_DEB_DESCR="$EMACS_DEB_DESCR, with pure-GTK"
+    # else
+    # 	EMACS_DEB_DEP="$EMACS_DEB_DEP, libwebkit2gtk-4.1-0"
     fi
-    echo "Package: emacs${EMACS_FEATURES}\n\
-Version: ${EMACS_VERSION}\n\
-Section: base\n\
-Priority: optional\n\
-Architecture: $(dpkg-architecture --query DEB_TARGET_ARCH)\n\
-Depends: $EMACS_DEB_DEP\n\
-Maintainer: bjodah\n\
-Description: $EMACS_DEB_DESCR\n\
-    $CONFIGURE_FLAGS" \
-         >> $EMACS_DEB_ROOT/DEBIAN/control
+    cat <<EOF >> $EMACS_DEB_ROOT/DEBIAN/control
+Package: emacs${EMACS_FEATURES}
+Version: ${EMACS_VERSION}
+Section: base
+Priority: optional
+Architecture: $(dpkg-architecture --query DEB_TARGET_ARCH)
+Depends: $EMACS_DEB_DEP
+Maintainer: bjodah
+Description: $EMACS_DEB_DESCR
+    $CONFIGURE_FLAGS 
+EOF
     dpkg-deb --build $EMACS_DEB_ROOT
     mkdir -p /opt/deploy
-    mv /opt/emacs-gcc-pgtk_*.deb /opt/deploy
+    mv ${BUILD_ROOT}/emacs${EMACS_FEATURES}_${EMACS_VERSION}.deb "${CREATE_DEB_OUTDIR}"
 elif [[ $INSTALL_PREFIX != "" ]]; then
     sudo make install
     make clean

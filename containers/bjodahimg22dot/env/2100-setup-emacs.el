@@ -1,4 +1,4 @@
-;;; 110-setup-emacs.el --- Summary
+;;; 2100-setup-emacs.el --- Summary
 ;;; this file loaded upon first launch of emacs to setup packages
 ;;; Commentary:
 ;;; execute using -nw --batch '(load "110-setup-emacs.el")'
@@ -22,9 +22,9 @@
   (lsp--install-server-internal client nil)
   (while (lsp--client-download-in-progress? client)
     (sit-for 1)))
-(let ((client (gethash 'jdtls lsp-clients)))
-  (lsp--install-server-internal client nil)
-  (while (lsp--client-download-in-progress? client)
-    (sit-for 1)))
+;; (let ((client (gethash 'jdtls lsp-clients)))
+;;   (lsp--install-server-internal client nil)
+;;   (while (lsp--client-download-in-progress? client)
+;;     (sit-for 1)))
 )
-;;; 110-setup-emacs.el ends here
+;;; 2100-setup-emacs.el ends here

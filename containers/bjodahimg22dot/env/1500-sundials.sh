@@ -2,7 +2,7 @@
 
 # /usr/lib/x86_64-linux-gnu/libopenblas.so
 
-if [ ! -z "$OPENBLAS_ROOT" ]; then
+if [ ! -z "$OPENBLAS_LIBDIR" ]; then
     OPENBLAS_OVERRIDE=1
 else
     OPENBLAS_OVERRIDE=0
@@ -10,10 +10,11 @@ fi
 set -u
 SUNDIALS_VERSION=${1:-6.1.1}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
-export CC=${CC:-"gcc-11"}
+export CC=${CC:-"gcc-12"}
 
 if [ ! -d $SRC_DIR ]; then
-    curl -Ls https://github.com/llnl/sundials/releases/download/v${SUNDIALS_VERSION}/sundials-${SUNDIALS_VERSION}.tar.gz | tar xz -C /build
+    SUNDIALS_SRC_URL="https://github.com/llnl/sundials/releases/download/v${SUNDIALS_VERSION}/sundials-${SUNDIALS_VERSION}.tar.gz"
+    curl -Ls "${SUNDIALS_SRC_URL}" | tar xz -C /build
 fi
 
 for VARIANT in debug release single extended; do
@@ -29,16 +30,16 @@ for VARIANT in debug release single extended; do
     cd ${BUILD_DIR}
     if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
         if [[ $VARIANT == "debug" ]]; then
-            OPENBLAS_ROOT=/opt/openblas-0.3.20-${VARIANT}
+            OPENBLAS_LIBDIR=/opt/openblas-0.3.20-${VARIANT}/lib
         else
-            OPENBLAS_ROOT=/opt/openblas-0.3.20-release
+            OPENBLAS_LIBDIR=/opt/openblas-0.3.20-release/lib
         fi
-        if [ ! -d "${OPENBLAS_ROOT}" ]; then
-            >&2 echo "Not a directory: ${OPENBLAS_ROOT}"
+        if [ ! -d "${OPENBLAS_LIBDIR}" ]; then
+            >&2 echo "Not a directory: ${OPENBLAS_LIBDIR}"
             exit 1
         fi
     fi
-    export LDFLAGS=-Wl,-rpath-link,${OPENBLAS_ROOT}/lib
+    export LDFLAGS=-Wl,-rpath-link,${OPENBLAS_LIBDIR}
     if [[ $VARIANT == extended || $VARIANT == single ]]; then
         CMAKE_ARGS="-DENABLE_KLU=OFF -DSUNDIALS_PRECISION:STRING=$VARIANT"
     else
@@ -54,10 +55,10 @@ for VARIANT in debug release single extended; do
             CFLAGS_DEBUG_DEFAULT="-Os -g3"
             export CFLAGS=${CFLAGS_DEBUG:-"${CFLAGS_DEBUG_DEFAULT}"}
             BUILD_TYPE=${VARIANT^}
-	    if [[ -e ${OPENBLAS_ROOT}/lib/libopenblas_d.so ]]; then
-		OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas_d.so
-	    else
-		OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas.so	
+	    if [[ -e ${OPENBLAS_LIBDIR}/libopenblas_d.so ]]; then
+		OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas_d.so
+	    elif [[ -e ${OPENBLAS_LIBDIR}/libopenblas.so ]]; then
+		OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas.so	
 	    fi
         else
             if [[ $(uname -m) == "x86_64" ]]; then
@@ -67,11 +68,15 @@ for VARIANT in debug release single extended; do
             fi
             export CFLAGS=${CFLAGS_RELEASE:-"${CFLAGS_RELEASE_DEFAULT}"}
             BUILD_TYPE=Release
-            OPENBLAS_SO=${OPENBLAS_ROOT}/lib/libopenblas.so
+            OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas.so
             if [[ $VARIANT == single ]]; then
                 CMAKE_ARGS='$CMAKE_ARGS'
             fi
         fi
+	if [[ ! -e $OPENBLAS_SO ]]; then
+	    >&2 echo "Could not find openblas shared object with default name"
+	    exit 1
+	fi
         CMAKE_ARGS="${CMAKE_ARGS} \
           -DENABLE_LAPACK=ON \
           -DLAPACK_LIBRARIES=${OPENBLAS_SO} \
@@ -81,7 +86,7 @@ for VARIANT in debug release single extended; do
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-          -DCMAKE_INSTALL_RPATH="${INSTALL_DIR}/lib;${OPENBLAS_ROOT}/lib" \
+          -DCMAKE_INSTALL_RPATH="${INSTALL_DIR}/lib;${OPENBLAS_LIBDIR}" \
           -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
           -DBUILD_SHARED_LIBS=ON \
           -DBUILD_STATIC_LIBS=OFF \

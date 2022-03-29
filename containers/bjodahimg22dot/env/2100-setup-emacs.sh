@@ -6,4 +6,4 @@ rm -f ~/.emacs.d
 ln -s $TARGET/defaults/.emacs.d ~/.emacs.d
 cd /opt
 ls -lrt | grep 110
-emacs -nw --batch --eval '(load "/opt/110-setup-emacs.el")'
+emacs -nw --batch --eval '(load "/opt/2100-setup-emacs.el")'
