@@ -16,7 +16,7 @@ sudo apt-get --assume-yes --no-install-recommends install \
      libwebp-dev libwebsockets-dev libx11-dev libxml2-dev libxpm-dev libxrender1 libxslt1-dev libyaml-dev \
      libzmq3-dev libzstd-dev lzma-dev \
      ninja-build petsc-dev \
-     python3-dev rr tk-dev trilinos-dev valgrind wine-stable xorg-dev xutils-dev zlib1g-dev linux-tools-common \
+     python3-dev rr tk-dev trilinos-dev valgrind xorg-dev xutils-dev zlib1g-dev linux-tools-common \
      libopenblas-openmp-dev
 
 # Useful packages deferred for now (too heavy)

@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dev:22.3.a
+FROM bjodah/bjodahimg22dev:22.4.a.1
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
 COPY 870-sundials.sh /opt/

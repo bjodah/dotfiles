@@ -1,14 +1,21 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22base:22.3.a
+FROM bjodah/bjodahimg22base:22.4.a
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY 100-setup_ubuntu_packages.sh 110-setup_llvm_clang.sh 130-setup_intel_compilers.sh 150-pip-install.sh 160-ccls.sh 250-libqd.sh  330-libcxx-msan.sh 750-boost.sh /opt/
+COPY 100-setup_ubuntu_packages.sh 110-setup_llvm_clang.sh 120-download_intel_sde.sh 130-setup_intel_compilers.sh 140-gdb-printers.sh 150-pip-install.sh 154-build-flint-arb.sh /opt/
 
 RUN apt-get update \
     && /opt/100-setup_ubuntu_packages.sh  \
     && /opt/110-setup_llvm_clang.sh 14  \
-    && /opt/130-setup_intel_compilers.sh  \
+    && /opt/120-download_intel_sde.sh \
+    && /opt/130-setup_intel_compilers.sh \
+    && /opt/140-gdb-printers.sh \
     && /opt/150-pip-install.sh  \
+    && /opt/154-build-flint-arb.sh
+
+COPY 155-build-antic-calcium.sh 160-ccls.sh 250-libqd.sh  330-libcxx-msan.sh 750-boost.sh /opt/
+
+RUN /opt/155-build-antic-calcium.sh \
     && /opt/160-ccls.sh  \
     && /opt/250-libqd.sh 2.3.23 /opt/libqd-2.3.23 \
     && /opt/330-libcxx-msan.sh \

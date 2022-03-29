@@ -2,7 +2,15 @@
 # usage: pass --user flag if running on workstation, and not in docker build.
 ${PYTHON:-python3} -m pip install $@ --upgrade pip
 ${PYTHON:-python3} -m pip install $@ \
-        ase asv black cclib cython epc flake8  isort mogli mypy Nikola[extras] numpydoc pudb pybind11 pycparser pycparser-fake-libc pygraphviz pytest-black pytest-cov pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb pytest-xdist rstcheck scikit-image scikit-optimize setuptools_scm sphinx sphinx_rtd_theme trepan3k virtualenv websockets
+        ase asv cclib cython dufte epc flake8 holoviews[recommended] ipykernel ipython ipywidgets ipympl isort joblib jupyter matplotlib mpld3 mogli mypy nbconvert nbsphinx nbstripout notebook networkx Nikola[extras] numericalunits numpy numpydoc param periodictable ptvsd pulp pudb pybind11 pycparser pycparser-fake-libc pygraphviz pytest-black pytest-cov pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb pytest-xdist quantities rstcheck SciencePlots scikit-image scikit-optimize scipy setuptools_scm sphinx sphinx_rtd_theme statsmodels sympy termplotlib trepan3k toolz virtualenv websockets xarray
+
+${PYTHON:-python3} -m ipykernel install $@
+${PYTHON:-python3} -m jupyter nbextension enable $@ --py widgetsnbextension
+${PYTHON:-python3} -c "import matplotlib.pyplot as plt"
+
+# bokeh 85M
+# plotly 146M
+# pandas 59M
 
 # jedi-language-server
 # accupy perfplots
