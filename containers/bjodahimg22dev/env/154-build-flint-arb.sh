@@ -17,7 +17,7 @@ cmake --build ${BUILD_ROOT}/flint2-${FLINT_VERSION}-debug
 cmake --install ${BUILD_ROOT}/flint2-${FLINT_VERSION}-debug
 cmake --build ${BUILD_ROOT}/flint2-${FLINT_VERSION}-debug --target clean
 ln -s ${BUILD_ROOT}/flint2-${FLINT_VERSION}-debug/compile_commands.json /opt/flint2-${FLINT_VERSION}-debug
-
+find ${BUILD_ROOT}/flint2-${FLINT_VERSION} -type d -name test -maxdepth 2 | xargs rm -r  # save some space
 
 ARB_VERSION=${ARB_VERSION:-"2.22.1"}
 curl -Ls https://github.com/fredrik-johansson/arb/archive/refs/tags/${ARB_VERSION}.tar.gz | tar xz -C ${BUILD_ROOT}/

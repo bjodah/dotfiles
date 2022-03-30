@@ -53,4 +53,13 @@ for VARIANT in debug release msan; do
     cmake --build . --target clean
 
     cp $LIBCXXABI_INCLUDE/* /opt/libcxx${LLVM_MAJOR}-${VARIANT}/include/
+
+    cd -
+    cmake --build . --target clean
 done
+rm -r $SRC_DIR/llvm/test/
+rm -r $SRC_DIR/clang/test/
+rm -r $SRC_DIR/lldb/test/
+ln -s this-folder-was-deleted-in-order-to-save-space $SRC_DIR/llvm/test
+ln -s this-folder-was-deleted-in-order-to-save-space $SRC_DIR/clang/test
+ln -s this-folder-was-deleted-in-order-to-save-space $SRC_DIR/lldb/test

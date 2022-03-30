@@ -20,5 +20,6 @@ echo "using gcc : $($CC --version | head -n 1 | cut -d' ' -f4) : $(which $CXX) ;
 ./bootstrap.sh --with-toolset=gcc --with-python=python3 --prefix=${BOOST_PREFIX}  #.p
 bear -- ./b2 -j4 install
 cp compile_commands.json ${BOOST_PREFIX}/
+./b2 --clean
 ./b2 --clean-all -n
 rm g++ gcc
