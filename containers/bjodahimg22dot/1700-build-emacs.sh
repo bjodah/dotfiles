@@ -17,7 +17,7 @@ EMACS_BRANCH="emacs-28"
 WITH_NATIVE_COMP=0
 WITH_PGTK=0
 CREATE_DEB=0
-INSTALL_PREFIX=""
+INSTALL_PREFIX="/usr/local"
 BUILD_ROOT=""
 CFLAGS_GIVEN=""
 MAKE_COMMAND="make"
@@ -76,13 +76,6 @@ while [ $# -gt 0 ]; do
 	    ;;
     esac
 done  
-if [[ $CREATE_DEB == 0 && $INSTALL_PREFIX == "" ]]; then
-    >&2 echo "Need either --create-deb or --install <prefix> as flag"
-    exit 1
-elif [[ $CREATE_DEB != 0 && $INSTALL_PREFIX != "" ]]; then
-    >&2 echo "Cannot have both --create-deb and --install <prefix> specified"
-    exit 1
-fi
 if [[ $CREATE_DEB == 1 ]]; then
     if [[ $CREATE_DEB_OUTDIR == "" ]]; then
 	>&2 echo "Got no --create-deb <dir>"
@@ -162,8 +155,8 @@ $MAKE_COMMAND -j $(nproc) $MAKE_FLAGS
 if [[ $CREATE_DEB == 1 ]]; then
     EMACS_VERSION=$(sed -ne 's/AC_INIT(GNU Emacs, \([0-9.]\+\), .*/\1/p' configure.ac)
     EMACS_DEB_ROOT=$BUILD_ROOT/emacs${EMACS_FEATURES}_${EMACS_VERSION}
-    mkdir -p $EMACS_DEB_ROOT/usr/local
-    make install prefix=$EMACS_DEB_ROOT/usr/local
+    mkdir -p $EMACS_DEB_ROOT$INSTALL_PREFIX
+    make install prefix=$EMACS_DEB_ROOT$INSTALL_PREFIX
     mkdir $EMACS_DEB_ROOT/DEBIAN
     EMACS_DEB_DEP="libgif7, libotf1, libm17n-0, librsvg2-2, libtiff5, libjansson4, libacl1, libgmp10, libwebp7, libsqlite3-0"
     EMACS_DEB_DESCR="Emacs $EMACS_VERSION ($EMACS_BRANCH)"
@@ -189,7 +182,6 @@ Description: $EMACS_DEB_DESCR
     $CONFIGURE_FLAGS 
 EOF
     dpkg-deb --build $EMACS_DEB_ROOT
-    mkdir -p /opt/deploy
     mv ${BUILD_ROOT}/emacs${EMACS_FEATURES}_${EMACS_VERSION}.deb "${CREATE_DEB_OUTDIR}"
 elif [[ $INSTALL_PREFIX != "" ]]; then
     sudo make install
