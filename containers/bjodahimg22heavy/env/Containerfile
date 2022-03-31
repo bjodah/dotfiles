@@ -22,4 +22,13 @@ RUN curl -Ls https://downloads.python.org/pypy/pypy3.9-v7.3.8-linux64.tar.bz2 | 
 
 COPY 67000-rust.sh
 
-RUN mkdir /opt/cargo /opt/rustup && CARGO_HOME=/opt/cargo PATH="$CARGO_HOME/bin:$PATH" RUSTUP_HOME=/opt/rustup /opt/67000-rust.sh
+RUN \
+        mkdir /opt/cargo /opt/rustup && \
+        CARGO_HOME=/opt/cargo PATH="$CARGO_HOME/bin:$PATH" RUSTUP_HOME=/opt/rustup /opt/67000-rust.sh
+
+RUN /opt/cargo/bin/cargo install difftastic
+
+
+# https://gitlab.inria.fr/gappa/gappa
+# https://www.sollya.org/
+# (https://gitlab.com/flopoco/flopoco)
