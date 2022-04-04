@@ -37,3 +37,7 @@ RUN \
     npm i -g bash-language-server && \
     npm cache clean --force
     
+RUN \
+    apt-get --quiet update && \
+    apt-get --assume-yes --no-install-recommends install libgtk-3-bin && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
