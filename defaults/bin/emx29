@@ -1,0 +1,8 @@
+#!/bin/bash
+# -*- mode: shellscript -*-
+if [ ! -e ~/.emacs-eln-cache ]; then
+   mkdir ~/.emacs-eln-cache
+fi
+bjodah \
+    -v ~/.emacs-eln-cache:/root/.emacs.d.29/eln-cache \
+-- "ln -s /root/.emacs.d.29 /root/.emacs.d && bash /opt/bjodah-dotfiles/install_defaults.sh && /opt/emacs-pgtk-gcc-29/bin/emacs"
