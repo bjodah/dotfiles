@@ -11,7 +11,7 @@ fi
 
 cd "$ABS_REPO_PATH"/defaults
 for f in $(find . -maxdepth 1 -type f); do
-    if [[ $f == ".gdbinit" ]]; then
+    if [[ $f == "./.gdbinit" ]]; then
         if [ -e "$HOME/.gdbinit" ]; then
             >&2 echo "~/.gdbinit already exists, skipping."
         else

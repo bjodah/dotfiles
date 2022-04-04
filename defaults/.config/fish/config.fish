@@ -25,8 +25,9 @@ if status is-interactive
     set -U fish_pager_color_description   yellow
     set -U fish_pager_color_prefix        'white' '--bold' '--underline'
     set -U fish_pager_color_progress      'brwhite' '--background=cyan'
+
+    source ~/.bash_aliases
 end
-source ~/.bash_aliases
 
 function vterm_printf;
     if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end 

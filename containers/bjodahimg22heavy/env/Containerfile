@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dot:22.3.a
+FROM bjodah/bjodahimg22dot:22.4.a.1.2
 
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
