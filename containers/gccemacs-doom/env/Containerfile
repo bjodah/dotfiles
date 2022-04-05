@@ -34,8 +34,10 @@ ADD doom-base-config.tar.gz /root/
 
 RUN ~/.emacs.d/bin/doom sync
 
-COPY .doom.d/config.el .doom.d/packages.el .doom.d/init.el /root/.doom.d/
+COPY ./.doom.d/config.el ./.doom.d/packages.el ./.doom.d/init.el /root/.doom.d/
 
 RUN ~/.emacs.d/bin/doom sync
+
+COPY .config/fish/config.fish /root/.config/fish/
 
 # emacs --batch --eval '(load-file "/opt/setup-emacs.sh")'
