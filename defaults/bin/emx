@@ -1,0 +1,78 @@
+#!/bin/bash
+# -*- mode: shellscript -*-
+set -euo pipefail
+show_help(){
+    echo "Launches an instance of Emacs 29 (master branch)"
+    echo ""
+    echo "Usage:"
+    echo "--broadway <display-number>   E.g. 5, then open http://localhost:8085"
+    echo "--use <version>           E.g. 28.doom, symlinks .emcas.d.<version> to /root/.emacs.d"
+}
+USE_EMACS_D=""
+USE_BROADWAY=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --broadway)
+            shift
+            USE_BROADWAY=$1
+            shift
+            ;;
+        --use)
+            shift
+            USE_EMACS_D=$1
+            shift
+            ;;
+        -h|--help|\?)
+            show_help
+            exit 0
+            ;;
+        *)
+           show_help
+           exit 1
+           ;;
+    esac
+done
+if [ ! -e ~/.emx ]; then
+    mkdir ~/.emx
+fi
+if [ ! -e ~/.emx/.emacs-eln-cache ]; then
+   mkdir ~/.emx/.emacs-eln-cache
+fi
+
+set -x
+
+
+cat <<EOF>>~/.emx/.tmux.conf
+unbind C-b
+set -g prefix 'C-\'
+bind 'C-\' send-prefix
+set -g mouse on
+set -g default-terminal "screen-256color"
+set -g status-style "bg=blue"
+set -g remain-on-exit on  # cf. respawn-pane & respawn-pane -k
+set -g history-limit 15000  # default is 2000 lines
+EOF
+
+if [[ $USE_BROADWAY != "" ]]; then
+    BJODAH_ARGS="-p 127.0.0.1:808$USE_BROADWAY:808$USE_BROADWAY"
+    cat <<EOF>~/.emx/launch.sh
+tmux  -2 -S tmux-bjodah.sock -f /emx/.tmux.conf new -s emx "broadwayd :$USE_BROADWAY" \
+    \; new-window "GDK_BACKEND=broadway BROADWAY_DISPLAY=:$USE_BROADWAY /opt/emacs-pgtk-gcc-29/bin/emacs"
+EOF
+    TMUX_ARGS=""
+    xdg-open "http://localhost:8085"
+else
+    BJODAH_ARGS=""
+    cat <<EOF>~/.emx/launch.sh
+tmux -2 -S tmux-bjodah.sock -f /emx/.tmux.conf new -s emx /opt/emacs-pgtk-gcc-29/bin/emacs
+EOF
+
+fi
+
+bjodah \
+    -v ~/.emx:/emx \
+    -v ~/.emx/.emacs-eln-cache:/root/.emacs.d.29/eln-cache \
+    $BJODAH_ARGS \
+    -- "ln -s /root/.emacs.d.29 /root/.emacs.d && \
+        bash /opt/bjodah-dotfiles/install_defaults.sh && \
+        set -x; source /emx/launch.sh"
