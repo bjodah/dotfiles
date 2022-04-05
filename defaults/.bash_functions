@@ -40,3 +40,10 @@ grp() {
 mkcd() {
     ( set -x; mkdir $@; cd ${@: -1} )
 }
+
+et29() {
+    emx --client --use 29 -t $@  
+}
+ec29() {
+    emx --client --use 29 $@  -- --x11
+}

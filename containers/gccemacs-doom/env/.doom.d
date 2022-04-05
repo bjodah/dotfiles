@@ -1,0 +1,1 @@
+/home/bjorn/dotfiles/defaults/.doom.d
