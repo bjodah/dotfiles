@@ -39,5 +39,5 @@ RUN \
     
 RUN \
     apt-get --quiet update && \
-    apt-get --assume-yes --no-install-recommends install libgtk-3-bin && \
+    apt-get --assume-yes --no-install-recommends install libgtk-3-bin x11-apps iputils-ping && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
