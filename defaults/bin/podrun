@@ -114,7 +114,7 @@
             source $CONTAINER_FOLDER/run-args.sh
         fi
 	ENV_HASH=$(cat "$CONTAINER_FOLDER"/env/* | openssl sha256 | cut -f2 -d' ')
-	IMAGE="localhost/$(basename ${CONTAINER_FOLDER}):${ENV_HASH:0:8}"
+	IMAGE="localhost/$(basename $(realpath ${CONTAINER_FOLDER})):${ENV_HASH:0:8}"
 	if ! podman image ls | grep $IMAGE; then
 	    podman build -t $IMAGE "$CONTAINER_FOLDER/env"
 	fi
