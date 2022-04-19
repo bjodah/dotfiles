@@ -1,3 +1,4 @@
+;(set-background-color "black")
 (setq custom-file (concat user-emacs-directory "custom-vars.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
