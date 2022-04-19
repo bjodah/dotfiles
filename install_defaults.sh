@@ -23,7 +23,8 @@ for f in $(find $PER_FILE -type f); do
         fi
         continue
     fi
-    DESTFILE=$HOME_DIR/$(basename ${f#$PER_FILE/})
+    DESTFILE=$HOME_DIR/${f#./per-file/}
+    echo $DESTFILE
     if [ -L "$DESTFILE" ]; then
 	rm "$DESTFILE"
     elif [ -e "$DESTFILE" ]; then
@@ -32,6 +33,9 @@ for f in $(find $PER_FILE -type f); do
     fi
     DESTDIR=$(dirname $DESTFILE)
     if [[ ! -d "$DESTDIR" ]]; then
+	if [[ -L "$DESTDIR" ]]; then
+	    rm "$DESTDIR"  # remove broken link
+	fi
         mkdir -p "$DESTDIR"
     fi
     ln -s "$ABS_REPO_PATH/${f#./}" "$DESTFILE"
@@ -46,7 +50,7 @@ done
 PER_LEAF_DIR="./per-leaf-dir"
 for d in $(find $PER_LEAF_DIR -type d -links 2);
 do
-    DESTLINK="$HOME_DIR/${d#$PER_LEAF_DIR/}"
+    DESTLINK="$HOME_DIR/${d#./per-leaf-dir/}"
     if [[ -L "$DESTLINK" ]]; then
         rm "$DESTLINK"
     elif [[ -e "$DESTLINK" ]]; then
