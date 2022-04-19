@@ -1,5 +1,0 @@
-repo@hera ~/public_html/${MD5_DIGEST}/ http://hera.physchem.kth.se/~repo/${MD5_DIGEST}/
-repo@neatger /opt/share/www/repo/${SHA256_DIGEST:0:1}/${SHA256_DIGEST}/ http://sayyy.mooo.com:8080/repo/${SHA256_DIGEST:0:1}/${SHA256_DIGEST}/
-bjorn-repos@therock /home/bjorn-repos/public_html/${SHA256_DIGEST:0:1}/${SHA256_DIGEST}/ http://therock.egneblad.se/~bjorn-repos/${SHA256_DIGEST:0:1}/${SHA256_DIGEST}/
-repo@odroid64 /media/bjorn/bravo/repo/www/${SHA256_DIGEST:0:1}/${SHA256_DIGEST}/ http://sayyy.mooo.com/~repo/${SHA256_DIGEST:0:1}/${SHA256_DIGEST}/
-repo@fraktal /mnt/frequent/precious/users/repo/www/sha256/${SHA256_DIGEST:0:1}/${SHA256_DIGEST}/ http://repo.perfe.tk/sha256/${SHA256_DIGEST:0:1}/${SHA256_DIGEST}/

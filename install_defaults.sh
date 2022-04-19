@@ -1,36 +1,40 @@
 #!/bin/bash
+HOME_DIR=${HOME_DIR:-$HOME}
 ABS_REPO_PATH=$(unset CDPATH && cd "$(dirname "$0")" && echo $PWD)
-if ! grep bjodah/dotfiles $HOME/.profile >/dev/null; then
-    cat "$ABS_REPO_PATH"/profile.append >>$HOME/.profile
+if ! grep bjodah/dotfiles $HOME_DIR/.profile >/dev/null; then
+    cat "$ABS_REPO_PATH"/profile.append >>$HOME_DIR/.profile
     echo "Appended to ~/.profile"
 fi
-if ! grep bjodah/dotfiles $HOME/.bashrc >/dev/null; then
-    cat "$ABS_REPO_PATH"/bashrc.append >>$HOME/.bashrc
+if ! grep bjodah/dotfiles $HOME_DIR/.bashrc >/dev/null; then
+    cat "$ABS_REPO_PATH"/bashrc.append >>$HOME_DIR/.bashrc
     echo "Appended to ~/.bashrc"
 fi
 
-cd "$ABS_REPO_PATH"/defaults
-for f in $(find . -maxdepth 1 -type f); do
-    if [[ $f == "./.gdbinit" ]]; then
-        if [ -e "$HOME/.gdbinit" ]; then
+cd "$ABS_REPO_PATH"
+PER_FILE="./per-file/"
+for f in $(find $PER_FILE -type f); do
+    if [[ $f == "./per-file/.gdbinit" ]]; then
+        if [ -e "$HOME_DIR/.gdbinit" ]; then
             >&2 echo "~/.gdbinit already exists, skipping."
         else
             # echo "set auto-load safe-path /" >>~/.gdbinit
-            echo "add-auto-load-safe-path $ABS_REPO_PATH/defaults/.gdbinit" >>~/.gdbinit
-            echo "source \"$ABS_REPO_PATH/defaults/.gdbinit\""
+            echo "add-auto-load-safe-path $ABS_REPO_PATH/${f#./}" >>~/.gdbinit
+            echo "source \"$ABS_REPO_PATH/${f#./}\""
         fi
         continue
     fi
-    DESTFILE="$HOME/$(basename "$f")"
-    if [ -e "$DESTFILE" ]; then
-        if [ -L "$DESTFILE" ]; then
-	    rm "$DESTFILE"
-        else
-            echo "File already exists, skipping: $DESTFILE"
-            continue
-        fi
+    DESTFILE=$HOME_DIR/$(basename ${f#$PER_FILE/})
+    if [ -L "$DESTFILE" ]; then
+	rm "$DESTFILE"
+    elif [ -e "$DESTFILE" ]; then
+        >&2 echo "File already exists, skipping: $DESTFILE"
+        continue
     fi
-    ln -s "$ABS_REPO_PATH/defaults/$f" "$DESTFILE"
+    DESTDIR=$(dirname $DESTFILE)
+    if [[ ! -d "$DESTDIR" ]]; then
+        mkdir -p "$DESTDIR"
+    fi
+    ln -s "$ABS_REPO_PATH/${f#./}" "$DESTFILE"
     if [ -L "$DESTFILE" ]; then
         echo "Successfully symlinked $DESTFILE"
     else
@@ -39,30 +43,30 @@ for f in $(find . -maxdepth 1 -type f); do
     fi
 done
 
-for d in $(find . -maxdepth 1 ! -path . -type d);
+PER_LEAF_DIR="./per-leaf-dir"
+for d in $(find $PER_LEAF_DIR -type d -links 2);
 do
-    for f in $(find $d -maxdepth 1 ! -path $d ! -path \*.gitattributes);
-    do
-        DESTDIR="$HOME/$(dirname "$f")"
-        DESTFILE="$DESTDIR/$(basename $f)"
-        if [ -e "$DESTFILE" ]; then
-            if [ -L "$DESTFILE" ]; then
-	        rm "$DESTFILE"
-            else
-                echo "File already exists, skipping: $DESTFILE"
-                continue
-            fi
-        fi
-        if [ ! -e $DESTDIR ]; then
-            "Creating directory: $DESTDIR"
-            mkdir -p $DESTDIR
-        fi
-        ln -s "$ABS_REPO_PATH"/defaults/$f $DESTFILE
-        if [ -L "$DESTFILE" ]; then
-            echo "Successfully symlinked $DESTFILE"
-        else
-            >&2 echo "ERROR: Exiting... Something went wrong creating symlink: $DESTFILE"
-            exit 1
-        fi
-    done
+    DESTLINK="$HOME_DIR/${d#$PER_LEAF_DIR/}"
+    if [[ -L "$DESTLINK" ]]; then
+        rm "$DESTLINK"
+    elif [[ -e "$DESTLINK" ]]; then
+        >&2 echo "Directory already exists, skipping: $DESTLINK"
+        continue
+    fi
+    DESTPARENT=$(dirname $DESTLINK)
+    echo $DESTPARENT
+    if [[ -L $DESTPARENT ]] && [[ ! -e $DESTPARENT ]]; then
+        rm $DESTPARENT
+    fi
+
+    if [[ ! -d "$DESTPARENT" ]]; then
+        mkdir -p "$DESTPARENT"
+    fi
+    ln -s "$ABS_REPO_PATH/${d#./}" "$DESTLINK"
+    if [[ -L "$DESTLINK" ]]; then
+        echo "Successfully symlinked $DESTLINK"
+    else
+        >&2 echo "ERROR: Exiting... Something went wrong creating symlink: $DESTLINK"
+        exit 1
+    fi
 done
