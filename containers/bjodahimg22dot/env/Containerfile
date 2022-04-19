@@ -39,5 +39,13 @@ RUN \
     
 RUN \
     apt-get --quiet update && \
-    apt-get --assume-yes --no-install-recommends install libgtk-3-bin x11-apps iputils-ping && \
+    apt-get --assume-yes --no-install-recommends install libgtk-3-bin x11-apps iputils-ping jq && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY 4100-get-ein-master.sh /opt/
+
+RUN python3 -m pip install yq && \
+    git clone https://github.com/cask/cask /opt/cask && \
+    git clone https://github.com/millejoh/emacs-ipython-notebook /build/ein && \
+    /opt/4100-get-ein-master.sh /opt/emacs*-28/ ~/.emacs.d.28 && \
+    /opt/4100-get-ein-master.sh /opt/emacs*-29/ ~/.emacs.d.29

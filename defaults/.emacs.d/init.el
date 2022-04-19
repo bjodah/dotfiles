@@ -300,7 +300,13 @@
   :after magit)
 (use-package realgud :ensure t)
 
-(use-package ein :ensure t)
+;; (use-package quelpa-use-package
+;;   :init (setq quelpa-update-melpa-p nil)
+;;   :config (quelpa-use-package-activate-advice))
+
+(use-package ein ;:ensure t
+  )
+
 (use-package jupyter :ensure t)
 (use-package tex
   :defer t
@@ -347,7 +353,8 @@
 (mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
 
 ;(use-package monokai-theme :ensure t)
-(use-package tangotango-theme :ensure t)
+;(use-package tangotango-theme :ensure t)
+(require 'pitchkai-theme)
 
 
 ;; yasnippet
@@ -388,7 +395,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
 
-(add-hook 'after-init-hook (lambda () (load-theme 'tangotango)))
+(add-hook 'after-init-hook (lambda () (load-theme
+				       ;'tangotango
+				       'pitchkai
+				       )))
 
 (add-hook 'gdb-mode-hook
     (function (lambda ()

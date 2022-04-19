@@ -29,6 +29,15 @@ RUN \
 RUN /opt/cargo/bin/cargo install difftastic
 
 
+# RUN git clone https://github.com/mattgodbolt/seasocks.git /build/seasocks && \
+#     cmake -S /build/seasocks -B /build/seasocks/build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/opt/seasocks -DCMAKE_EXPORT_COMPILE_COMMANDS=ON && \
+#     cmake --build /build/seasocks/build && \
+#     cmake --install /build/seasocks/build && \
+#     ln -s /build/seasocks/build/compile_commands.json /opt/seasocks/
+
+
+
 # https://gitlab.inria.fr/gappa/gappa
 # https://www.sollya.org/
 # (https://gitlab.com/flopoco/flopoco)
+
