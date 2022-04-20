@@ -129,9 +129,11 @@ CONFIGURE_FLAGS="--with-dbus \
  --with-xft\
  --with-xpm\
  --with-gpm=no\
- --with-imagemagick\
  --with-modules\
  --with-json $@"
+
+# --with-imagemagick\
+
 
 EMACS_FEATURES=""
 
