@@ -80,8 +80,21 @@
         exit 1
     fi
     if [[ $WITH_X11 == 1 ]]; then
-        PODMAN_RUN_ARGS+=("-e DISPLAY")
+        PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
         PODMAN_RUN_ARGS+=("-v /tmp/.X11-unix:/tmp/.X11-unix:rw")
+        if [[ -e $HOME/.Xauthority ]]; then
+            PODMAN_RUN_ARGS+=("-v $HOME/.Xauthority:/root/.Xauthority:rw")
+        fi
+	# # https://github.com/containers/podman/discussions/13040#discussioncomment-2071464
+	# PODMAN_RUN_ARGS+=("--uidmap $(id -u):0:1")
+	# PODMAN_RUN_ARGS+=("--gidmap $(id -g):0:1")
+	# PODMAN_RUN_ARGS+=("--gidmap 0:1:$(id -g)")
+	#
+	# The above doesn't really work, podman starts *copying* the whole filesystem
+	# with 'storage-chown-by-maps' consuming all CPU and disk read-write.
+	#
+	# Instead pass the following to 
+	PODMAN_RUN_ARGS+=("--net host")
     fi
 
 #          --user $UID:$GID \
@@ -103,7 +116,7 @@
             source $CONTAINER_FOLDER/run-args.sh
         fi
 	ENV_HASH=$(cat "$CONTAINER_FOLDER"/env/* | openssl sha256 | cut -f2 -d' ')
-	IMAGE="localhost/$(basename ${CONTAINER_FOLDER}):${ENV_HASH:0:8}"
+	IMAGE="localhost/$(basename $(realpath ${CONTAINER_FOLDER})):${ENV_HASH:0:8}"
 	if ! podman image ls | grep $IMAGE; then
 	    podman build -t $IMAGE "$CONTAINER_FOLDER/env"
 	fi

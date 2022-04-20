@@ -1,3 +1,4 @@
+;(set-background-color "black")
 (setq custom-file (concat user-emacs-directory "custom-vars.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
@@ -14,7 +15,7 @@
      ;; If you edit it by hand, you could mess it up, so be careful.
      ;; Your init file should contain only one such instance.
      ;; If there is more than one, they won't work right.
-     '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 90 :width normal)))))
+     '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 100 :width normal)))))
   (message "on MS Windows?")
   )
 
@@ -300,7 +301,13 @@
   :after magit)
 (use-package realgud :ensure t)
 
-(use-package ein :ensure t)
+;; (use-package quelpa-use-package
+;;   :init (setq quelpa-update-melpa-p nil)
+;;   :config (quelpa-use-package-activate-advice))
+
+(use-package ein ;:ensure t
+  )
+
 (use-package jupyter :ensure t)
 (use-package tex
   :defer t
@@ -347,7 +354,8 @@
 (mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
 
 ;(use-package monokai-theme :ensure t)
-(use-package tangotango-theme :ensure t)
+;(use-package tangotango-theme :ensure t)
+(require 'pitchkai-theme)
 
 
 ;; yasnippet
@@ -388,7 +396,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
 
-(add-hook 'after-init-hook (lambda () (load-theme 'tangotango)))
+(add-hook 'after-init-hook (lambda () (load-theme
+				       ;'tangotango
+				       'pitchkai
+				       )))
 
 (add-hook 'gdb-mode-hook
     (function (lambda ()
@@ -780,9 +791,3 @@
   ;;   (find-file "//ODEN/Profile\$/bjorningvar/Documents/main.org"))
   ;; (open-main-org)
 )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 85 :width normal)))))

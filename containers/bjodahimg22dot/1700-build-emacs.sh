@@ -5,13 +5,17 @@ show_help(){
     echo "--git-branch <name>    e.g.: 'emacs-28', 'master'"
     echo "--with-native-comp     Enable native compilation (libgccjit)"
     echo "--with-pgtk            Enable pure-gtk backend (req. gtk3)"
-    echo "--build-root           emacs will be cloned from this dir"
+    echo "--build-root           a shallow clone of emacs' repo will be put under this dir"
     echo "--cflags               Specify CFLAGS, defaults to optimized build"
     echo "--make-command         default: make, e.g.: 'bear -- make'"
     echo ""
     echo "One of:"
     echo "--create-deb <outdir>  Build a debian dpkg/apt package, or:..."
     echo "--install <prefix>     Install into <prefix>"
+    echo ""
+    echo "Example:"
+    echo "  \$ CC=gcc-10 ./$0 --git-branch emacs-28 -- --without-x && which emacs"
+    echo "  /usr/local/bin/emacs"
 }
 EMACS_BRANCH="emacs-28"
 WITH_NATIVE_COMP=0
@@ -125,9 +129,11 @@ CONFIGURE_FLAGS="--with-dbus \
  --with-xft\
  --with-xpm\
  --with-gpm=no\
- --with-imagemagick\
  --with-modules\
- --with-json"
+ --with-json $@"
+
+# --with-imagemagick\
+
 
 EMACS_FEATURES=""
 
@@ -148,7 +154,7 @@ fi
 if [[ $INSTALL_PREFIX != "" ]]; then
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --prefix=$INSTALL_PREFIX"
 fi
-( set -x; CC=gcc-12 CXX=g++-12 CFLAGS="$CFLAGS_GIVEN" ./configure $CONFIGURE_FLAGS )
+( set -x; CC=${CC:-"gcc-12"} CXX=${CXX:-"g++-12"} CFLAGS="$CFLAGS_GIVEN" ./configure $CONFIGURE_FLAGS )
 
 $MAKE_COMMAND -j $(nproc) $MAKE_FLAGS
 

@@ -1,3 +1,3 @@
 [submodule "defaults/.bash-git-prompt"]
-	path = defaults/.bash-git-prompt
+	path = per-leaf-dir/.bash-git-prompt
 	url = https://github.com/magicmonty/bash-git-prompt.git
