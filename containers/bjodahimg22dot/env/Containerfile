@@ -49,3 +49,7 @@ RUN python3 -m pip install yq && \
     git clone https://github.com/millejoh/emacs-ipython-notebook /build/ein && \
     /opt/4100-get-ein-master.sh /opt/emacs*-28/ ~/.emacs.d.28 && \
     /opt/4100-get-ein-master.sh /opt/emacs*-29/ ~/.emacs.d.29
+
+RUN npm install -g npm@8.7.0 && \
+    /usr/local/bin/npm -g --prefix /root/.emacs.d.28/.cache/lsp/npm/pyright install pyright && \
+    /usr/local/bin/npm -g --prefix /root/.emacs.d.29/.cache/lsp/npm/pyright install pyright
