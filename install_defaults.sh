@@ -40,7 +40,7 @@ for f in $(find $PER_FILE -type f); do
     fi
     ln -s "$ABS_REPO_PATH/${f#./}" "$DESTFILE"
     if [ -L "$DESTFILE" ]; then
-        echo "Successfully symlinked $DESTFILE"
+        echo "Successfully symlinked file: $DESTFILE"
     else
         >&2 echo "ERROR: Exiting... Something went wrong creating symlink: $DESTFILE"
         exit 1
@@ -48,7 +48,8 @@ for f in $(find $PER_FILE -type f); do
 done
 
 PER_LEAF_DIR="./per-leaf-dir"
-for d in $(find $PER_LEAF_DIR -type d -links 2);
+# https://stackoverflow.com/a/62632786/790973
+for d in $(find ./per-leaf-dir -type d | sed 's/$/\//' | sort -r | awk 'index(a,$0)!=1{a=$0;print}' | sed 's/\/$//' | sort);
 do
     DESTLINK="$HOME_DIR/${d#./per-leaf-dir/}"
     if [[ -L "$DESTLINK" ]]; then
@@ -68,7 +69,7 @@ do
     fi
     ln -s "$ABS_REPO_PATH/${d#./}" "$DESTLINK"
     if [[ -L "$DESTLINK" ]]; then
-        echo "Successfully symlinked $DESTLINK"
+        echo "Successfully symlinked dir: $DESTLINK"
     else
         >&2 echo "ERROR: Exiting... Something went wrong creating symlink: $DESTLINK"
         exit 1

@@ -249,7 +249,7 @@ Also affects 'linum-mode' background."
           (terminal-pitchkai-violet-d         "#5F00AF")
           (terminal-pitchkai-violet-l         "#AF87D7")
           (terminal-pitchkai-blue-d           "#008787")
-          (terminal-pitchkai-blue-l           "#87D7FF")
+          (terminal-pitchkai-blue-l           "#77C7EF")
           (terminal-pitchkai-cyan-d           "#5FAFAF")
           (terminal-pitchkai-cyan-l           "#AFFFFF")
           (terminal-pitchkai-green-d          "#5F8700")
