@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("4b7f40b8a016aebe2f0229c188f6fcc10436881dbfd1469f427679212b5c16e7" "5e2cdea6453f8963037723ab91c779b203fb201bf5c377094440f0c465d688ec" "fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7" "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
+   '("6efc73ee7c144f7f845d03317439827d76bf331ac0f5977c616254d38ba3262e" "4b7f40b8a016aebe2f0229c188f6fcc10436881dbfd1469f427679212b5c16e7" "5e2cdea6453f8963037723ab91c779b203fb201bf5c377094440f0c465d688ec" "fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7" "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
  '(ein:output-area-inlined-images t)
  '(flycheck-c/c++-gcc-executable "gcc-10")
  '(inhibit-startup-screen t)
