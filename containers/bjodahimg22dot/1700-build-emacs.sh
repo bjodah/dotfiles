@@ -120,17 +120,20 @@ if [[ $CFLAGS_GIVEN == "" ]]; then
     CFLAGS_GIVEN="-O3 -pipe $ARCH_FLAGS -fomit-frame-pointer"
 fi
 
-CONFIGURE_FLAGS="--with-dbus \
+CONFIGURE_FLAGS="\
+ --with-dbus\
  --with-gif\
+ --with-gpm=no\
  --with-jpeg\
+ --with-json\
+ --with-xml2\
+ --with-modules\
  --with-png\
  --with-rsvg\
  --with-tiff\
  --with-xft\
  --with-xpm\
- --with-gpm=no\
- --with-modules\
- --with-json $@"
+ $@"
 
 # --with-imagemagick\
 
@@ -164,7 +167,8 @@ if [[ $CREATE_DEB == 1 ]]; then
     mkdir -p $EMACS_DEB_ROOT$INSTALL_PREFIX
     make install prefix=$EMACS_DEB_ROOT$INSTALL_PREFIX
     mkdir $EMACS_DEB_ROOT/DEBIAN
-    EMACS_DEB_DEP="libgif7, libotf1, libm17n-0, librsvg2-2, libtiff5, libjansson4, libacl1, libgmp10, libwebp7, libsqlite3-0"
+    # libxml2-dev
+    EMACS_DEB_DEP="libgif7, libotf1, libm17n-0, librsvg2-2, libtiff5, libjansson4, libacl1, libgmp10, libwebp7, libsqlite3-0, libxml2"
     EMACS_DEB_DESCR="Emacs $EMACS_VERSION ($EMACS_BRANCH)"
     if [[ $WITH_NATIVE_COMP == 1 ]]; then
 	EMACS_DEB_DEP="$EMACS_DEB_DEP, libgccjit0"

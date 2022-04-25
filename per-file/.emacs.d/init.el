@@ -392,6 +392,24 @@
   :defer t
   )
 
+(use-package elfeed
+  :ensure t
+  :config
+  (global-set-key (kbd "C-x w") 'elfeed)
+  (setq elfeed-feeds
+        '("https://fa.bianp.net/blog/feed/"
+          "https://lemire.me/blog/feed/"
+          "https://hbfs.wordpress.com/feed/"
+          "https://easyperf.net/feed.xml"
+          "https://pvk.ca/atom.xml"
+          "https://stackoverflow.com/feeds/tag?tagnames=x86&sort=votes"
+          "https://branchfree.org/feed/"
+          "https://stackoverflow.com/feeds/user/2542702" ;; Z boson
+          "https://stackoverflow.com/feeds/user/224132" ;; Peter Cordes
+          "https://pzemtsov.github.io/feed.xml"
+          ))
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks
