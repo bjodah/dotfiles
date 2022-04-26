@@ -17,4 +17,4 @@ Misc commnads
 
 .. code-block:: shell-session
 
-   $ ssh -Y 192.168.1.140 'bash -c "source ~/.profile; emx --use 29 -- --x11"'
+   $ ssh -Y 192.168.1.140 'bash -c "source ~/.profile; emx --use 29 -- --x11 -v /mnt:/mnt"'

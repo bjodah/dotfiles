@@ -1,3 +1,8 @@
+(if (and (getenv "DISPLAY") (string-match-p "dark" (shell-command-to-string
+                             "gsettings get org.gnome.desktop.interface gtk-theme")))
+                                        ;(set-background-color "black")
+    (load-theme 'tango-dark)
+    )
 ;(set-background-color "black")
 (setq custom-file (concat user-emacs-directory "custom-vars.el"))
 (when (file-exists-p custom-file)
