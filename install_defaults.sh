@@ -15,7 +15,7 @@ link_dest() {
         rm "$2"
     elif [[ -e "$2" ]]; then
         >&2 echo "Directory already exists, skipping: $2"
-        continue
+        return
     fi
     DESTPARENT=$(dirname $2)
     if [[ -L $DESTPARENT ]] && [[ ! -e $DESTPARENT ]]; then
