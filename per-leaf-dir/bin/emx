@@ -98,7 +98,7 @@ if [[ $RUN_AS_CLIENT == 1 ]]; then
     # EMACS_BIN="emacsclient -nc -s /emx/emx-server"
     EMACS_BIN="emacsclient -nc -s emx-server"
     PODRUN_ARGS="--name emx-client-$(printf '%(%s)T\n' -1)"
-    LAUNCH_COMMAND="$EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]}"
+    LAUNCH_COMMAND="$EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]:-''}"
 else
     LAUNCH_COMMAND="ln -s /root/.emacs.d.$USE_EMACS_D /root/.emacs.d && \
         bash /opt/bjodah-dotfiles/install_defaults.sh && \
@@ -125,7 +125,7 @@ else
         PODRUN_ARGS="--name emx-broadway -p 0.0.0.0:808$USE_BROADWAY:808$USE_BROADWAY"
         cat <<EOF>~/.emx/launch.sh
 tmux  -2 -S tmux-podrun.sock -f /emx/.tmux.conf new -s emx "broadwayd --address=0.0.0.0 :$USE_BROADWAY" \
-    \; new-window "GDK_BACKEND=broadway BROADWAY_DISPLAY=:$USE_BROADWAY $EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]}"
+    \; new-window "GDK_BACKEND=broadway BROADWAY_DISPLAY=:$USE_BROADWAY $EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]:-''}"
 EOF
         TMUX_ARGS=""
 	if [[ "${DISPLAY:-}" != "" ]]; then
@@ -135,7 +135,7 @@ EOF
         EMACS_BIN=emacs
         PODRUN_ARGS="--name emx"
         cat <<EOF>~/.emx/launch.sh
-tmux -2 -S tmux-podrun.sock -f /emx/.tmux.conf new -s emx $EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]}
+tmux -2 -S tmux-podrun.sock -f /emx/.tmux.conf new -s emx $EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]:-""}
 EOF
     fi
 fi
@@ -145,7 +145,7 @@ podrun \
     -v ~/.emx/.emacs-eln-cache:/root/.emacs.d.$USE_EMACS_D/eln-cache \
     -v $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR \
     -e XDG_RUNTIME_DIR \
-    --image bjodah/bjodahimg22dot:22.4.a.1.4 \
+    --image bjodah/bjodahimg22dot:22.4.a.1.5 \
     $PODRUN_ARGS \
     $* \
     -- $LAUNCH_COMMAND
