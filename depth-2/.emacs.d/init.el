@@ -326,7 +326,11 @@
 ;; mmm-mako
 
 ;http://www.emacswiki.org/emacs/LoadPath
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+(add-to-list 'load-path
+                                        ;"~/.emacs.d/lisp/"
+             (format "%s%s" (file-name-directory load-file-name) "lisp/")
+             )
+(message (format "%s%s" (file-name-directory load-file-name) "lisp/"))
 (require 'sln-mode)
 (require 'mmm-mako)
 ;; (require 'mmm-mode)
