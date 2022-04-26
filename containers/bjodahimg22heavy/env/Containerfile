@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dot:22.4.a.1.2
+FROM bjodah/bjodahimg22dot:22.4.a.1.5
 
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
@@ -14,10 +14,10 @@ COPY 15000-pip-install.sh /opt/
 RUN /opt/15000-pip-install.sh && \
     rm -rf ~/.cache/pip
 
-RUN curl -Ls https://downloads.python.org/pypy/pypy3.9-v7.3.8-linux64.tar.bz2 | tar xj -C /opt && \
-    /opt/pypy3.9*/bin/pypy3.9 -m ensurepip && \
-    /opt/pypy3.9*/bin/pypy3.9 -m pip install cppyy ipython && \
-    /opt/pypy3.9*/bin/pypy3.9 -m IPython -c "import cppyy; import IPython; print(IPython.__version__)"
+COPY 25000-install-pypy.sh /opt/
+
+RUN /opt/25000-install-pypy.sh && \
+    rm -rf ~/.cache/pip
 
 
 COPY 67000-rust.sh
