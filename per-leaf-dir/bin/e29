@@ -1,0 +1,2 @@
+#!/bin/bash
+emx --client --use 29 $@ -- --x11
