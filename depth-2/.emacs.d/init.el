@@ -29,12 +29,12 @@
     (package-initialize)
 )
 (if window-system
-    (toggle-scroll-bar -1)
-  (xterm-mouse-mode)
-)
-(if (functionp 'tool-bar-mode)
-    (tool-bar-mode 0)
-)
+    (progn
+      ;(toggle-scroll-bar -1)
+      (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
+      )
+  (xterm-mouse-mode))
+
 (unless window-system
   (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
   (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
@@ -420,7 +420,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
-(global-unset-key (kbd "C-z"))     ;; (suspend-frame)
 (global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
 
 (add-hook 'after-init-hook (lambda () (load-theme
