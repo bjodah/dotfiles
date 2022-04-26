@@ -306,6 +306,9 @@
 ;;   :config (quelpa-use-package-activate-advice))
 
 (use-package ein ;:ensure t
+  :config
+  (setq ein:worksheet-enable-undo t
+        ein:output-area-inlined-images t)
   )
 
 (use-package jupyter :ensure t)
@@ -412,7 +415,9 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Global hooks
+;; Global hooks and keymaps
+(global-unset-key (kbd "C-z"))     ;; (suspend-frame)
+(global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
 
 (add-hook 'after-init-hook (lambda () (load-theme
 				       ;'tangotango
