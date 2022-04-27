@@ -7,3 +7,6 @@
 [submodule "depth-1/.emacs.prelude"]
 	path = depth-1/.emacs.prelude
 	url = https://github.com/bjodah/prelude
+[submodule "depth-1/.emacs.doom"]
+	path = depth-1/.emacs.doom
+	url = https://github.com/hlissner/doom-emacs

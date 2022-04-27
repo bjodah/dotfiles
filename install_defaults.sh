@@ -57,6 +57,11 @@ do
     link_dest "$ABS_REPO_PATH/${d#./}" "$HOME_DIR/${d#./per-leaf-dir/}"
 done
 
+for e in $(find ./depth-1 -maxdepth 1 -mindepth 1);
+do
+    link_dest "$ABS_REPO_PATH/${e#./}" "$HOME_DIR/${e#./depth-1/}"
+done
+
 for e in $(find ./depth-2 -maxdepth 2 -mindepth 2);
 do
     link_dest "$ABS_REPO_PATH/${e#./}" "$HOME_DIR/${e#./depth-2/}"

@@ -15,7 +15,7 @@ Manual installation of prelude
 ==============================
 .. code-block:: shell-session
 
-    $ export PRELUDE_INSTALL_DIR="$HOME/.emacs.prelude" && curl -L https://github.com/bbatsov/prelude/raw/master/utils/installer.sh | sh
+    $ PRELUDE_INSTALL_DIR="$HOME/.emacs.prelude" ~/.&& curl -L https://github.com/bbatsov/prelude/raw/master/utils/installer.sh | sh
 
 Misc commnads
 =============
