@@ -218,6 +218,7 @@
   (with-eval-after-load "lsp-mode"
     (setq lsp-ui-doc-show-with-cursor nil) ;; keep on-mouse-over docs
     (setq lsp-ui-sideline-enable nil) ;; e.g. "Extract expression into function...."
+    (setq lsp-lens-enable nil) ;; bullet 3: https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
     )
   :bind
   ("C-<down>" . lsp-ui-find-next-reference)
