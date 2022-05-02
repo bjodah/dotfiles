@@ -8,6 +8,9 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(if (boundp 'native-comp-eln-load-path)
+    (setq  (expand-file-name (format "eln-cache-%d/" emacs-major-version) user-emacs-directory))
+)
 (setq visible-bell nil
       ring-bell-function 'flash-mode-line)
 (defun flash-mode-line ()
@@ -25,7 +28,7 @@
   )
 
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/ ----------------------------------------
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold (* 128 1024 1024))
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; -----------------------------------------------------------------------------------------------
