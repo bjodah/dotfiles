@@ -38,7 +38,7 @@
 )
 (if window-system
     (progn
-      ;(toggle-scroll-bar -1)
+      (toggle-scroll-bar -1)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       )
   (xterm-mouse-mode))
@@ -314,7 +314,8 @@
 ;;   :init (setq quelpa-update-melpa-p nil)
 ;;   :config (quelpa-use-package-activate-advice))
 
-(use-package ein ;:ensure t
+(use-package ein
+  :ensure t
   :config
   (setq ein:worksheet-enable-undo t
         ein:output-area-inlined-images t)
