@@ -8,6 +8,9 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(if (boundp 'native-comp-eln-load-path)
+    (setq  (expand-file-name (format "eln-cache-%d/" emacs-major-version) user-emacs-directory))
+)
 (setq visible-bell nil
       ring-bell-function 'flash-mode-line)
 (defun flash-mode-line ()
@@ -25,7 +28,7 @@
   )
 
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/ ----------------------------------------
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold (* 128 1024 1024))
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; -----------------------------------------------------------------------------------------------
@@ -35,7 +38,7 @@
 )
 (if window-system
     (progn
-      ;(toggle-scroll-bar -1)
+      (toggle-scroll-bar -1)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       )
   (xterm-mouse-mode))
@@ -311,7 +314,8 @@
 ;;   :init (setq quelpa-update-melpa-p nil)
 ;;   :config (quelpa-use-package-activate-advice))
 
-(use-package ein ;:ensure t
+(use-package ein
+  :ensure t
   :config
   (setq ein:worksheet-enable-undo t
         ein:output-area-inlined-images t)
