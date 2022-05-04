@@ -418,8 +418,11 @@
           "https://stackoverflow.com/feeds/tag?tagnames=x86&sort=votes"
           "https://branchfree.org/feed/"
           "https://stackoverflow.com/feeds/user/2542702" ;; Z boson
-          "https://stackoverflow.com/feeds/user/224132" ;; Peter Cordes
+          ;;"https://stackoverflow.com/feeds/user/224132" ;; Peter Cordes
+          "https://sachachua.com/blog/feed/" ;; Sacha Chua
           "https://pzemtsov.github.io/feed.xml"
+          "https://gms.tf/feeds/all.atom.xml" ;; Georg Sauthoff
+          "https://gpfault.net/rss.xml"
           ))
   )
 
