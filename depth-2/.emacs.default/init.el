@@ -8,6 +8,9 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+(if (boundp 'native-comp-eln-load-path)
+    (setq  (expand-file-name (format "eln-cache-%d/" emacs-major-version) user-emacs-directory))
+)
 (setq visible-bell nil
       ring-bell-function 'flash-mode-line)
 (defun flash-mode-line ()
@@ -25,7 +28,7 @@
   )
 
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/ ----------------------------------------
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold (* 128 1024 1024))
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; -----------------------------------------------------------------------------------------------
@@ -35,7 +38,6 @@
 )
 (if window-system
     (progn
-      ;(toggle-scroll-bar -1)
       (scroll-bar-mode -1)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       )
@@ -312,7 +314,8 @@
 ;;   :init (setq quelpa-update-melpa-p nil)
 ;;   :config (quelpa-use-package-activate-advice))
 
-(use-package ein ;:ensure t
+(use-package ein
+  :ensure t
   :config
   (setq ein:worksheet-enable-undo t
         ein:output-area-inlined-images t)
@@ -419,8 +422,11 @@
           "https://stackoverflow.com/feeds/tag?tagnames=x86&sort=votes"
           "https://branchfree.org/feed/"
           "https://stackoverflow.com/feeds/user/2542702" ;; Z boson
-          "https://stackoverflow.com/feeds/user/224132" ;; Peter Cordes
+          ;;"https://stackoverflow.com/feeds/user/224132" ;; Peter Cordes
+          "https://sachachua.com/blog/feed/" ;; Sacha Chua
           "https://pzemtsov.github.io/feed.xml"
+          "https://gms.tf/feeds/all.atom.xml" ;; Georg Sauthoff
+          "https://gpfault.net/rss.xml"
           ))
   )
 
