@@ -8,15 +8,16 @@ else
     OPENBLAS_OVERRIDE=0
 fi
 set -u
-SUNDIALS_VERSION=${1:-6.1.1}
+SUNDIALS_VERSION=${1:-6.2.0}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
-export CC=${CC:-"gcc-12"}
+export CC=${CC:-"gcc-10"}
 
 if [ ! -d $SRC_DIR ]; then
     SUNDIALS_SRC_URL="https://github.com/llnl/sundials/releases/download/v${SUNDIALS_VERSION}/sundials-${SUNDIALS_VERSION}.tar.gz"
     curl -Ls "${SUNDIALS_SRC_URL}" | tar xz -C /build
 fi
 
+SUNDIALS_ENABLE_LAPACK=${SUNDIALS_ENABLE_LAPACK:-ON}
 for VARIANT in debug release single extended; do
     BUILD_DIR=/build/sundials-${SUNDIALS_VERSION}-${VARIANT}
     INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION}-${VARIANT}
@@ -28,24 +29,28 @@ for VARIANT in debug release single extended; do
         mkdir ${BUILD_DIR}
     fi
     cd ${BUILD_DIR}
-    if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
-        if [[ $VARIANT == "debug" ]]; then
-            OPENBLAS_LIBDIR=/opt/openblas-0.3.20-${VARIANT}/lib
-        else
-            OPENBLAS_LIBDIR=/opt/openblas-0.3.20-release/lib
+    if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
+        if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
+            if [[ $VARIANT == "debug" ]]; then
+                OPENBLAS_LIBDIR=/opt/openblas-0.3.20-${VARIANT}/lib
+            else
+                OPENBLAS_LIBDIR=/opt/openblas-0.3.20-release/lib
+            fi
+            if [ ! -d "${OPENBLAS_LIBDIR}" ]; then
+                >&2 echo "Not a directory: ${OPENBLAS_LIBDIR}"
+                exit 1
+            fi
         fi
-        if [ ! -d "${OPENBLAS_LIBDIR}" ]; then
-            >&2 echo "Not a directory: ${OPENBLAS_LIBDIR}"
-            exit 1
-        fi
+        export LDFLAGS=-Wl,-rpath-link,${OPENBLAS_LIBDIR}
     fi
-    export LDFLAGS=-Wl,-rpath-link,${OPENBLAS_LIBDIR}
     if [[ $VARIANT == extended || $VARIANT == single ]]; then
         CMAKE_ARGS="-DENABLE_KLU=OFF -DSUNDIALS_PRECISION:STRING=$VARIANT"
-    else
+    elif [[ ${SUNDIALS_ENABLE_KLU:-ON} == ON ]]; then
         CMAKE_ARGS="-DENABLE_KLU=ON \
                   -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
-                  -DKLU_LIBRARY_DIR=/usr/lib/x86_64-linux-gnu"
+                  -DKLU_LIBRARY_DIR=/usr/lib/$(uname -m)-linux-gnu"
+    else
+        CMAKE_ARGS="-DENABLE_KLU=OFF"
     fi
       
     if [[ $VARIANT == extended ]]; then
@@ -55,11 +60,13 @@ for VARIANT in debug release single extended; do
             CFLAGS_DEBUG_DEFAULT="-Os -g3"
             export CFLAGS=${CFLAGS_DEBUG:-"${CFLAGS_DEBUG_DEFAULT}"}
             BUILD_TYPE=${VARIANT^}
-	    if [[ -e ${OPENBLAS_LIBDIR}/libopenblas_d.so ]]; then
-		OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas_d.so
-	    elif [[ -e ${OPENBLAS_LIBDIR}/libopenblas.so ]]; then
-		OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas.so	
-	    fi
+            if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
+	        if [[ -e ${OPENBLAS_LIBDIR}/libopenblas_d.so ]]; then
+		    OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas_d.so
+	        elif [[ -e ${OPENBLAS_LIBDIR}/libopenblas.so ]]; then
+		    OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas.so	
+	        fi
+            fi
         else
             if [[ $(uname -m) == "x86_64" ]]; then
                 CFLAGS_RELEASE_DEFAULT="-O3 -march=nehalem -mtune=skylake"
@@ -68,25 +75,32 @@ for VARIANT in debug release single extended; do
             fi
             export CFLAGS=${CFLAGS_RELEASE:-"${CFLAGS_RELEASE_DEFAULT}"}
             BUILD_TYPE=Release
-            OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas.so
+            if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
+                OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas.so
+            fi
             if [[ $VARIANT == single ]]; then
                 CMAKE_ARGS='$CMAKE_ARGS'
             fi
         fi
-	if [[ ! -e $OPENBLAS_SO ]]; then
-	    >&2 echo "Could not find openblas shared object with default name"
-	    exit 1
-	fi
-        CMAKE_ARGS="${CMAKE_ARGS} \
-          -DENABLE_LAPACK=ON \
-          -DLAPACK_LIBRARIES=${OPENBLAS_SO} \
-          -DSUNDIALS_INDEX_SIZE=32"
+        if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
+	    if [[ ! -e $OPENBLAS_SO ]]; then
+	        >&2 echo "Could not find openblas shared object with default name"
+	        exit 1
+	    fi
+            CMAKE_ARGS="${CMAKE_ARGS} \
+          -DENABLE_LAPACK=${SUNDIALS_ENABLE_LAPACK} \
+          -DLAPACK_LIBRARIES=${OPENBLAS_SO}"
+            INSTALL_RPATH=${INSTALL_DIR}/lib;${OPENBLAS_LIBDIR}
+        else
+            INSTALL_RPATH=${INSTALL_DIR}/lib
+        fi
+        CMAKE_ARGS="${CMAKE_ARGS} -DSUNDIALS_INDEX_SIZE=${SUNDIALS_INDEX_SIZE:-32}"
     fi
     cmake -G ${CMAKE_GENERATOR:-Ninja} \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
           -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
-          -DCMAKE_INSTALL_RPATH="${INSTALL_DIR}/lib;${OPENBLAS_LIBDIR}" \
+          -DCMAKE_INSTALL_RPATH=$INSTALL_RPATH \
           -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
           -DBUILD_SHARED_LIBS=ON \
           -DBUILD_STATIC_LIBS=OFF \

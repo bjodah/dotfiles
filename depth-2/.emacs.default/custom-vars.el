@@ -5,7 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("6efc73ee7c144f7f845d03317439827d76bf331ac0f5977c616254d38ba3262e" "4b7f40b8a016aebe2f0229c188f6fcc10436881dbfd1469f427679212b5c16e7" "5e2cdea6453f8963037723ab91c779b203fb201bf5c377094440f0c465d688ec" "fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7" "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
- '(ein:output-area-inlined-images t)
+ '(ein:output-area-inlined-images t t)
  '(flycheck-c/c++-gcc-executable "gcc-10")
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
@@ -17,10 +17,11 @@
  '(vc-git-grep-template
    "git --no-pager grep --recurse-submodules -n <C> -e <R> -- <F>")
  '(vterm-always-compile-module t)
- '(vterm-shell "/usr/bin/fish"))
+ '(vterm-shell "/usr/bin/fish")
+ '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 100 :width normal)))))
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 90 :width normal)))))
