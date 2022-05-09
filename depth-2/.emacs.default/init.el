@@ -38,7 +38,7 @@
 )
 (if window-system
     (progn
-      (toggle-scroll-bar -1)
+      (scroll-bar-mode -1)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       )
   (xterm-mouse-mode))

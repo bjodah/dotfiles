@@ -10,7 +10,7 @@ RUN \
     rm /opt/emacs*.deb && \
     apt-get --quiet update && \
     /opt/1000-apt-packages.sh && \
-    OPENBLAS_LIBDIR=/usr/lib/x86_64-linux-gnu /opt/1500-sundials.sh && \
+    OPENBLAS_LIBDIR=/usr/lib/$(uname -m)-linux-gnu /opt/1500-sundials.sh && \
     /opt/1600-ttyd.sh && \
     update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
