@@ -431,13 +431,20 @@
   )
 
 
+(if (< emacs-major-version 28)
+    (use-package modus-vivendi-theme
+      :ensure t
+      )
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
 (global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
 
 (add-hook 'after-init-hook (lambda () (load-theme
 				       ;'tangotango
-				       'pitchkai
+				       ;'pitchkai
+                                       'modus-vivendi
 				       )))
 
 (add-hook 'gdb-mode-hook
