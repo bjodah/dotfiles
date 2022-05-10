@@ -427,25 +427,26 @@
           "https://pzemtsov.github.io/feed.xml"
           "https://gms.tf/feeds/all.atom.xml" ;; Georg Sauthoff
           "https://gpfault.net/rss.xml"
+          "https://nhigham.com/feed/" ;; Nick Higham, The University of Manchester
           ))
   )
 
 
-(if (< emacs-major-version 28)
-    (use-package modus-vivendi-theme
-      :ensure t
-      )
-)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
 (global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
 
-(add-hook 'after-init-hook (lambda () (load-theme
-				       ;'tangotango
-				       ;'pitchkai
-                                       'modus-vivendi
-				       )))
+(if (>= emacs-major-version 28)
+    (add-hook 'after-init-hook (lambda () (load-theme
+                                        ;'tangotango
+                                        ;'pitchkai
+                                           'modus-vivendi
+                                           )))
+  (if (functionp 'tool-bar-mode)
+    (tool-bar-mode 0))
+)
+
 
 (add-hook 'gdb-mode-hook
     (function (lambda ()
@@ -464,8 +465,8 @@
 		;(define-key gud-minor-mode-map (kbd "<f12>") #'gdb-many-windows)
                 (define-key gud-minor-mode-map (kbd "<f12>") 
                   (lambda() (interactive) (progn (gdb-many-windows) (other-window) (other-window))))
-		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-down)
-		(define-key gud-minor-mode-map (kbd "<next>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "C-M-<prior>") #'gud-down)
+		(define-key gud-minor-mode-map (kbd "C-M-<next>") #'gud-up)
 )))
 
 (add-hook 'c++-mode-hook
