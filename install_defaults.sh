@@ -43,7 +43,7 @@ for f in $(find $PER_FILE -type f); do
         else
             # echo "set auto-load safe-path /" >>~/.gdbinit
             echo "add-auto-load-safe-path $ABS_REPO_PATH/${f#./}" >~/.gdbinit
-            echo "source \"$ABS_REPO_PATH/${f#./}\"" >>~/.gdbinit
+            echo "source $ABS_REPO_PATH/${f#./}" >>~/.gdbinit
         fi
         continue
     fi
