@@ -19,6 +19,10 @@ COPY 25000-install-pypy.sh /opt/
 RUN /opt/25000-install-pypy.sh && \
     rm -rf ~/.cache/pip
 
+COPY 27000-cpython.sh /opt/
+
+RUN /opt/27000-cpython.sh
+
 
 COPY 67000-rust.sh
 
