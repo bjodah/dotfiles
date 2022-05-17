@@ -316,10 +316,33 @@
 
 (use-package ein
   :ensure t
+  :bind
+  ("C-c 1" . ein:worksheet-execute-all-cells)
   :config
   (setq ein:worksheet-enable-undo t
         ein:output-area-inlined-images t)
   )
+
+(use-package god-mode
+  :ensure t
+  :bind
+  ("C-<escape>" . #'god-local-mode)
+  :config
+  (defun my-god-mode-update-cursor-type ()
+    (if god-local-mode
+        (progn
+          (setq cursor-type 'hbar)
+          (setq blink-cursor-interval 0.15)
+          (setq blink-cursor-blinks 30)
+      )
+      (progn
+          (setq cursor-type 'box)
+          (setq blink-cursor-interval 0.5)
+          (setq blink-cursor-blinks 10)
+        )))
+  (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
+)
+
 
 (use-package jupyter :ensure t)
 (use-package tex
