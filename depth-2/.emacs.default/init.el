@@ -41,11 +41,10 @@
       (scroll-bar-mode -1)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       )
+  (progn
+    (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
+    (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
   (xterm-mouse-mode))
-
-(unless window-system
-  (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
-  (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
 
 (require 'savehist)
 (savehist-mode 1)
@@ -327,6 +326,7 @@
   :ensure t
   :bind
   ("C-<escape>" . #'god-local-mode)
+  ("ESC M-SPC" . #'god-local-mode)
   :config
   (defun my-god-mode-update-cursor-type ()
     (if god-local-mode
@@ -342,7 +342,6 @@
         )))
   (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
 )
-
 
 (use-package jupyter :ensure t)
 (use-package tex
