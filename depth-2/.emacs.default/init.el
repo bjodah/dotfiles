@@ -470,6 +470,9 @@
   (require 'org-roam-protocol)
 )
 
+(use-package rmsbolt ;; live disassembly
+  :ensure t)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
 (global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
@@ -502,9 +505,10 @@
 		;(define-key gud-minor-mode-map (kbd "<f12>") #'gdb-many-windows)
                 (define-key gud-minor-mode-map (kbd "<f12>") 
                   (lambda() (interactive) (progn (gdb-many-windows) (other-window) (other-window))))
-		(define-key gud-minor-mode-map (kbd "C-M-<prior>") #'gud-down)
-		(define-key gud-minor-mode-map (kbd "C-M-<next>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "M-<up>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "M-<down>") #'gud-down)
 )))
+
 
 (add-hook 'c++-mode-hook
     (function (lambda ()
@@ -589,8 +593,6 @@
 (global-set-key (kbd "ESC <f4>") 'delete-window)
 (global-set-key (kbd "M-<left>") 'previous-buffer)
 (global-set-key (kbd "M-<right>") 'next-buffer)
-(global-set-key (kbd "M-<up>") 'winner-undo)
-(global-set-key (kbd "M-<down>") 'winner-redo)
 
 
 
