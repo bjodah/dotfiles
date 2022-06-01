@@ -83,7 +83,7 @@
       (use-package dap-mode
         ;;  :ensure t)
         :ensure t
-        :defer
+        :defer t
         :custom
         (dap-auto-configure-mode t                           "Automatically configure dap.")
         (dap-auto-configure-features
@@ -503,6 +503,10 @@
 
 (use-package rmsbolt ;; live disassembly
   :ensure t)
+
+(use-package nginx-mode
+  :ensure t
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
