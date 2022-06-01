@@ -453,6 +453,38 @@
           ))
   )
 
+(use-package org
+  :ensure t
+  :config
+  (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
+  (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
+  
+
+  ;; org-babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (mapcar (lambda (lang) (cons lang t))
+           `(C
+             dot
+             emacs-lisp
+             ;julia
+             python
+             jupyter
+             ,(if (locate-library "ob-shell") 'shell 'sh)
+             )))
+  (setq org-confirm-babel-evaluate nil)
+
+  ;; Render mako from org-mode source block (https://stackoverflow.com/a/10418779/790973)
+  (defun org-babel-execute:mako (body params)
+    "Render Mako templated source with org-babel."
+    (message "calling render-mako on code block")
+    (org-babel-eval "mako-render" body))
+  (setq org-babel-python-command "python3")
+
+)
+
+(setq python-shell-interpreter "python3")
+
 (use-package org-roam
   :ensure t
   :custom
@@ -826,33 +858,6 @@
 
 (show-paren-mode 1)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- (mapcar (lambda (lang) (cons lang t))
-         `(C
-           dot
-           emacs-lisp
-           ;julia
-           python
-           jupyter
-           ,(if (locate-library "ob-shell") 'shell 'sh)
-           )))
-
-(setq
- org-confirm-babel-evaluate nil)
-
-(setq org-html-htmlize-output-type 'css) ; default: 'inline-css
-(setq org-html-htmlize-font-prefix "org-") ; default: "org-"
-
-
-;; Render mako from org-mode source block (https://stackoverflow.com/a/10418779/790973)
-(defun org-babel-execute:mako (body params)
-  "Render Mako templated source with org-babel."
-  (message "calling render-mako on code block")
-  (org-babel-eval "mako-render" body))
-(setq org-babel-python-command "python3")
-
-(setq python-shell-interpreter "python3")
 
 
 ;; (fset 'mark-to-space
