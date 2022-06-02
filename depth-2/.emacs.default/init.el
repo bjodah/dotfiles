@@ -317,8 +317,9 @@
 (use-package ein
   :ensure t
   :bind
-  ("C-c 0" . ein:kernel-restart-session)
   ("C-c 1" . ein:worksheet-execute-all-cells)
+  ("C-c 9" . ein:worksheet-clear-all-output)
+  ("C-c 0" . ein:notebook-restart-session-command)
   :config
   (setq ein:worksheet-enable-undo t
         ein:output-area-inlined-images t)
