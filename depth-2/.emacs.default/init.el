@@ -313,9 +313,11 @@
 ;;   :init (setq quelpa-update-melpa-p nil)
 ;;   :config (quelpa-use-package-activate-advice))
 
+
 (use-package ein
   :ensure t
   :bind
+  ("C-c 0" . ein:kernel-restart-session)
   ("C-c 1" . ein:worksheet-execute-all-cells)
   :config
   (setq ein:worksheet-enable-undo t
