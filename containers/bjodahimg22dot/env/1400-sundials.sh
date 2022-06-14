@@ -93,7 +93,7 @@ for VARIANT in debug release single extended; do
             CMAKE_ARGS="${CMAKE_ARGS} \
           -DENABLE_LAPACK=${SUNDIALS_ENABLE_LAPACK} \
           -DLAPACK_LIBRARIES=${OPENBLAS_SO}"
-            INSTALL_RPATH=${INSTALL_DIR}/lib;${OPENBLAS_LIBDIR}
+            INSTALL_RPATH="${INSTALL_DIR}/lib;${OPENBLAS_LIBDIR}"
         else
             INSTALL_RPATH=${INSTALL_DIR}/lib
         fi

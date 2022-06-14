@@ -8,9 +8,9 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(if (boundp 'native-comp-eln-load-path)
-    (setq  (expand-file-name (format "eln-cache-%d/" emacs-major-version) user-emacs-directory))
-)
+;; (if (boundp 'native-comp-eln-load-path)
+;;     (setq  (expand-file-name (format "eln-cache-%d/" emacs-major-version) user-emacs-directory))
+;; )
 (setq visible-bell nil
       ring-bell-function 'flash-mode-line)
 (defun flash-mode-line ()
