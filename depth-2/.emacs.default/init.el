@@ -41,11 +41,10 @@
       (scroll-bar-mode -1)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       )
+  (progn
+    (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
+    (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
   (xterm-mouse-mode))
-
-(unless window-system
-  (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
-  (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
 
 (require 'savehist)
 (savehist-mode 1)
@@ -84,7 +83,7 @@
       (use-package dap-mode
         ;;  :ensure t)
         :ensure t
-        :defer
+        :defer t
         :custom
         (dap-auto-configure-mode t                           "Automatically configure dap.")
         (dap-auto-configure-features
@@ -314,6 +313,7 @@
 ;;   :init (setq quelpa-update-melpa-p nil)
 ;;   :config (quelpa-use-package-activate-advice))
 
+
 (use-package ein
   :ensure t
   :bind
@@ -321,6 +321,8 @@
   ("C-c 1" . ein:worksheet-execute-all-cells)
   ("C-c 2" . ein:worksheet-execute-all-cells-above)
   ("C-c 3" . ein:worksheet-execute-all-cells-below)
+  ("C-c 9" . ein:worksheet-clear-all-output)
+  ("C-c 0" . ein:notebook-restart-session-command)
   :config
   (setq ein:worksheet-enable-undo t
         ein:output-area-inlined-images t)
@@ -330,6 +332,7 @@
   :ensure t
   :bind
   ("C-<escape>" . #'god-local-mode)
+  ("ESC M-SPC" . #'god-local-mode)
   :config
   (defun my-god-mode-update-cursor-type ()
     (if god-local-mode
@@ -345,7 +348,6 @@
         )))
   (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
 )
-
 
 (use-package jupyter :ensure t)
 (use-package tex
@@ -457,6 +459,38 @@
           ))
   )
 
+(use-package org
+  :ensure t
+  :config
+  (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
+  (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
+  
+
+  ;; org-babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (mapcar (lambda (lang) (cons lang t))
+           `(C
+             dot
+             emacs-lisp
+             ;julia
+             python
+             jupyter
+             ,(if (locate-library "ob-shell") 'shell 'sh)
+             )))
+  (setq org-confirm-babel-evaluate nil)
+
+  ;; Render mako from org-mode source block (https://stackoverflow.com/a/10418779/790973)
+  (defun org-babel-execute:mako (body params)
+    "Render Mako templated source with org-babel."
+    (message "calling render-mako on code block")
+    (org-babel-eval "mako-render" body))
+  (setq org-babel-python-command "python3")
+
+)
+
+(setq python-shell-interpreter "python3")
+
 (use-package org-roam
   :ensure t
   :custom
@@ -472,6 +506,13 @@
   (org-roam-db-autosync-mode)
   (require 'org-roam-protocol)
 )
+
+(use-package rmsbolt ;; live disassembly
+  :ensure t)
+
+(use-package nginx-mode
+  :ensure t
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
@@ -505,9 +546,12 @@
 		;(define-key gud-minor-mode-map (kbd "<f12>") #'gdb-many-windows)
                 (define-key gud-minor-mode-map (kbd "<f12>") 
                   (lambda() (interactive) (progn (gdb-many-windows) (other-window) (other-window))))
-		(define-key gud-minor-mode-map (kbd "C-M-<prior>") #'gud-down)
-		(define-key gud-minor-mode-map (kbd "C-M-<next>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "M-<up>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "M-<down>") #'gud-down)
+		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "<next>") #'gud-down)
 )))
+
 
 (add-hook 'c++-mode-hook
     (function (lambda ()
@@ -592,8 +636,6 @@
 (global-set-key (kbd "ESC <f4>") 'delete-window)
 (global-set-key (kbd "M-<left>") 'previous-buffer)
 (global-set-key (kbd "M-<right>") 'next-buffer)
-(global-set-key (kbd "M-<up>") 'winner-undo)
-(global-set-key (kbd "M-<down>") 'winner-redo)
 
 
 
@@ -828,33 +870,6 @@
 
 (show-paren-mode 1)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- (mapcar (lambda (lang) (cons lang t))
-         `(C
-           dot
-           emacs-lisp
-           ;julia
-           python
-           jupyter
-           ,(if (locate-library "ob-shell") 'shell 'sh)
-           )))
-
-(setq
- org-confirm-babel-evaluate nil)
-
-(setq org-html-htmlize-output-type 'css) ; default: 'inline-css
-(setq org-html-htmlize-font-prefix "org-") ; default: "org-"
-
-
-;; Render mako from org-mode source block (https://stackoverflow.com/a/10418779/790973)
-(defun org-babel-execute:mako (body params)
-  "Render Mako templated source with org-babel."
-  (message "calling render-mako on code block")
-  (org-babel-eval "mako-render" body))
-(setq org-babel-python-command "python3")
-
-(setq python-shell-interpreter "python3")
 
 
 ;; (fset 'mark-to-space

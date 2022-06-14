@@ -27,4 +27,5 @@ apt-get --assume-yes --no-install-recommends install \
 
 ### Python bindings (https://pypi.org/project/libclang/#history) :
 # python3 -m pip install --upgrade-strategy=eager --upgrade pip setuptools wheel
-# python3 -m pip install libclang==$MAJOR_VERSION.0.0 && python3 -c "from clang.cindex import Index; Index.create()"
+python3 -m pip install libclang>=$MAJOR_VERSION
+python3 -c "from clang.cindex import Index; Index.create()"
