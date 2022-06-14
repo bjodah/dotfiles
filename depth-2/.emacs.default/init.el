@@ -514,9 +514,34 @@
   :ensure t
   )
 
+(use-package modus-themes
+  :ensure t
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+	modus-themes-bold-constructs t ;nil
+	modus-themes-region '(accented)
+	modus-themes-paren-match '(bold intense)
+	modus-themes-headings '((1 . (rainbow overline background 1.4))
+				(2 . (rainbow background 1.3))
+				(3 . (rainbow bold 1.2))
+				(t . (semilight 1.1)))
+	modus-themes-scale-headings t
+	modus-themes-org-blocks 'tinted-background
+	)
+
+  ;; Load the theme files before enabling a theme
+  (modus-themes-load-themes)
+  :config
+  ;; Load the theme of your choice:
+  (modus-themes-load-vivendi) ;; OR (modus-themes-load-operandi)
+  :bind ("ESC <f5>" . modus-themes-toggle))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
 (global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
+
+
 
 (if (>= emacs-major-version 28)
     (add-hook 'after-init-hook (lambda () (load-theme
