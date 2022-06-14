@@ -542,6 +542,8 @@
                   (lambda() (interactive) (progn (gdb-many-windows) (other-window) (other-window))))
 		(define-key gud-minor-mode-map (kbd "M-<up>") #'gud-up)
 		(define-key gud-minor-mode-map (kbd "M-<down>") #'gud-down)
+		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "<next>") #'gud-down)
 )))
 
 

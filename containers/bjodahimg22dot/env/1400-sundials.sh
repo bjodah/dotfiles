@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-# /usr/lib/x86_64-linux-gnu/libopenblas.so
+# /usr/lib/$(uname -m)-linux-gnu/libopenblas.so
 
 if [ ! -z "$OPENBLAS_LIBDIR" ]; then
     OPENBLAS_OVERRIDE=1
@@ -10,14 +10,13 @@ fi
 set -u
 SUNDIALS_VERSION=${1:-6.2.0}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
-export CC=${CC:-"gcc-10"}
+export CC=${CC:-"gcc-12"}
 
 if [ ! -d $SRC_DIR ]; then
     SUNDIALS_SRC_URL="https://github.com/llnl/sundials/releases/download/v${SUNDIALS_VERSION}/sundials-${SUNDIALS_VERSION}.tar.gz"
     curl -Ls "${SUNDIALS_SRC_URL}" | tar xz -C /build
 fi
 
-SUNDIALS_ENABLE_LAPACK=${SUNDIALS_ENABLE_LAPACK:-ON}
 for VARIANT in debug release single extended; do
     BUILD_DIR=/build/sundials-${SUNDIALS_VERSION}-${VARIANT}
     INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION}-${VARIANT}
@@ -29,6 +28,19 @@ for VARIANT in debug release single extended; do
         mkdir ${BUILD_DIR}
     fi
     cd ${BUILD_DIR}
+    if [[ $VARIANT == extended || $VARIANT == single ]]; then
+        CMAKE_ARGS="-DENABLE_KLU=OFF -DSUNDIALS_PRECISION:STRING=$VARIANT"
+        if [[ $VARIANT == extended || $VARIANT == single ]]; then
+            SUNDIALS_ENABLE_LAPACK="OFF"
+        fi
+    elif [[ ${SUNDIALS_ENABLE_KLU:-ON} == ON ]]; then
+        CMAKE_ARGS="-DENABLE_KLU=ON \
+                  -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
+                  -DKLU_LIBRARY_DIR=/usr/lib/$(uname -m)-linux-gnu"
+    else
+        CMAKE_ARGS="-DENABLE_KLU=OFF"
+    fi
+    SUNDIALS_ENABLE_LAPACK=${SUNDIALS_ENABLE_LAPACK:-ON}
     if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
         if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
             if [[ $VARIANT == "debug" ]]; then
@@ -42,15 +54,6 @@ for VARIANT in debug release single extended; do
             fi
         fi
         export LDFLAGS=-Wl,-rpath-link,${OPENBLAS_LIBDIR}
-    fi
-    if [[ $VARIANT == extended || $VARIANT == single ]]; then
-        CMAKE_ARGS="-DENABLE_KLU=OFF -DSUNDIALS_PRECISION:STRING=$VARIANT"
-    elif [[ ${SUNDIALS_ENABLE_KLU:-ON} == ON ]]; then
-        CMAKE_ARGS="-DENABLE_KLU=ON \
-                  -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
-                  -DKLU_LIBRARY_DIR=/usr/lib/$(uname -m)-linux-gnu"
-    else
-        CMAKE_ARGS="-DENABLE_KLU=OFF"
     fi
       
     if [[ $VARIANT == extended ]]; then
@@ -96,6 +99,7 @@ for VARIANT in debug release single extended; do
         fi
         CMAKE_ARGS="${CMAKE_ARGS} -DSUNDIALS_INDEX_SIZE=${SUNDIALS_INDEX_SIZE:-32}"
     fi
+    # USE_GENERIC_MATH below seems to be needed (xref https://github.com/LLNL/sundials/issues/149)
     cmake -G ${CMAKE_GENERATOR:-Ninja} \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
@@ -106,6 +110,7 @@ for VARIANT in debug release single extended; do
           -DBUILD_STATIC_LIBS=OFF \
           -DEXAMPLES_ENABLE_C=ON \
           -DEXAMPLES_INSTALL=ON \
+          -DUSE_GENERIC_MATH=OFF \
           ${CMAKE_ARGS} \
           ${SRC_DIR}
     cmake --build .
