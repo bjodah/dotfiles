@@ -317,7 +317,10 @@
 (use-package ein
   :ensure t
   :bind
+  ("C-c 0" . ein:notebook-restart-session-command)
   ("C-c 1" . ein:worksheet-execute-all-cells)
+  ("C-c 2" . ein:worksheet-execute-all-cells-above)
+  ("C-c 3" . ein:worksheet-execute-all-cells-below)
   :config
   (setq ein:worksheet-enable-undo t
         ein:output-area-inlined-images t)

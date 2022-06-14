@@ -5,6 +5,7 @@ Custom keyboard shortcuts:
    $ #gsettings set org.gnome.desktop.input-sources xkb-options ['ctrl:nocaps']
    $ gsettings set org.gnome.desktop.input-sources xkb-options "['caps:escape']"
 
+https://github.com/sezanzeb/input-remapper
 
 Stale customizations
 ====================
