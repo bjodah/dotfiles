@@ -2,7 +2,7 @@
 # adapted from:
 # https://github.com/nodejs/docker-node/blob/main/16/buster-slim/Dockerfile
 
-NODE_VERSION=16.14.2
+NODE_VERSION=16.15.1
 
 ARCH=
 dpkgArch="$(dpkg --print-architecture)" 
@@ -42,7 +42,7 @@ ln -s /usr/local/bin/node /usr/local/bin/nodejs
 node --version 
 npm --version
 
-YARN_VERSION=1.22.18
+YARN_VERSION=1.22.19
 
 set -ex
 savedAptMark="$(apt-mark showmanual)"

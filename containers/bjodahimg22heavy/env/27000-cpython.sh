@@ -2,7 +2,7 @@
 which make
 which bear
 set -x
-CPYTHON_VERSION=${1:-v3.11.0b1}
+CPYTHON_VERSION=${1:-v3.11.0b3}
 #https://www.python.org/ftp/python/3.11.0/Python-3.11.0b1.tar.xz
 export CC=${CC:-"gcc-12"}
 export CXX=${CXX:-"g++-12"}
@@ -21,7 +21,11 @@ for VARIANT in debug release; do
         export CFLAGS="-Og -g3 ${CFLAGS:-}"
     elif [[ $VARIANT == release ]]; then
         CONFIGURE_FLAGS=""
-        export CFLAGS="-O2 ${CFLAGS:-}"
+        if [[ $(uname -m) == "x86_64" ]]; then
+            export CFLAGS="-O3 -march=nehalem -mtune=skylake  ${CFLAGS:-}"
+        else
+            export CFLAGS="-O3 ${CFLAGS:-}"
+        fi
     else
         >&2 echo "Unkown VARIANT: $VARIANT"
         exit 1

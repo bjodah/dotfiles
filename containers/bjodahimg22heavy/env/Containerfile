@@ -6,8 +6,10 @@ MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 COPY 10000-setup_ubuntu_packages.sh /opt/
 
 RUN apt-get update && \
-    /opt/10100-setup_ubuntu_packages.sh
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    /opt/10100-setup_ubuntu_packages.sh && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    updatedb
 
 COPY 15000-pip-install.sh /opt/
 

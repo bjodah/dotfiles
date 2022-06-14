@@ -15,9 +15,9 @@ sudo apt-get --assume-yes --no-install-recommends install \
      libsqlite3-dev libssl-dev libsuitesparse-dev libsystemd-dev libtiff-dev libtool libtool-bin \
      libwebp-dev libwebsockets-dev libx11-dev libxml2-dev libxpm-dev libxrender1 libxslt1-dev libyaml-dev \
      libzmq3-dev libzstd-dev lzma-dev \
-     ninja-build petsc-dev \
+     man manpages ninja-build petsc-dev \
      python3-dev rr tk-dev trilinos-dev valgrind xorg-dev xutils-dev zlib1g-dev linux-tools-common \
-     libopenblas-openmp-dev
+     libopenblas-openmp-dev wkhtmltopdf
 
 # Useful packages deferred for now (too heavy)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
