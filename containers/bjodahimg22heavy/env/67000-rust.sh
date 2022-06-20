@@ -11,4 +11,7 @@ fi
 rustup --version
 cargo --version
 rustc --version
+source $CARGO_HOME/env
+rustup install stable
+rustup default stable
 rustup component add rustfmt

@@ -54,7 +54,6 @@ for VARIANT in debug release; do
     ${INSTALL_DIR}/bin/python3 -c "import sqlite3, uuid, lzma, bz2" 
     ${INSTALL_DIR}/bin/python3 -m pip install --upgrade --upgrade-strategy=eager pip 
     PYTHON=${INSTALL_DIR}/bin/python3 /opt/15-pip-install.sh
-    PYTHON=${INSTALL_DIR}/bin/python3 /opt/150-pip-install.sh
     make clean
     ln -s $BUILD_DIR/compile_commands.json /opt/cpython-${CPYTHON_VERSION#v}-${VARIANT}/
 done

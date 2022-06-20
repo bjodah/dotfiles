@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dev:22.4.a.1
+FROM bjodah/bjodahimg22dev:22.6.a.1
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
 COPY emacs-pgtk-gcc_29.0.50.deb emacs_28.1.50.deb 1000-apt-packages.sh 1400-sundials.sh 1600-ttyd.sh /opt/

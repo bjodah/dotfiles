@@ -91,8 +91,7 @@
         :config
         (require 'dap-lldb)
         (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode-11"))
-        (setq dap-lldb-debugged-program-function (lambda () (read-file-name "Select file to debug.")))
-
+        (setq dap-lldb-debugged-program-function (lambda () (read-file-name "Select file to debug.")))        
   ;;; default debug template for (c++)
         (dap-register-debug-template
          "C++ LLDB dap"
@@ -109,7 +108,19 @@
 	        (default "~/.emacs.d/default-launch.json"))
             (unless (file-exists-p filename)
 	      (copy-file default filename))
-            (find-file-existing filename))))
+            (find-file-existing filename)))
+      ;;; Python
+        (require 'dap-python)
+        (setq dap-python-debugger 'debugpy)
+        (dap-register-debug-template "Python :: Run pytest (at point)"
+                                     (list :type "python-test-at-point"
+                                           :args ""
+                                           :module "pytest"
+                                           :request "launch"
+                                           :debugger 'debugpy
+                                           :name "Python :: Run pytest (at point)"))        
+        )
+      
 
 ))
 

@@ -1,38 +1,55 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dot:22.4.a.1.5
+FROM bjodah/bjodahimg22dot:22.6.a.1.1
 
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY 10000-setup_ubuntu_packages.sh /opt/
+COPY 10100-setup_ubuntu_packages.sh /opt/
 
 RUN apt-get update && \
     /opt/10100-setup_ubuntu_packages.sh && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    updatedb
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+    # && \
+    # updatedb
 
 COPY 15000-pip-install.sh /opt/
 
-RUN /opt/15000-pip-install.sh && \
+RUN env CC=gcc-12 CXX=g++-12 /opt/15000-pip-install.sh && \
     rm -rf ~/.cache/pip
 
 COPY 25000-install-pypy.sh /opt/
 
-RUN /opt/25000-install-pypy.sh && \
+RUN env CC=gcc-12 CXX=g++-12 /opt/25000-install-pypy.sh && \
     rm -rf ~/.cache/pip
 
-COPY 27000-cpython.sh /opt/
 
-RUN /opt/27000-cpython.sh
-
-
-COPY 67000-rust.sh
+COPY 67000-rust.sh /opt/
 
 RUN \
         mkdir /opt/cargo /opt/rustup && \
         CARGO_HOME=/opt/cargo PATH="$CARGO_HOME/bin:$PATH" RUSTUP_HOME=/opt/rustup /opt/67000-rust.sh
 
-RUN /opt/cargo/bin/cargo install difftastic
+RUN env CC=gcc-12 CXX=g++-12 bash -c "source /opt/cargo/env; rustup default stable; cargo install difftastic"
+
+COPY 75000-cpython.sh /opt/
+
+RUN env CPYTHON_VERSION=3.11 /opt/75000-cpython.sh
+
+COPY 75050-scipy.sh /opt/
+
+RUN sed -i.bak 's/ scipy / /g' /opt/150-pip-install.sh \
+    && env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0b3-release/bin/python3 /opt/75050-scipy.sh
+
+RUN env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0b3-debug/bin/python3   /opt/75050-scipy.sh
+
+RUN env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0b3-release/bin/python3 /opt/150-pip-install.sh \
+    && /opt/cpython-3.11.0b3-release/bin/python3 -m pip install debugpy \
+    && python3 -m pip install debugpy
+
+# env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0b3-debug/bin/python3 /opt/150-pip-install.sh \
+# && /opt/cpython-3.11.0b3-debug/bin/python3 -m pip install debugpy \
+
 
 
 # RUN git clone https://github.com/mattgodbolt/seasocks.git /build/seasocks && \
