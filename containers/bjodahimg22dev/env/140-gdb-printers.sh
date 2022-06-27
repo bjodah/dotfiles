@@ -7,3 +7,6 @@ git clone --branch indicate-dynamic https://github.com/bjodah/eigengdb
 
 git clone --branch relax-upper-version-limit-of-boost https://github.com/bjodah/Boost-Pretty-Printer
 #echo -e "python\nimport sys; sys.path.insert(1, '/opt/Boost-Pretty-Printer'); __import__('boost').register_printers(boost_version=(1, 77, 0))\nend" >>/root/.gdbinit
+
+git clone https://github.com/koutheir/libcxx-pretty-printers
+
