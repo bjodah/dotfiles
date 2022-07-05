@@ -96,14 +96,15 @@ cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
 set -euxo pipefail
 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
      new -s ${CONTAINER_FOLDER}-$(basename $(dirname $(realpath $BASH_SOURCE))) \
-     "cmake \\
+     "set -x \\
+     ; cmake \\
              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \\
-             -G Ninja \\
              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \\
              $CMAKE_ARGS \\
              -B $THIS_BUILD \\
-             -S $(pwd) ; \\
-      ln -fs $THIS_BUILD/compile_commands.json . && cmake --build $THIS_BUILD" \; \
+             -S $(pwd) \\
+      && ln -fs $THIS_BUILD/compile_commands.json . \\
+      && cmake --build $THIS_BUILD" \; \
      new-window "/opt/my-rundir/launch-emacs.sh"
 EOF
 

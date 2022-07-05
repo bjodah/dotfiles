@@ -542,7 +542,7 @@
 	)
 
   ;; Load the theme files before enabling a theme
-  (modus-themes-load-themes)
+  ;; (modus-themes-load-themes)
   :config
   ;; Load the theme of your choice:
   (modus-themes-load-vivendi) ;; OR (modus-themes-load-operandi)
