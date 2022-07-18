@@ -6,10 +6,10 @@ sudo apt-get --assume-yes --no-install-recommends install \
      htop hunspell imagemagick latexmk lcov less lmodern lzma make \
      ninja-build parallel pngquant poppler-utils pv \
      python3-pip python3-setuptools python3-wheel ripgrep \
-     rsync scons ssh sudo texinfo \
+     rsync scons ssh texinfo \
      texlive-fonts-recommended texlive-lang-european texlive-latex-extra \
      texlive-latex-recommended texlive-science texlive-xetex time \
-     tmux tree unison unzip wget wkhtmltopdf \
+     tmux tree unison unzip wget \
      xz-utils zip zstd
 
 # Heavy-weights among kept packages:

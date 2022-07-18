@@ -83,7 +83,7 @@
       (use-package dap-mode
         ;;  :ensure t)
         :ensure t
-        :defer
+        :defer t
         :custom
         (dap-auto-configure-mode t                           "Automatically configure dap.")
         (dap-auto-configure-features
@@ -91,8 +91,7 @@
         :config
         (require 'dap-lldb)
         (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode-11"))
-        (setq dap-lldb-debugged-program-function (lambda () (read-file-name "Select file to debug.")))
-
+        (setq dap-lldb-debugged-program-function (lambda () (read-file-name "Select file to debug.")))        
   ;;; default debug template for (c++)
         (dap-register-debug-template
          "C++ LLDB dap"
@@ -109,7 +108,19 @@
 	        (default "~/.emacs.d/default-launch.json"))
             (unless (file-exists-p filename)
 	      (copy-file default filename))
-            (find-file-existing filename))))
+            (find-file-existing filename)))
+      ;;; Python
+        (require 'dap-python)
+        (setq dap-python-debugger 'debugpy)
+        (dap-register-debug-template "Python :: Run pytest (at point)"
+                                     (list :type "python-test-at-point"
+                                           :args ""
+                                           :module "pytest"
+                                           :request "launch"
+                                           :debugger 'debugpy
+                                           :name "Python :: Run pytest (at point)"))        
+        )
+      
 
 ))
 
@@ -313,10 +324,16 @@
 ;;   :init (setq quelpa-update-melpa-p nil)
 ;;   :config (quelpa-use-package-activate-advice))
 
+
 (use-package ein
   :ensure t
   :bind
+  ("C-c 0" . ein:notebook-restart-session-command)
   ("C-c 1" . ein:worksheet-execute-all-cells)
+  ("C-c 2" . ein:worksheet-execute-all-cells-above)
+  ("C-c 3" . ein:worksheet-execute-all-cells-below)
+  ("C-c 9" . ein:worksheet-clear-all-output)
+  ("C-c 0" . ein:notebook-restart-session-command)
   :config
   (setq ein:worksheet-enable-undo t
         ein:output-area-inlined-images t)
@@ -453,6 +470,38 @@
           ))
   )
 
+(use-package org
+  :ensure t
+  :config
+  (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
+  (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
+  
+
+  ;; org-babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (mapcar (lambda (lang) (cons lang t))
+           `(C
+             dot
+             emacs-lisp
+             ;julia
+             python
+             jupyter
+             ,(if (locate-library "ob-shell") 'shell 'sh)
+             )))
+  (setq org-confirm-babel-evaluate nil)
+
+  ;; Render mako from org-mode source block (https://stackoverflow.com/a/10418779/790973)
+  (defun org-babel-execute:mako (body params)
+    "Render Mako templated source with org-babel."
+    (message "calling render-mako on code block")
+    (org-babel-eval "mako-render" body))
+  (setq org-babel-python-command "python3")
+
+)
+
+(setq python-shell-interpreter "python3")
+
 (use-package org-roam
   :ensure t
   :custom
@@ -472,9 +521,38 @@
 (use-package rmsbolt ;; live disassembly
   :ensure t)
 
+(use-package nginx-mode
+  :ensure t
+  )
+
+(use-package modus-themes
+  :ensure t
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+	modus-themes-bold-constructs t ;nil
+	modus-themes-region '(accented)
+	modus-themes-paren-match '(bold intense)
+	modus-themes-headings '((1 . (rainbow overline background 1.4))
+				(2 . (rainbow background 1.3))
+				(3 . (rainbow bold 1.2))
+				(t . (semilight 1.1)))
+	modus-themes-scale-headings t
+	modus-themes-org-blocks 'tinted-background
+	)
+
+  ;; Load the theme files before enabling a theme
+  ;; (modus-themes-load-themes)
+  :config
+  ;; Load the theme of your choice:
+  (modus-themes-load-vivendi) ;; OR (modus-themes-load-operandi)
+  :bind ("ESC <f5>" . modus-themes-toggle))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
 (global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
+
+
 
 (if (>= emacs-major-version 28)
     (add-hook 'after-init-hook (lambda () (load-theme
@@ -506,6 +584,8 @@
                   (lambda() (interactive) (progn (gdb-many-windows) (other-window) (other-window))))
 		(define-key gud-minor-mode-map (kbd "M-<up>") #'gud-up)
 		(define-key gud-minor-mode-map (kbd "M-<down>") #'gud-down)
+		(define-key gud-minor-mode-map (kbd "<prior>") #'gud-up)
+		(define-key gud-minor-mode-map (kbd "<next>") #'gud-down)
 )))
 
 
@@ -826,33 +906,6 @@
 
 (show-paren-mode 1)
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- (mapcar (lambda (lang) (cons lang t))
-         `(C
-           dot
-           emacs-lisp
-           ;julia
-           python
-           jupyter
-           ,(if (locate-library "ob-shell") 'shell 'sh)
-           )))
-
-(setq
- org-confirm-babel-evaluate nil)
-
-(setq org-html-htmlize-output-type 'css) ; default: 'inline-css
-(setq org-html-htmlize-font-prefix "org-") ; default: "org-"
-
-
-;; Render mako from org-mode source block (https://stackoverflow.com/a/10418779/790973)
-(defun org-babel-execute:mako (body params)
-  "Render Mako templated source with org-babel."
-  (message "calling render-mako on code block")
-  (org-babel-eval "mako-render" body))
-(setq org-babel-python-command "python3")
-
-(setq python-shell-interpreter "python3")
 
 
 ;; (fset 'mark-to-space

@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 export CC=clang-14 CXX=clang++-14
-export LLVM_ORG_VER=14.0.0
+export LLVM_ORG_VER=14.0.4
 export LLVM_MAJOR=$(echo $LLVM_ORG_VER | cut -f1 -d.)
 SRC_DIR=/build/llvm-project-llvmorg-${LLVM_ORG_VER}
 LIBCXXABI_INCLUDE=$SRC_DIR/libcxxabi/include

@@ -11,6 +11,7 @@ show_help() {
     echo "   $ CMAKE_ARGS=\"-DCMAKE_BUILD_TYPE=Debug\" host-devenv-gccemacs-doom-cmake.sh -- --x11"
 }
 HOST_TTYD=""
+EMACS_FLAGS=""
 NO_EVIL=0
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -25,6 +26,11 @@ while [ $# -gt 0 ]; do
             ;;
         --no-evil)
             NO_EVIL=1
+            shift
+            ;;
+        --emacs-flags)
+            shift
+            EMACS_FLAGS="$1"
             shift
             ;;
         --)
@@ -73,9 +79,7 @@ EOF
 if [[ $HOST_TTYD != "" ]]; then
     echo "\; \\"<$(head -c -1 $THIS_RUNDIR/launch-tmux.sh) >$THIS_RUNDIR/launch-tmux.sh
     echo "new-window \"ttyd --port $HOST_TTYD tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock\"" >>$THIS_RUNDIR/launch-tmux.sh
-    EMACS_FLAGS="-nw"
-else
-    EMACS_FLAGS=""
+    EMACS_FLAGS="-nw $EMACS_FLAGS"
 fi
 
 
@@ -88,7 +92,7 @@ if [[ $NO_EVIL == 1 ]]; then
    ~/.emacs.d/bin/doom sync
 fi
 while ! test -e $(pwd)/compile_commands.json; do sleep 1; done
-/install_dir/bin/emacs $EMACS_FLAGS --eval '(load "/opt/my-rundir/launch-emacs.el")'
+emacs $EMACS_FLAGS --eval '(load "/opt/my-rundir/launch-emacs.el")'
 EOF
 chmod +x $THIS_RUNDIR/launch-emacs.sh
 cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
@@ -96,14 +100,15 @@ cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
 set -euxo pipefail
 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
      new -s ${CONTAINER_FOLDER}-$(basename $(dirname $(realpath $BASH_SOURCE))) \
-     "cmake \\
+     "set -x \\
+     ; cmake \\
              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \\
-             -G Ninja \\
              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \\
              $CMAKE_ARGS \\
              -B $THIS_BUILD \\
-             -S $(pwd) ; \\
-      ln -fs $THIS_BUILD/compile_commands.json . && cmake --build $THIS_BUILD" \; \
+             -S $(pwd) \\
+      && ln -fs $THIS_BUILD/compile_commands.json . \\
+      && cmake --build $THIS_BUILD" \; \
      new-window "/opt/my-rundir/launch-emacs.sh"
 EOF
 

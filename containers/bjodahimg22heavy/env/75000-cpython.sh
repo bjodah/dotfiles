@@ -2,7 +2,7 @@
 which make
 which bear
 set -x
-CPYTHON_VERSION=${1:-v3.11.0b1}
+CPYTHON_VERSION=${1:-v3.11.0b3}
 #https://www.python.org/ftp/python/3.11.0/Python-3.11.0b1.tar.xz
 export CC=${CC:-"gcc-12"}
 export CXX=${CXX:-"g++-12"}
@@ -21,7 +21,11 @@ for VARIANT in debug release; do
         export CFLAGS="-Og -g3 ${CFLAGS:-}"
     elif [[ $VARIANT == release ]]; then
         CONFIGURE_FLAGS=""
-        export CFLAGS="-O2 ${CFLAGS:-}"
+        if [[ $(uname -m) == "x86_64" ]]; then
+            export CFLAGS="-O3 -march=nehalem -mtune=skylake  ${CFLAGS:-}"
+        else
+            export CFLAGS="-O3 ${CFLAGS:-}"
+        fi
     else
         >&2 echo "Unkown VARIANT: $VARIANT"
         exit 1
@@ -50,7 +54,6 @@ for VARIANT in debug release; do
     ${INSTALL_DIR}/bin/python3 -c "import sqlite3, uuid, lzma, bz2" 
     ${INSTALL_DIR}/bin/python3 -m pip install --upgrade --upgrade-strategy=eager pip 
     PYTHON=${INSTALL_DIR}/bin/python3 /opt/15-pip-install.sh
-    PYTHON=${INSTALL_DIR}/bin/python3 /opt/150-pip-install.sh
     make clean
     ln -s $BUILD_DIR/compile_commands.json /opt/cpython-${CPYTHON_VERSION#v}-${VARIANT}/
 done
