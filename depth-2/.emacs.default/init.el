@@ -9,7 +9,7 @@
   (load custom-file))
 
 ;; (if (boundp 'native-comp-eln-load-path)
-;;     (setq  (expand-file-name (format "eln-cache-%d/" emacs-major-version) user-emacs-directory))
+;;     (setq native-comp-eln-load-path (expand-file-name (format "eln-cache-%d/" emacs-major-version) user-emacs-directory))
 ;; )
 (setq visible-bell nil
       ring-bell-function 'flash-mode-line)
@@ -542,7 +542,7 @@
 	)
 
   ;; Load the theme files before enabling a theme
-  (modus-themes-load-themes)
+  ;; (modus-themes-load-themes)
   :config
   ;; Load the theme of your choice:
   (modus-themes-load-vivendi) ;; OR (modus-themes-load-operandi)
@@ -919,7 +919,7 @@
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([47 kp-multiply 32 134217848 134217840 134217840 return 91 44 41 93 return 2 32 42 47] 0 "%d")) arg)))
 (global-set-key (kbd "C-c c") 'comment-c-word)
 
-(let ((local-settings "~/.emacs.d/local-settings.el"))
+(let ((local-settings (concat user-emacs-directory "local-settings.el")))
  (when (file-exists-p local-settings)
    (load-file local-settings))
   ;; e.g.:
@@ -929,3 +929,4 @@
   ;;   (find-file "//ODEN/Profile\$/bjorningvar/Documents/main.org"))
   ;; (open-main-org)
 )
+;;; init.el ends here
