@@ -39,15 +39,15 @@ RUN env CPYTHON_VERSION=3.11 /opt/75000-cpython.sh
 COPY 75050-scipy.sh /opt/
 
 RUN sed -i.bak 's/ scipy / /g' /opt/150-pip-install.sh \
-    && env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0b3-release/bin/python3 /opt/75050-scipy.sh
+    && env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0rc1-release/bin/python3 /opt/75050-scipy.sh
 
-RUN env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0b3-debug/bin/python3   /opt/75050-scipy.sh
+RUN env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0rc1-debug/bin/python3   /opt/75050-scipy.sh
 
-RUN /opt/cpython-3.11.0b3-release/bin/python3 -c "import scipy; print(scipy.__version__)" \
-    && env YARL_NO_EXTENSIONS=1 /opt/cpython-3.11.0b3-release/bin/python3 -m pip install https://github.com/aio-libs/yarl/archive/master.tar.gz \
-    && env FROZENLIST_NO_EXTENSIONS=1 /opt/cpython-3.11.0b3-release/bin/python3 -m pip install https://github.com/aio-libs/frozenlist/archive/master.tar.gz \
-    && env AIOHTTP_NO_EXTENSIONS=1 /opt/cpython-3.11.0b3-release/bin/python3 -m pip install https://github.com/aio-libs/aiohttp/archive/master.tar.gz \
-    && env CC=gcc-12 CXX=g++-12 /opt/cpython-3.11.0b3-release/bin/python3 -m pip install black ase asv check-manifest conan dufte epc flake8 holoviews[recommended] ipykernel ipython ipywidgets ipympl isort joblib jupyter matplotlib mpld3 mogli mypy nbconvert nbsphinx nbstripout "notebook<7" networkx Nikola[extras] numericalunits numpydoc param periodictable debugpy pulp pudb pycparser pycparser-fake-libc pygraphviz pylatex pytest-black pytest-cov pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb pytest-xdist quantities rstcheck SciencePlots setuptools_scm sphinx sphinx_rtd_theme sympy pyfma termplotlib toolz virtualenv websockets xarray yq \
+RUN /opt/cpython-3.11.0rc1-release/bin/python3 -c "import scipy; print(scipy.__version__)" \
+    && env YARL_NO_EXTENSIONS=1 /opt/cpython-3.11.0rc1-release/bin/python3 -m pip install https://github.com/aio-libs/yarl/archive/master.tar.gz \
+    && env FROZENLIST_NO_EXTENSIONS=1 /opt/cpython-3.11.0rc1-release/bin/python3 -m pip install https://github.com/aio-libs/frozenlist/archive/master.tar.gz \
+    && env AIOHTTP_NO_EXTENSIONS=1 /opt/cpython-3.11.0rc1-release/bin/python3 -m pip install https://github.com/aio-libs/aiohttp/archive/master.tar.gz \
+    && env CC=gcc-12 CXX=g++-12 /opt/cpython-3.11.0rc1-release/bin/python3 -m pip install black ase asv check-manifest conan dufte epc flake8 holoviews[recommended] ipykernel ipython ipywidgets ipympl isort joblib jupyter matplotlib mpld3 mogli mypy nbconvert nbsphinx nbstripout "notebook<7" networkx Nikola[extras] numericalunits numpydoc param periodictable debugpy pulp pudb pycparser pycparser-fake-libc pygraphviz pylatex pytest-black pytest-cov pytest-docstyle pytest-flake8 pytest-flakes pytest-pep8 pytest-pudb pytest-xdist quantities rstcheck SciencePlots setuptools_scm sphinx sphinx_rtd_theme sympy pyfma termplotlib toolz virtualenv websockets xarray yq \
     && rm -r ~/.cache/pip
 
 RUN apt-get update \
@@ -59,8 +59,8 @@ RUN apt-get update \
 
 # scikit-image scikit-optimize statsmodels "numba<0.56"
 
-# env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0b3-debug/bin/python3 /opt/150-pip-install.sh \
-# && /opt/cpython-3.11.0b3-debug/bin/python3 -m pip install debugpy \
+# env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11.0rc1-debug/bin/python3 /opt/150-pip-install.sh \
+# && /opt/cpython-3.11.0rc1-debug/bin/python3 -m pip install debugpy \
 
 
 

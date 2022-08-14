@@ -8,12 +8,16 @@ show_help(){
     echo "--client                     runs as client"
     echo "--daemon                     runs as a daemon"
     echo "--broadway <display-number>  e.g. 5, then open http://localhost:8085"
-    echo "--use <version>              e.g. 28.doom, symlinks .emcas.d.<version> to /root/.emacs.d"
+    echo "--emacs-build <build-id>     e.g. 29pg for /opt/emacs-29pg"
     echo ""
     echo "Extra arguments passed to podrun (wrapper around podman) can be specified after a  '--' token."
+    echo ""
+    echo "Example:"
+    echo ""
+    echo "  $ emx --emacs-build 29pg --profile default -- --x11"
 }
 declare -a EMACS_ARGS
-USE_EMACS_D=""
+EMACS_BUILD=""
 USE_BROADWAY=""
 RUN_AS_DAEMON=0
 RUN_AS_CLIENT=0
@@ -32,9 +36,14 @@ while [ $# -gt 0 ]; do
             USE_BROADWAY=$1
             shift
             ;;
-        --use)
+        --emacs-build)
             shift
-            USE_EMACS_D=$1
+            EMACS_BUILD=$1
+            if [[ $EMACS_BUILD = 28* ]]; then
+                export EMACS_VERSION=28
+            elif [[ $EMACS_BUILD = 29* ]]; then
+                export EMACS_VERSION=29
+            fi
             shift
             ;;
         -h|--help|\?)
@@ -86,23 +95,28 @@ set -g remain-on-exit on  # cf. respawn-pane & respawn-pane -k
 set -g history-limit 15000  # default is 2000 lines
 EOF
 
-if [[ $USE_EMACS_D == 28* ]]; then
-    EMACS_PREFIX=/opt/emacs-28
-elif [[ $USE_EMACS_D == 29* ]]; then
-    EMACS_PREFIX=/opt/emacs-pgtk-gcc-29
-else
-    >&2 echo "TODO: implment handling for verion: $USE_EMACS_D"
-fi
+PODRUN_ARGS="--image bjodah/bjodahimg22heavy:22.6.a.1.1.1"
+
+# if ! podrun $PODRUN_ARGS "test -f /opt/emacs-$EMACS_BUILD/bin/emacs"; then
+EMACS_PREFIX=/opt/emacs-$EMACS_BUILD
+# else
+#     >&2 echo "Found no emacs root "
+#     exit
+# fi
 
 if [[ $RUN_AS_CLIENT == 1 ]]; then
     # EMACS_BIN="emacsclient -nc -s /emx/emx-server"
     EMACS_BIN="emacsclient -nc -s emx-server"
-    PODRUN_ARGS="--name emx-client-$(printf '%(%s)T\n' -1)"
+    PODRUN_ARGS="--name emx-client-$(printf '%(%s)T\n' -1) $PODRUN_ARGS"
     LAUNCH_COMMAND="$EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]:-''}"
 else
-    LAUNCH_COMMAND="ln -s /root/.emacs.d.$USE_EMACS_D /root/.emacs.d && \
-        bash /opt/bjodah-dotfiles/install_defaults.sh && \
-        set -x; chmod 700 /emx; . /emx/launch.sh"
+    # LAUNCH_COMMAND="ln -s /root/.emacs.d.$USE_EMACS_D /root/.emacs.d && \
+    LAUNCH_COMMAND="set -e && \
+                    bash /opt/bjodah-dotfiles/install_defaults.sh && \
+                    set -x && \
+                    for d in /root/.emacs.d.$EMACS_VERSION/{.cache,eln-cache,elpa}; do if [[ -d \\\$d ]]; then ln -s \\\$d /root/.emacs.default/; fi ; done && \
+                    chmod 700 /emx && \
+                    . /emx/launch.sh"
     if [[ $RUN_AS_DAEMON == 1 ]]; then
         if [[ $USE_BROADWAY != "" ]]; then
             >&2 echo "Cannot combine daemon and broadway"
@@ -119,10 +133,10 @@ else
 # EOF
 #         EMACS_BIN="emacs --eval '(load \"/emx/daemon-init.el\")'"
         EMACS_BIN="emacs --daemon=emx-server"
-        PODRUN_ARGS="--name emx-daemon"
+        PODRUN_ARGS="--name emx-daemon $PODRUN_ARGS"
     elif [[ $USE_BROADWAY != "" ]]; then
         EMACS_BIN="emacs"
-        PODRUN_ARGS="--name emx-broadway -p 0.0.0.0:808$USE_BROADWAY:808$USE_BROADWAY"
+        PODRUN_ARGS="--name emx-broadway -p 0.0.0.0:808$USE_BROADWAY:808$USE_BROADWAY $PODRUN_ARGS"
         cat <<EOF>~/.emx/launch.sh
 tmux  -2 -S tmux-podrun.sock -f /emx/.tmux.conf new -s emx "broadwayd --address=0.0.0.0 :$USE_BROADWAY" \
     \; new-window "GDK_BACKEND=broadway BROADWAY_DISPLAY=:$USE_BROADWAY $EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]:-''}"
@@ -133,7 +147,7 @@ EOF
 	fi
     else
         EMACS_BIN=emacs
-        PODRUN_ARGS="--name emx"
+        PODRUN_ARGS="--name emx $PODRUN_ARGS"
         cat <<EOF>~/.emx/launch.sh
 tmux -2 -S tmux-podrun.sock -f /emx/.tmux.conf new -s emx $EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]:-""}
 EOF
@@ -142,10 +156,12 @@ fi
 
 podrun \
     -v ~/.emx:/emx \
-    -v ~/.emx/.emacs-eln-cache:/root/.emacs.d.$USE_EMACS_D/eln-cache \
     -v $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR \
     -e XDG_RUNTIME_DIR \
-    --image bjodah/bjodahimg22dot:22.4.a.1.5 \
+    -e EMACS_VERSION \
     $PODRUN_ARGS \
     $* \
-    -- $LAUNCH_COMMAND
+    -- "bash -c \"$LAUNCH_COMMAND\""
+
+#    -v ~/.emx/.emacs-eln-cache:/root/.emacs.d.$USE_EMACS_D/eln-cache \
+#     --image bjodah/bjodahimg22dot:22.4.a.1.5 \

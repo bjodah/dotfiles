@@ -20,5 +20,5 @@ RUN /opt/155-build-antic-calcium.sh \
     && /opt/160-ccls.sh  \
     && /opt/250-libqd.sh 2.3.23 /opt/libqd-2.3.23 \
     && /opt/330-libcxx-msan.sh \
-    && /opt/750-boost.sh \
+    && /opt/750-boost.sh 1 80 0 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
