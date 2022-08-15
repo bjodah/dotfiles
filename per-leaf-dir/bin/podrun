@@ -4,8 +4,8 @@
 # The curly braces on the line below allows us to edit this file without worrying
 # if doing so while the script is running.
 {
-    IMAGE=alpine:latest # e.g. python:alpine, ubuntu:jammy   # the default image
-    CONTAINER_FOLDER=""
+    IMAGE=""
+    CONT_IMG_DIR=""
     NAME=""
     WITH_X11=0
     DO_MOUNT_CWD=1
@@ -20,16 +20,16 @@
         echo "also supports building & caching container images on-the-fly."
         echo ""
         echo "Usage:"
-        echo "--image                  name of containerimage, default: $IMAGE, e.g. ubuntu:jammy"
-        echo "--container-folder       name of container folder to build image from (overrides --image)"
-        echo "--name                   name of containerimage, default is basename of image"
-        echo "--x11                    set DISPLAY, mount X11 socket folder."
-        echo "--no-mount-cwd           disable default mounting of current working directory"
+        echo "--cont-img-dir    path to folder with ./env/Containerfile"
+        echo "--image           name of image (overrides --cont-img-dir), e.g. ubuntu:jammy"
+        echo "--name            name of container, default is basename of image"
+        echo "--x11             set DISPLAY, mount X11 socket folder."
+        echo "--no-mount-cwd    disable default mounting of current working directory"
         echo ""
         echo "Example:"
         echo ' $ podrun -v ~/.ssh:/root/.ssh -v ~/.gnupg:/root/.gnupg --image alpine:latest'
         echo ' $ podrun --x11 --image docker.io/silex/emacs:master-alpine -- emacs ~/.bashrc '
-        echo ' $ podrun --x11 --container-folder ~/dotfiles/containers/gccemacs-doom -- ~/.emacs.d/bin/doom sync; emacs ~/.bashrc '
+        echo ' $ podrun --x11 --cont-img-dir ~/dotfiles/containers/gccemacs-doom -- ~/.emacs.d/bin/doom sync; emacs ~/.bashrc '
     }
     declare -a PODMAN_RUN_ARGS
     while [ $# -gt 0 ]; do
@@ -52,9 +52,9 @@
                 IMAGE=$1
                 shift
                 ;;
-            --container-folder)
+            --cont-img-dir)
                 shift
-                CONTAINER_FOLDER=$1
+                CONT_IMG_DIR=$1
                 shift
                 ;;
             --x11)
@@ -115,23 +115,23 @@
         exit 1
     fi
    
-    if [[ ! -z "$CONTAINER_FOLDER" ]]; then
-        if [[ ! -d "$CONTAINER_FOLDER/env" ]]; then
-            CANDIDATE_FOLDER="$(dirname $(realpath $BASH_SOURCE))/../../containers/$CONTAINER_FOLDER/"
+    if [[ -z "$IMAGE" && ! -z "$CONT_IMG_DIR" ]]; then
+        if [[ ! -d "$CONT_IMG_DIR/env" ]]; then
+            CANDIDATE_FOLDER="$(dirname $(realpath $BASH_SOURCE))/../../containers/$CONT_IMG_DIR/"
             if [[ ! -d "$CANDIDATE_FOLDER/env" ]]; then
                 >&2 echo "Found no container folder, looked for: $CANDIDATE_FOLDER/env"
                 exit 1
             else
-                CONTAINER_FOLDER="$CANDIDATE_FOLDER"
+                CONT_IMG_DIR="$CANDIDATE_FOLDER"
             fi
         fi
-        if [[ -e $CONTAINER_FOLDER/run-args.sh ]]; then
-            source $CONTAINER_FOLDER/run-args.sh
+        if [[ -e $CONT_IMG_DIR/run-args.sh ]]; then
+            source $CONT_IMG_DIR/run-args.sh
         fi
-	ENV_HASH=$(cat "$CONTAINER_FOLDER"/env/* | openssl sha256 | cut -f2 -d' ')
-	IMAGE="localhost/$(basename $(realpath ${CONTAINER_FOLDER})):${ENV_HASH:0:8}"
+	ENV_HASH=$(cat "$CONT_IMG_DIR"/env/* | openssl sha256 | cut -f2 -d' ')
+	IMAGE="localhost/$(basename $(realpath ${CONT_IMG_DIR})):${ENV_HASH:0:8}"
 	if ! $PODMAN image ls | grep $IMAGE; then
-	    $PODMAN build -t $IMAGE "$CONTAINER_FOLDER/env"
+	    $PODMAN build -t $IMAGE "$CONT_IMG_DIR/env"
 	fi
     fi
 

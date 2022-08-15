@@ -145,7 +145,7 @@ fi
 {  # this scope saves us from surprises if editing this file during podman executiong below
     podrun \
         $* \
-        --container-folder $CONTAINER_FOLDER \
+        --cont-img-dir $CONTAINER_FOLDER \
         --name host-dev-env-gccemacs-doom-cmake \
         --volume $THIS_CCACHE:/root/.ccache \
         --volume $THIS_CLANGD_CACHE:/root/.cache/clangd \
@@ -158,4 +158,3 @@ fi
         # --volume "$THIS_FOLDER":/opt/my-scripts/ \
 
 }
-

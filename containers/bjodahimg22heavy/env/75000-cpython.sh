@@ -2,8 +2,8 @@
 which make
 which bear
 set -x
-CPYTHON_VERSION=${1:-v3.11.0b3}
-#https://www.python.org/ftp/python/3.11.0/Python-3.11.0b1.tar.xz
+CPYTHON_VERSION=${1:-v3.11.0rc1}
+#https://www.python.org/ftp/python/3.11.0/Python-3.11.0rc1.tar.xz
 export CC=${CC:-"gcc-12"}
 export CXX=${CXX:-"g++-12"}
 set -u
