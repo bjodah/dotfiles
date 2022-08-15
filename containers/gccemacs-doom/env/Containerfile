@@ -1,7 +1,7 @@
 # -*- mode: dockerfile -*-
 # -*- compile-command: "podman build ." -*-
 
-FROM bjodah/bjodahimg22dot:22.6.a.1.1
+FROM bjodahimg22heavy:22.6.a.1.1.1
 
 
 # RUN apt-get update \
