@@ -1,9 +1,11 @@
 #!/bin/bash -eux
-export CC=clang-14 CXX=clang++-14
-export LLVM_ORG_VER=14.0.4
+export CC=${CC:-clang-14} CXX=${CXX:-clang++-14}
+export LLVM_ORG_VER=${LLVM_ORG_VER:-14.0.4}
 export LLVM_MAJOR=$(echo $LLVM_ORG_VER | cut -f1 -d.)
 SRC_DIR=/build/llvm-project-llvmorg-${LLVM_ORG_VER}
 LIBCXXABI_INCLUDE=$SRC_DIR/libcxxabi/include
+BUILD_ROOT=${BUILD_ROOT:-/build}
+INSTALL_ROOT=/opt
 
 for VARIANT in debug release msan; do
     if [[ $VARIANT == debug ]]; then
@@ -16,16 +18,16 @@ for VARIANT in debug release msan; do
         >&2 echo "Unhandled variant"
         exit 1        
     fi
-    BUILD_DIR_LIBCXX=/build/libcxx${LLVM_MAJOR}-${VARIANT}
-    INSTALL_DIR_LIBCXX=/opt/libcxx${LLVM_MAJOR}-${VARIANT}
+    BUILD_DIR_LIBCXX=${BUILD_ROOT}/libcxx${LLVM_MAJOR}-${VARIANT}
+    INSTALL_DIR_LIBCXX=${INSTALL_ROOT}/libcxx${LLVM_MAJOR}-${VARIANT}
     if [ -d $INSTALL_DIR_LIBCXX ]; then
         >&2 echo "Directory already exists, skipping: $INSTALL_DIR_LIBCXX"
         continue
     fi
-    BUILD_DIR_LIBCXXABI=/build/libcxxabi${LLVM_MAJOR}-${VARIANT}
-    INSTALL_DIR_LIBCXXABI=/opt/libcxxabi${LLVM_MAJOR}-${VARIANT}
+    BUILD_DIR_LIBCXXABI=${BUILD_ROOT}/libcxxabi${LLVM_MAJOR}-${VARIANT}
+    INSTALL_DIR_LIBCXXABI=${INSTALL_ROOT}/libcxxabi${LLVM_MAJOR}-${VARIANT}
     if [ ! -d $LIBCXXABI_INCLUDE ]; then
-        curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /build
+        curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C ${BUILD_ROOT}
     fi
     mkdir $BUILD_DIR_LIBCXX
     cd $BUILD_DIR_LIBCXX
@@ -52,7 +54,7 @@ for VARIANT in debug release msan; do
     cmake --build . --target install
     cmake --build . --target clean
 
-    cp $LIBCXXABI_INCLUDE/* /opt/libcxx${LLVM_MAJOR}-${VARIANT}/include/
+    cp $LIBCXXABI_INCLUDE/* ${INSTALL_ROOT}/libcxx${LLVM_MAJOR}-${VARIANT}/include/
 
     cd -
     cmake --build . --target clean
