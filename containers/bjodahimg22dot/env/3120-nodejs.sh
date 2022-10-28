@@ -3,6 +3,11 @@
 # https://github.com/nodejs/docker-node/blob/main/16/buster-slim/Dockerfile
 
 NODE_VERSION=16.18.0
+set -euxo pipefail
+PREFIX="${1:-/opt/node-16}"
+if [ ! -d "$PREFIX" ]; then
+    mkdir -p "$PREFIX"
+fi
 
 ARCH=
 dpkgArch="$(dpkg --print-architecture)" 
@@ -15,7 +20,6 @@ case "${dpkgArch##*-}" in \
       i386) ARCH='x86';; \
       *) echo "unsupported architecture"; exit 1 ;;
 esac 
-set -ex 
 for key in \
       4ED778F539E3634C779C87C6D7062848A1AB005C \
       94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
@@ -34,30 +38,13 @@ for key in \
     done 
 curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" 
 curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" 
+if [ -e SHASUMS256.txt ]; then
+    rm SHASUMS256.txt
+fi
 gpg2 --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc 
 grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - 
-tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner 
+tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C $PREFIX --strip-components=1 --no-same-owner 
 rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt 
-ln -s /usr/local/bin/node /usr/local/bin/nodejs 
-node --version 
-npm --version
-
-YARN_VERSION=1.22.19
-
-set -ex
-savedAptMark="$(apt-mark showmanual)"
-for key in \
-    6A010C5166006599AA17F08146C2130DFD2497F5 \
-  ; do \
-    gpg2 --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || \
-    gpg2 --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ; \
-  done
-curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz"
-curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc"
-gpg2 --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
-mkdir -p /opt
-tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/
-ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn
-ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg
-rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
-yarn --version
+ln -s $PREFIX/bin/node $PREFIX/bin/nodejs 
+PATH=$PREFIX/bin:$PATH node --version 
+PATH=$PREFIX/bin:$PATH npm --version

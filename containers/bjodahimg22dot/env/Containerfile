@@ -32,12 +32,15 @@ RUN \
 COPY 3???-*.sh /opt/
 
 RUN \
-    /opt/3100-iwyu.sh 15 \
-    && /opt/3120-nodejs.sh \
-    && npm i -g typescript-language-server \
-    && npm i -g typescript \
-    && npm i -g bash-language-server \
-    && npm cache clean --force
+    /opt/3100-iwyu.sh 14 && \
+    /opt/3120-nodejs.sh && \
+    cp -s /opt/node-16/bin/* /usr/local/bin && \
+    /opt/3125-yarn.sh && \
+    npm i -g typescript-language-server && \
+    npm i -g typescript && \
+    npm i -g bash-language-server && \
+    npm cache clean --force
+
     
 # COPY 4100-get-ein-master.sh /opt/
 

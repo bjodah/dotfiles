@@ -106,7 +106,13 @@
 	fi
     fi
 
-    podman run \
+    if ! which podman; then
+        PODMAN_CMD=docker
+    else
+        PODMAN_CMD=podman
+    fi
+
+    ${PODMAN_CMD} run \
            ${PODMAN_RUN_ARGS[@]} \
            -e TERM=xterm-256color\
            -v "$PWD":"$PWD" \

@@ -26,6 +26,9 @@ vv() {
     files=${@:-"*"} # vv !(.gvfs||afs) misses e.g. "~/VirtualBox VMs"
     du -ks $files | sort -n | cut -f2 | xargs -d '\n' du -sh
 }
+nn() {
+    for d in */; do find $d -type f | wc -l | tr '\n' '\t'; echo $d; done | sort -h
+}
 pygrep() {
     grep --include "*.py" "${1}" -R .
 }

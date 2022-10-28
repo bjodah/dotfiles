@@ -52,10 +52,13 @@ RUN /opt/cpython-3.11-release/bin/python3 -c "import scipy; print(scipy.__versio
 
 RUN apt-get update \
     && apt-get --assume-yes --no-install-recommends install \
-        libmpc-dev \
+        libmpc-dev gawk \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN git clone https//github.com/uwplse/herbgrind /opt/herbgrind \
+    && ln -s /usr/bin/automake /usr/local/bin/automake-1.15 \
+    && make && make install
 
 # scikit-image scikit-optimize statsmodels "numba<0.56"
 
