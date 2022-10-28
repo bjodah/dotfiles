@@ -8,7 +8,7 @@ else
     OPENBLAS_OVERRIDE=0
 fi
 set -u
-SUNDIALS_VERSION=${1:-6.2.0}
+SUNDIALS_VERSION=${1:-6.3.0}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
 export CC=${CC:-"gcc-12"}
 
@@ -44,9 +44,9 @@ for VARIANT in debug release single extended; do
     if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
         if [[ $OPENBLAS_OVERRIDE != 1 ]]; then
             if [[ $VARIANT == "debug" ]]; then
-                OPENBLAS_LIBDIR=/opt/openblas-0.3.20-${VARIANT}/lib
+                OPENBLAS_LIBDIR=/opt/openblas-0.3.21-${VARIANT}/lib
             else
-                OPENBLAS_LIBDIR=/opt/openblas-0.3.20-release/lib
+                OPENBLAS_LIBDIR=/opt/openblas-0.3.21-release/lib
             fi
             if [ ! -d "${OPENBLAS_LIBDIR}" ]; then
                 >&2 echo "Not a directory: ${OPENBLAS_LIBDIR}"

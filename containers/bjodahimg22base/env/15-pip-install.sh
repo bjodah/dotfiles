@@ -4,7 +4,7 @@ ${PYTHON:-python3} -m pip install $@ --upgrade pip
 ${PYTHON:-python3} -m pip install $@ --upgrade-strategy=eager --upgrade setuptools wheel
 ${PYTHON:-python3} -m pip install $@ \
         appdirs argcomplete argh \
-        future git-archive-all mako "pygments>=2.4.1" pyparsing \
+        future git-archive-all mako pygments pyparsing \
 	pytest pyyaml tqdm wheel wurlitzer
 
 #${PYTHON:-python3} -m pip install --no-use-pep517 sqlalchemy

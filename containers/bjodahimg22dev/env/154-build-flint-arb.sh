@@ -2,7 +2,7 @@
 set -euxo pipefail
 
 export CXX=${CXX:-"g++-12"} CC=${CC:-"gcc-12"}
-FLINT_VERSION=${FLINT_VERSION:-"2.8.4"}
+FLINT_VERSION=${FLINT_VERSION:-"2.9.0"}
 BUILD_ROOT=${BUILD_ROOT:-/build}
 mkdir -p ${BUILD_ROOT}
 curl -Ls https://github.com/wbhart/flint2/archive/refs/tags/v${FLINT_VERSION}.tar.gz | tar xz -C ${BUILD_ROOT}/
@@ -19,7 +19,7 @@ cmake --build ${BUILD_ROOT}/flint2-${FLINT_VERSION}-debug --target clean
 ln -s ${BUILD_ROOT}/flint2-${FLINT_VERSION}-debug/compile_commands.json /opt/flint2-${FLINT_VERSION}-debug
 find ${BUILD_ROOT}/flint2-${FLINT_VERSION} -type d -name test -maxdepth 2 | xargs rm -r  # save some space
 
-ARB_VERSION=${ARB_VERSION:-"2.22.1"}
+ARB_VERSION=${ARB_VERSION:-"2.23.0"}
 curl -Ls https://github.com/fredrik-johansson/arb/archive/refs/tags/${ARB_VERSION}.tar.gz | tar xz -C ${BUILD_ROOT}/
 CMAKE_PREFIX_PATH=/opt/flint2-${FLINT_VERSION}-debug/ cmake \
     -DCMAKE_BUILD_TYPE=Debug \

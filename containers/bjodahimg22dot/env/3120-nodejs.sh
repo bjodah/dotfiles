@@ -2,7 +2,7 @@
 # adapted from:
 # https://github.com/nodejs/docker-node/blob/main/16/buster-slim/Dockerfile
 
-NODE_VERSION=16.15.1
+NODE_VERSION=16.18.0
 
 ARCH=
 dpkgArch="$(dpkg --print-architecture)" 

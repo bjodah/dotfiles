@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM docker.io/ubuntu:jammy-20220531
+FROM docker.io/ubuntu:jammy-20221003
 
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 ARG DEBIAN_FRONTEND=noninteractive
@@ -11,13 +11,14 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 TZ=Europe/Stockholm
 COPY 10-setup_ubuntu_packages.sh 15-pip-install.sh /opt/
 
 RUN apt-get update && \
-    apt-get --quiet --assume-yes --no-install-recommends install locales sudo tzdata apt-transport-https ca-certificates && \
-    echo "LC_ALL=en_US.UTF-8" >> /etc/environment && \
-    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen && \
-    echo "LANG=en_US.UTF-8" > /etc/locale.conf && \
-    locale-gen en_US.UTF-8 && \
-    update-ca-certificates && \    
-    apt-get dist-upgrade -y && \
-    /opt/10-setup_ubuntu_packages.sh && \
-    /opt/15-pip-install.sh && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+    apt-get --quiet --assume-yes --no-install-recommends install \
+    locales sudo tzdata apt-transport-https ca-certificates \
+    && echo "LC_ALL=en_US.UTF-8" >> /etc/environment \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && echo "LANG=en_US.UTF-8" > /etc/locale.conf \
+    && locale-gen en_US.UTF-8 \
+    && update-ca-certificates \
+    && apt-get dist-upgrade -y \
+    && /opt/10-setup_ubuntu_packages.sh \
+    && /opt/15-pip-install.sh \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip

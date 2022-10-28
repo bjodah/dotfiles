@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22base:22.6.a
+FROM bjodah/bjodahimg22base:22.10.a
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
 COPY 100-setup_ubuntu_packages.sh 110-setup_llvm_clang.sh 120-download_intel_sde.sh 130-setup_intel_compilers.sh 140-gdb-printers.sh 150-pip-install.sh 154-build-flint-arb.sh /opt/
@@ -7,7 +7,7 @@ COPY 100-setup_ubuntu_packages.sh 110-setup_llvm_clang.sh 120-download_intel_sde
 RUN apt-get update \
     && /opt/100-setup_ubuntu_packages.sh  \
     && yes | unminimize \
-    && /opt/110-setup_llvm_clang.sh 14  \
+    && /opt/110-setup_llvm_clang.sh 15  \
     && /opt/120-download_intel_sde.sh \
     && /opt/130-setup_intel_compilers.sh \
     && /opt/140-gdb-printers.sh \
