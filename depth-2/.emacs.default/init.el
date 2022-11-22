@@ -67,8 +67,9 @@
 
 ;; Download use-package
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  (progn
+    (package-refresh-contents)
+    (package-install 'use-package)))
 
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
