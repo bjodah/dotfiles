@@ -1,7 +1,8 @@
 [user]
     name = Björn Ingvar Dahlgren
     email = bjodah@gmail.com
-    signingkey = DE7E083195C707C5B8EDB0DA735FEE8A79429A91
+    signingkey = 79429A91
+    #DE7E083195C707C5B8EDB0DA735FEE8A79429A91
     #signingkey = DC372128
 [commit]
     gpgsign = true

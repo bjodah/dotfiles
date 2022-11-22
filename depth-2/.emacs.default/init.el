@@ -35,16 +35,24 @@
 
 (if (< emacs-major-version 27)
     (package-initialize)
-)
+  )
 (if window-system
     (progn
-      (scroll-bar-mode -1)
+      (scroll-bar-mode 0)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       )
   (progn
     (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
     (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
   (xterm-mouse-mode))
+
+;; the window-system if-check above does not help with emacs --daemon, hence:
+(defun my/disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
+
 
 (require 'savehist)
 (savehist-mode 1)
@@ -53,8 +61,9 @@
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("gnu" . "http://elpa.gnu.org/packages/"))
 (package-initialize)
-
 
 ;; Download use-package
 (unless (package-installed-p 'use-package)
@@ -467,6 +476,7 @@
           "https://gms.tf/feeds/all.atom.xml" ;; Georg Sauthoff
           "https://gpfault.net/rss.xml"
           "https://nhigham.com/feed/" ;; Nick Higham, The University of Manchester
+          "https://depth-first.com/articles.atom" ;; Richard L. Apodaca (chemoinformatics)
           ))
   )
 
@@ -828,6 +838,7 @@
 (add-to-list 'auto-mode-alist '("\\.ipp$" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+(add-to-list 'auto-mode-alist '("Containerfile" . dockerfile-mode))
 
 ; pylint pep8
 ;; (require 'tramp)
