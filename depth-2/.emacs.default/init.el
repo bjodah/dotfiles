@@ -62,7 +62,7 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
-             '("gnu" . "http://elpa.gnu.org/packages/"))
+             '("gnu" . "http://elpa.gnu.org/packages/") t)
 (package-initialize)
 
 ;; Download use-package
