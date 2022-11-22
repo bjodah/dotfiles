@@ -1,10 +1,10 @@
 #!/bin/bash -xe
 sudo apt-get --assume-yes --no-install-recommends install \
-     automake autoconf binutils-dev bison ccache coinor-libipopt-dev cppcheck \
+     automake autoconf binutils-dev bison coinor-libipopt-dev cppcheck \
      doxygen dpkg-dev expect fd-find ffmpeg flex fonts-dejavu \
      fonts-humor-sans freeglut3-dev fish fzf g++-12 gcc-12 \
      gcovr gdb lcov \
-     libacl1-dev libatomic1 libbz2-dev \
+     libacl1-dev libatomic1 libboost-math-dev \
      libc-dev libeigen3-dev libfontconfig1 libfreetype6-dev libgccjit0 libgccjit-12-dev libgdbm-dev \
      libgpm-dev libgif-dev libgit2-dev libgl1-mesa-dev libglfw3-dev libgmp-dev \
      libgnutls28-dev libgoogle-perftools-dev libgraphviz-dev libgsl-dev libgtk-3-dev \
@@ -16,7 +16,7 @@ sudo apt-get --assume-yes --no-install-recommends install \
      libwebp-dev libwebsockets-dev libx11-dev libxml2-dev libxpm-dev libxrender1 libxslt1-dev libyaml-dev \
      libzmq3-dev libzstd-dev lzma-dev \
      man manpages ninja-build petsc-dev \
-     python3-dev rr tk-dev trilinos-dev valgrind xorg-dev xutils-dev zlib1g-dev linux-tools-common \
+     python3-dev rr tk-dev trilinos-dev valgrind xorg-dev xutils-dev linux-tools-common \
      libopenblas-openmp-dev wkhtmltopdf
 
 # Useful packages deferred for now (too heavy)

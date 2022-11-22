@@ -18,6 +18,7 @@ if [[ -e emacs-libvterm ]]; then
 else
     git clone --depth 1 https://github.com/akermu/emacs-libvterm
     cd emacs-libvterm
+    sed -i "s/-VTermSBClearNotExists/-DVTermSBClearNotExists/g" CMakeLists.txt  # https://github.com/akermu/emacs-libvterm/issues/643
 fi
 mkdir build
 PATH="$EMACS_PREFIX/bin:$PATH" cmake -S . -B ./build

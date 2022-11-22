@@ -1,16 +1,16 @@
 #!/bin/bash -xe
 sudo apt-get --assume-yes --no-install-recommends install \
-     bat bc bear biber bison ca-certificates ccache cmake cppcheck \
-     curl dirmngr dot2tex dvipng expect fd-find ffmpeg flex fonts-dejavu \
+     bat bc bear biber bison build-essential bzip2 ca-certificates ccache cdbs cmake cppcheck \
+     curl devscripts dirmngr dot2tex dvipng expect fd-find ffmpeg flex fonts-dejavu \
      fonts-humor-sans fish fzf git gnupg2 gnuplot graphviz \
-     htop hunspell imagemagick latexmk lcov less lmodern lzma make \
+     htop hunspell imagemagick latexmk lcov less libbz2-dev lmodern lzma make \
      ninja-build parallel pngquant poppler-utils pv \
      python3-pip python3-setuptools python3-wheel ripgrep \
      rsync scons ssh texinfo \
      texlive-fonts-recommended texlive-lang-european texlive-latex-extra \
      texlive-latex-recommended texlive-science texlive-xetex time \
      tmux tree unison unzip wget \
-     xz-utils zip zstd
+     xz-utils zip zlib1g-dev zstd
 
 # Heavy-weights among kept packages:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

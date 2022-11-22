@@ -5,6 +5,4 @@ ${PYTHON:-python3} -m pip install $@ --upgrade-strategy=eager --upgrade setuptoo
 ${PYTHON:-python3} -m pip install $@ \
         appdirs argcomplete argh \
         future git-archive-all mako pygments pyparsing \
-	pytest pyyaml tqdm wheel wurlitzer
-
-#${PYTHON:-python3} -m pip install --no-use-pep517 sqlalchemy
+	pytest pyyaml tqdm wheel wurlitzer z3-solver

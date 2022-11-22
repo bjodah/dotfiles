@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22base:22.10.a
+FROM bjodah/bjodahimg22base:nov22
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
 COPY 100-setup_ubuntu_packages.sh 110-setup_llvm_clang.sh 120-download_intel_sde.sh 130-setup_intel_compilers.sh 140-gdb-printers.sh 150-pip-install.sh 154-build-flint-arb.sh /opt/
@@ -14,11 +14,26 @@ RUN apt-get update \
     && CC=gcc-12 CXX=g++-12 /opt/150-pip-install.sh  \
     && /opt/154-build-flint-arb.sh
 
-COPY 155-build-antic-calcium.sh 160-ccls.sh 250-libqd.sh  330-libcxx-msan.sh 750-boost.sh /opt/
+COPY 155-build-antic-calcium.sh 160-ccls.sh 250-libqd.sh /opt/
 
 RUN /opt/155-build-antic-calcium.sh \
     && /opt/160-ccls.sh  \
     && /opt/250-libqd.sh 2.3.23 /opt/libqd-2.3.23 \
-    && /opt/330-libcxx-msan.sh \
-    && /opt/750-boost.sh 1 80 0 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+
+COPY 330-libcxx-msan.sh /opt/ 
+RUN /opt/330-libcxx-msan.sh
+
+
+# Useful packages deferred for now (too heavy)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# gfortran-12 204 MB
+# libicu-dev 47.1 MB
+
+# meta packages:
+# mingw-w64 ~100-500MB?
+# libc6-dev-i386 7435 kB
+# g++-11-multilib 6144 B
+# gcc-10-multilib 6144 B
+
+# g++-11-multilib gcc-10-multilib libc6-dev-i386 

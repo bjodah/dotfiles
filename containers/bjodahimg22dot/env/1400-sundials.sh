@@ -8,7 +8,7 @@ else
     OPENBLAS_OVERRIDE=0
 fi
 set -u
-SUNDIALS_VERSION=${1:-6.3.0}
+SUNDIALS_VERSION=${1:-6.4.1}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
 export CC=${CC:-"gcc-12"}
 
@@ -99,7 +99,13 @@ for VARIANT in debug release single extended; do
         fi
         CMAKE_ARGS="${CMAKE_ARGS} -DSUNDIALS_INDEX_SIZE=${SUNDIALS_INDEX_SIZE:-32}"
     fi
-    # USE_GENERIC_MATH below seems to be needed (xref https://github.com/LLNL/sundials/issues/149)
+    if [[ ${SUNDIALS_VERSION:0:1} -lt 6 ]] || [[ ${SUNDIALS_VERSION:0:1} -eq 6 && ${SUNDIALS_VERSION:2:3} -lt 3 ]] ; then
+        CMAKE_ARGS="${CMAKE_ARGS} -DUSE_GENERIC_MATH=OFF"
+    else
+        CMAKE_ARGS="${CMAKE_ARGS} -DSUNDIALS_MATH_LIBRARY=m"
+    fi
+    # USE_GENERIC_MATH below seems to be needed (xref https://github.com/LLNL/sundials/issues/149 )
+    
     cmake -G ${CMAKE_GENERATOR:-Ninja} \
           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
           -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
@@ -110,7 +116,6 @@ for VARIANT in debug release single extended; do
           -DBUILD_STATIC_LIBS=OFF \
           -DEXAMPLES_ENABLE_C=ON \
           -DEXAMPLES_INSTALL=ON \
-          -DUSE_GENERIC_MATH=OFF \
           ${CMAKE_ARGS} \
           ${SRC_DIR}
     cmake --build .

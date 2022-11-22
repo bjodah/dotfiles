@@ -1,46 +1,51 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dev:22.10.a.1
+FROM bjodah/bjodahimg22dev:nov22.a
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY emacs-pgtk-gcc_29.0.50.deb emacs_28.1.50.deb 1000-apt-packages.sh 1400-sundials.sh 1600-ttyd.sh /opt/
+COPY emacs-pgtk-gcc_29.0.50.deb emacs_28.2.50.deb 1000-apt-packages.sh 1400-sundials.sh 1600-ttyd.sh /opt/
 
 RUN \
-    dpkg -i /opt/emacs-pgtk-gcc_29.0.50.deb && \
-    dpkg -i /opt/emacs_28.1.50.deb && \
-    rm /opt/emacs*.deb && \
-    apt-get --quiet update && \
-    /opt/1000-apt-packages.sh && \
-    OPENBLAS_LIBDIR=/usr/lib/$(uname -m)-linux-gnu /opt/1400-sundials.sh 5.8.0 && \
-    OPENBLAS_LIBDIR=/usr/lib/$(uname -m)-linux-gnu /opt/1400-sundials.sh 6.3.0 && \
-    /opt/1600-ttyd.sh && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
-
-COPY 2???-*.sh *.el /opt/
+    dpkg -i /opt/emacs-pgtk-gcc_29.0.50.deb  \
+    && dpkg -i /opt/emacs_28.2.50.deb  \
+    && rm /opt/emacs*.deb  \
+    && apt-get --quiet update  \
+    && /opt/1000-apt-packages.sh  \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
 RUN \
-    bash -c 'EMACS_PREFIX=$(compgen -G /opt/emacs-29*/) /opt/2050-build-emacs-vterm.sh' && \
-    bash -c 'EMACS_PREFIX=$(compgen -G /opt/emacs-28*/) /opt/2050-build-emacs-vterm.sh' && \
-    /opt/2000-clone-dotfiles.sh /opt/bjodah-dotfiles && \
-    /opt/2100-setup-emacs.sh /opt/emacs-28*/ ~/.emacs.d.28 /opt/bjodah-dotfiles/ && \
-    /opt/2100-setup-emacs.sh /opt/emacs-29*/ ~/.emacs.d.29 /opt/bjodah-dotfiles/ && \
-    chmod 666 -R               /opt/bjodah-dotfiles && \
-    find                       /opt/bjodah-dotfiles -type d | xargs chmod 777 && \
-    git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+    OPENBLAS_LIBDIR=/usr/lib/$(uname -m)-linux-gnu /opt/1400-sundials.sh 5.8.0  \
+    && OPENBLAS_LIBDIR=/usr/lib/$(uname -m)-linux-gnu /opt/1400-sundials.sh 6.4.1  \
+    && /opt/1600-ttyd.sh  \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3 1000
 
-COPY 3???-*.sh /opt/
+COPY 2010-nodejs.sh 2020-yarn.sh 2050-build-emacs-vterm.sh 2060-iwyu.sh /opt/
 
 RUN \
-    /opt/3100-iwyu.sh 14 && \
-    /opt/3120-nodejs.sh && \
-    cp -s /opt/node-16/bin/* /usr/local/bin && \
-    /opt/3125-yarn.sh && \
-    npm i -g typescript-language-server && \
-    npm i -g typescript && \
-    npm i -g bash-language-server && \
-    npm cache clean --force
+    /opt/2010-nodejs.sh  \
+    && cp -s /opt/node-16/bin/* /usr/local/bin  \
+    && /opt/2020-yarn.sh  \
+    && npm i -g typescript-language-server  \
+    && npm i -g typescript  \
+    && npm i -g bash-language-server  \
+    && /usr/local/bin/npm install -g npm@8.19.3 \
+    && /usr/local/bin/npm -g --prefix /root/.emacs.d.28/.cache/lsp/npm/pyright install pyright \
+    && /usr/local/bin/npm -g --prefix /root/.emacs.d.29/.cache/lsp/npm/pyright install pyright \
+    && bash -c 'EMACS_PREFIX=$(compgen -G /opt/emacs-29*/) /opt/2050-build-emacs-vterm.sh' \
+    && bash -c 'EMACS_PREFIX=$(compgen -G /opt/emacs-28*/) /opt/2050-build-emacs-vterm.sh' \
+    && npm cache clean --force \
+    && /opt/2060-iwyu.sh 15
 
+COPY 2120-clone-dotfiles.sh 2175-setup-emacs.sh 2175-setup-emacs.el /opt/
+
+RUN /opt/2120-clone-dotfiles.sh /opt/bjodah-dotfiles \
+    && /opt/2175-setup-emacs.sh /opt/emacs-28*/ ~/.emacs.d.28 /opt/bjodah-dotfiles/ \
+    && /opt/2175-setup-emacs.sh /opt/emacs-29*/ ~/.emacs.d.29 /opt/bjodah-dotfiles/  \
+    && chmod 666 -R             /opt/bjodah-dotfiles  \
+    && find                     /opt/bjodah-dotfiles -type d | xargs chmod 777  \
+    && git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 \
+    && rm -rf .emacs.default /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+
+    
     
 # COPY 4100-get-ein-master.sh /opt/
 
@@ -50,6 +55,3 @@ RUN \
 #     /opt/4100-get-ein-master.sh /opt/emacs*-28/ ~/.emacs.d.28 && \
 #     /opt/4100-get-ein-master.sh /opt/emacs*-29/ ~/.emacs.d.29
 
-RUN npm install -g npm@8.19.2
-    && /usr/local/bin/npm -g --prefix /root/.emacs.d.28/.cache/lsp/npm/pyright install pyright \
-    && /usr/local/bin/npm -g --prefix /root/.emacs.d.29/.cache/lsp/npm/pyright install pyright

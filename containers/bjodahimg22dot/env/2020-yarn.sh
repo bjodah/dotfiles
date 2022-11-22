@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euxo pipefail
-YARN_VERSION=1.22.18
+YARN_VERSION=1.22.19
 PREFIX="${1:-/opt/yarn-1.22}"
 if [ ! -d "$PREFIX" ]; then
     mkdir -p "$PREFIX"

@@ -162,7 +162,7 @@ fi
 $MAKE_COMMAND -j $(nproc) $MAKE_FLAGS
 
 if [[ $CREATE_DEB == 1 ]]; then
-    EMACS_VERSION=$(sed -ne 's/AC_INIT(GNU Emacs, \([0-9.]\+\), .*/\1/p' configure.ac)
+    EMACS_VERSION=$(grep -oP "AC_INIT\([\[]?GNU Emacs[\]]?,[ \[]+\K([0-9\.]+)(?=[ \]]*, .*)" configure.ac)
     EMACS_DEB_ROOT=$BUILD_ROOT/emacs${EMACS_FEATURES}_${EMACS_VERSION}
     mkdir -p $EMACS_DEB_ROOT$INSTALL_PREFIX
     make install prefix=$EMACS_DEB_ROOT$INSTALL_PREFIX

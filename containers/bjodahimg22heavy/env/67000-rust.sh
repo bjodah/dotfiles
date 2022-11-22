@@ -1,4 +1,5 @@
-#!/bin/bash -eux
+#!/bin/bash
+set -eux
 ls -dl $RUSTUP_HOME
 ls -dl $CARGO_HOME
 if [ ! -e "$CARGO_HOME/bin/rustc" ]; then

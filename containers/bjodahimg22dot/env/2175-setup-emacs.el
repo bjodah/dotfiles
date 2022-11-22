@@ -1,4 +1,4 @@
-;;; 2100-setup-emacs.el --- Summary
+;;; 2175-setup-emacs.el --- Summary
 ;;; this file loaded upon first launch of emacs to setup packages
 ;;; Commentary:
 ;;; execute using -nw --batch '(load "110-setup-emacs.el")'

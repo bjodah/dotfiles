@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM docker.io/ubuntu:jammy-20221003
+FROM docker.io/ubuntu:jammy-20221101
 
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 ARG DEBIAN_FRONTEND=noninteractive
