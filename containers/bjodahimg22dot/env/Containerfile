@@ -2,11 +2,10 @@
 FROM bjodah/bjodahimg22dev:nov22.a
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY emacs-pgtk-gcc_29.0.50.deb emacs_28.2.50.deb 1000-apt-packages.sh 1400-sundials.sh 1600-ttyd.sh /opt/
+COPY emacs_28.2.50.deb 1000-apt-packages.sh 1400-sundials.sh 1600-ttyd.sh /opt/
 
 RUN \
-    dpkg -i /opt/emacs-pgtk-gcc_29.0.50.deb  \
-    && dpkg -i /opt/emacs_28.2.50.deb  \
+    dpkg -i /opt/emacs_28.2.50.deb  \
     && rm /opt/emacs*.deb  \
     && apt-get --quiet update  \
     && /opt/1000-apt-packages.sh  \
@@ -29,8 +28,6 @@ RUN \
     && npm i -g bash-language-server  \
     && /usr/local/bin/npm install -g npm@8.19.3 \
     && /usr/local/bin/npm -g --prefix /root/.emacs.d.28/.cache/lsp/npm/pyright install pyright \
-    && /usr/local/bin/npm -g --prefix /root/.emacs.d.29/.cache/lsp/npm/pyright install pyright \
-    && bash -c 'EMACS_PREFIX=$(compgen -G /opt/emacs-29*/) /opt/2050-build-emacs-vterm.sh' \
     && bash -c 'EMACS_PREFIX=$(compgen -G /opt/emacs-28*/) /opt/2050-build-emacs-vterm.sh' \
     && npm cache clean --force \
     && /opt/2060-iwyu.sh 15
@@ -39,7 +36,6 @@ COPY 2120-clone-dotfiles.sh 2175-setup-emacs.sh 2175-setup-emacs.el /opt/
 
 RUN /opt/2120-clone-dotfiles.sh /opt/bjodah-dotfiles \
     && /opt/2175-setup-emacs.sh /opt/emacs-28*/ ~/.emacs.d.28 /opt/bjodah-dotfiles/ \
-    && /opt/2175-setup-emacs.sh /opt/emacs-29*/ ~/.emacs.d.29 /opt/bjodah-dotfiles/  \
     && chmod 666 -R             /opt/bjodah-dotfiles  \
     && find                     /opt/bjodah-dotfiles -type d | xargs chmod 777  \
     && git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 \
@@ -53,5 +49,3 @@ RUN /opt/2120-clone-dotfiles.sh /opt/bjodah-dotfiles \
 #     git clone https://github.com/cask/cask /opt/cask && \
 #     git clone https://github.com/millejoh/emacs-ipython-notebook /build/ein && \
 #     /opt/4100-get-ein-master.sh /opt/emacs*-28/ ~/.emacs.d.28 && \
-#     /opt/4100-get-ein-master.sh /opt/emacs*-29/ ~/.emacs.d.29
-

@@ -1,5 +1,5 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dot:nov22.a.1
+FROM bjodah/bjodahimg22dot:nov22.a.2
 
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
@@ -55,6 +55,30 @@ RUN /opt/cpython-3.11-release/bin/python3 -c "import scipy; print(scipy.__versio
 COPY 85000-julia.sh /opt/
 
 RUN /opt/85000-julia.sh
+
+COPY emacs-pgtk-gcc_29.0.50.deb /opt/
+
+RUN /usr/local/bin/npm -g --prefix /root/.emacs.d.29/.cache/lsp/npm/pyright install pyright \
+    && dpkg -i /opt/emacs-pgtk-gcc_29.0.50.deb  \
+    && bash -c 'EMACS_PREFIX=$(realpath $(compgen -G /opt/emacs-29*/)) /opt/2050-build-emacs-vterm.sh'
+
+RUN cd /opt/bjodah-dotfiles \
+    && git pull \
+    && git pull \
+    && sed "s/(package-install 'use-package)//g" -i /opt/bjodah-dotfiles/depth-2/.emacs.default/init.el \
+    && git clone --branch fix_gh-669 --depth 1 https://github.com/bjodah/use-package.git /build/use-package \
+    && bash -c 'cd /build/use-package; PREFIX=$(realpath $(compgen -G /opt/emacs-29*/)); PATH=$PREFIX/bin:$PATH make PREFIX=$PREFIX -C /build/use-package elc install-lisp' \
+    && rm -r /root/.emacs.d/ \
+    && /opt/2175-setup-emacs.sh /opt/emacs-29*/ ~/.emacs.d.29 /opt/bjodah-dotfiles \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+    # && ln -s ~/.emacs.d.29 ~/.emacs.d \
+    # && rm ~/.emacs.d
+
+COPY 86000-herbie.sh /opt/
+
+RUN /opt/86000-herbie.sh
+
 
 # RUN git clone https//github.com/uwplse/herbgrind /opt/herbgrind \
 #     && ln -s /usr/bin/automake /usr/local/bin/automake-1.15 \
