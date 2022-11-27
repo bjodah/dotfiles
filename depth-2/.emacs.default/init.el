@@ -62,13 +62,14 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
-             '("gnu" . "http://elpa.gnu.org/packages/"))
+             '("gnu" . "http://elpa.gnu.org/packages/") t)
 (package-initialize)
 
 ;; Download use-package
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  (progn
+    (package-refresh-contents)
+    (package-install 'use-package)))
 
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
