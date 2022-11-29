@@ -4,7 +4,7 @@
 # The curly braces on the line below allows us to edit this file without worrying
 # if doing so while the script is running.
 {
-    IMAGE=bjodahimg22heavy:nov22.a.1.1   # the default image
+    IMAGE=bjodahimg22heavy:nov22.a.2.2   # the default image
     CONTAINER_FOLDER=""
     MOUNT_HOME=0
     NAME=bjodah
