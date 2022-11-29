@@ -1,7 +1,7 @@
 # -*- mode: dockerfile -*-
 # -*- compile-command: "podman build ." -*-
 
-FROM bjodahimg22heavy:22.6.a.1.1.1
+FROM bjodahimg22heavy:nov22.a.2.2
 
 
 # RUN apt-get update \
@@ -34,15 +34,17 @@ FROM bjodahimg22heavy:22.6.a.1.1.1
 # RUN /opt/11-setup_llvm_clang.sh 14 \
 #     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV CXX=clang++-14 CC=clang-14 PATH=/opt/emacs-29pg/bin:$PATH
+#/opt/emacs-29pg
+ENV CXX=clang++-15 CC=clang-15 PATH=/opt/emacs-28/bin:$PATH
 
-RUN git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d \
-    && yes | ~/.emacs.d/bin/doom install
+#https://github.com/hlissner/doom-emacs
+RUN git clone --branch fix-straight --depth 1 https://github.com/rafa-dot-el/doomemacs.git ~/.emacs.d \
+    && ~/.emacs.d/bin/doom sync
 
 RUN git clone --depth 1 https://github.com/akermu/emacs-libvterm /opt/emacs-libvterm && \
-    cd /opt/emacs-libvterm/; mkdir build; cmake -DCMAKE_INSTALL_PREFIX=/opt/emacs-29pg/share/emacs/site-lisp -S . -B build && \
+    cd /opt/emacs-libvterm/; mkdir build; cmake -DCMAKE_INSTALL_PREFIX=/opt/emacs-28/share/emacs/site-lisp -S . -B build && \
     cmake --build ./build/ && \
-    cmake --install ./build && cp vterm-module.so /opt/emacs-29pg/share/emacs/site-lisp
+    cmake --install ./build && cp vterm-module.so /opt/emacs-28/share/emacs/site-lisp
 
 
 ADD doom-base-config.tar.gz /root/
@@ -55,6 +57,6 @@ COPY ./.doom.d/config.el ./.doom.d/packages.el ./.doom.d/init.el /root/.doom.d/
 
 RUN ~/.emacs.d/bin/doom sync
 
-RUN apt-get update \
-    && apt-get --assume-yes --no-install-recommends install \
-        libmpc-dev
+# RUN apt-get update \
+#     && apt-get --assume-yes --no-install-recommends install \
+#         libmpc-dev
