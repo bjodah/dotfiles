@@ -79,6 +79,9 @@ COPY 86000-herbie.sh /opt/
 
 RUN /opt/86000-herbie.sh
 
+COPY opt_boost_1_81_0_b1.tar.zst /opt/
+
+RUN zstd -d </opt/opt_boost_1_81_0_b1.tar.zst | tar x
 
 # RUN git clone https//github.com/uwplse/herbgrind /opt/herbgrind \
 #     && ln -s /usr/bin/automake /usr/local/bin/automake-1.15 \
