@@ -10,14 +10,13 @@ fi
 set -u
 SUNDIALS_VERSION=${1:-6.4.1}
 SRC_DIR=/build/sundials-${SUNDIALS_VERSION}
-export CC=${CC:-"gcc-12"}
 
 if [ ! -d $SRC_DIR ]; then
     SUNDIALS_SRC_URL="https://github.com/llnl/sundials/releases/download/v${SUNDIALS_VERSION}/sundials-${SUNDIALS_VERSION}.tar.gz"
     curl -Ls "${SUNDIALS_SRC_URL}" | tar xz -C /build
 fi
 
-for VARIANT in debug release single extended; do
+for VARIANT in debug release single extended msan; do
     BUILD_DIR=/build/sundials-${SUNDIALS_VERSION}-${VARIANT}
     INSTALL_DIR=/opt/sundials-${SUNDIALS_VERSION}-${VARIANT}
     if [ -d "${INSTALL_DIR}" ]; then
@@ -30,9 +29,11 @@ for VARIANT in debug release single extended; do
     cd ${BUILD_DIR}
     if [[ $VARIANT == extended || $VARIANT == single ]]; then
         CMAKE_ARGS="-DENABLE_KLU=OFF -DSUNDIALS_PRECISION:STRING=$VARIANT"
-        if [[ $VARIANT == extended || $VARIANT == single ]]; then
-            SUNDIALS_ENABLE_LAPACK="OFF"
-        fi
+        SUNDIALS_ENABLE_LAPACK="OFF"
+    elif [[ $VARIANT == msan ]]; then
+        CMAKE_ARGS="-DENABLE_KLU=OFF"
+        SUNDIALS_INDEX_SIZE=32
+        SUNDIALS_ENABLE_LAPACK="OFF"
     elif [[ ${SUNDIALS_ENABLE_KLU:-ON} == ON ]]; then
         CMAKE_ARGS="-DENABLE_KLU=ON \
                   -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
@@ -62,6 +63,7 @@ for VARIANT in debug release single extended; do
         if [[ $VARIANT == debug ]]; then
             CFLAGS_DEBUG_DEFAULT="-Os -g3"
             export CFLAGS=${CFLAGS_DEBUG:-"${CFLAGS_DEBUG_DEFAULT}"}
+            export CC=${GNU_CC:-gcc}
             BUILD_TYPE=${VARIANT^}
             if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
 	        if [[ -e ${OPENBLAS_LIBDIR}/libopenblas_d.so ]]; then
@@ -70,6 +72,10 @@ for VARIANT in debug release single extended; do
 		    OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas.so	
 	        fi
             fi
+        elif [[ $VARIANT == msan ]]; then
+            export CFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -g"
+            export CC=${CLANG_CC:-"clang"}
+            BUILD_TYPE=Debug
         else
             if [[ $(uname -m) == "x86_64" ]]; then
                 CFLAGS_RELEASE_DEFAULT="-O3 -march=nehalem -mtune=skylake"
@@ -77,12 +83,10 @@ for VARIANT in debug release single extended; do
                 CFLAGS_RELEASE_DEFAULT="-O3"
             fi
             export CFLAGS=${CFLAGS_RELEASE:-"${CFLAGS_RELEASE_DEFAULT}"}
+            export CC=${GNU_CC:-gcc}
             BUILD_TYPE=Release
             if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
                 OPENBLAS_SO=${OPENBLAS_LIBDIR}/libopenblas.so
-            fi
-            if [[ $VARIANT == single ]]; then
-                CMAKE_ARGS='$CMAKE_ARGS'
             fi
         fi
         if [[ $SUNDIALS_ENABLE_LAPACK == "ON" ]]; then
