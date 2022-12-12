@@ -12,14 +12,17 @@ RUN apt-get update \
     && /opt/130-setup_intel_compilers.sh \
     && /opt/140-gdb-printers.sh \
     && CC=gcc-12 CXX=g++-12 /opt/150-pip-install.sh  \
-    && /opt/154-build-flint-arb.sh
+    && /opt/154-build-flint-arb.sh \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
-COPY 155-build-antic-calcium.sh 160-ccls.sh 250-libqd.sh /opt/
+# 160-ccls.sh
+COPY 155-build-antic-calcium.sh 250-libqd.sh /opt/
+
+    # && /opt/160-ccls.sh  \
 
 RUN /opt/155-build-antic-calcium.sh \
-    && /opt/160-ccls.sh  \
     && /opt/250-libqd.sh 2.3.23 /opt/libqd-2.3.23 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+    && rm -rf /tmp/* /var/tmp/*
 
 COPY 330-libcxx-msan.sh /opt/ 
 RUN /opt/330-libcxx-msan.sh

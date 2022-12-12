@@ -30,7 +30,6 @@ git clone https://github.com/fredrik-johansson/calcium ${BUILD_ROOT}/calcium-${C
 cd ${BUILD_ROOT}/calcium-${CALCIUM_VERSION} && git checkout ${CALCIUM_COMMIT}
 CALCIUM_PREFIX=/opt/calcium-${CALCIUM_VERSION}-debug
 ( \
-  export LDFLAGS="-Wl,--disable-new-dtags -Wl,-rpath,/opt/calcium-${CALCIUM_VERSION}-debug/lib -L/opt/calcium-${CALCIUM_VERSION}-debug/lib" ; \
   ./configure \
       --prefix=${CALCIUM_PREFIX} \
       --with-gmp=/usr \
@@ -38,6 +37,11 @@ CALCIUM_PREFIX=/opt/calcium-${CALCIUM_VERSION}-debug
       --with-flint=/opt/flint2-${FLINT_VERSION}-debug \
       --with-arb=/opt/arb-${ARB_VERSION}-debug \
       --with-antic=/opt/antic-${ANTIC_VERSION}-debug; \
+  LDFLAGS="\
+-Wl,--disable-new-dtags -Wl,-rpath,/opt/calcium-${CALCIUM_VERSION}-debug/lib -L/opt/calcium-${CALCIUM_VERSION}-debug/lib \
+-Wl,--disable-new-dtags -Wl,-rpath,/opt/antic-${ANTIC_VERSION}-debug/lib -L/opt/antic-${ANTIC_VERSION}-debug/lib \
+-Wl,--disable-new-dtags -Wl,-rpath,/opt/arb-${ARB_VERSION}-debug/lib -L/opt/arb-${ARB_VERSION}-debug/lib \
+-Wl,--disable-new-dtags -Wl,-rpath,/opt/flint2-${FLINT_VERSION}-debug/lib -L/opt/flint2-${FLINT_VERSION}-debug/lib" \
   bear -- make -j4; \
   make install \
 )
@@ -45,7 +49,7 @@ cd ${BUILD_ROOT}/calcium-${CALCIUM_VERSION}
 ln -fs $(realpath compile_commands.json) ${CALCIUM_PREFIX}/
 make clean
 ln -fs $(realpath pycalcium/pyca.py) $(${PYTHON:-python3} -c 'import site; print(site.getsitepackages()[0])')/pyca.py
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-""}:/opt/calcium-${CALCIUM_VERSION}-debug/lib/:/opt/antic-${ANTIC_VERSION}-debug/lib/:/opt/arb-${ARB_VERSION}-debug/lib/:/opt/flint2-${FLINT_VERSION}-debug/lib/ 
+#export LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-""}:/opt/calcium-${CALCIUM_VERSION}-debug/lib/:/opt/antic-${ANTIC_VERSION}-debug/lib/:/opt/arb-${ARB_VERSION}-debug/lib/:/opt/flint2-${FLINT_VERSION}-debug/lib/ 
 if [[ ${CFLAGS:-""} == *fsanitize=address* ]]; then
     LD_PRELOAD=$(${CXX:-c++} --print-file-name libasan.so) ASAN_OPTIONS=detect_leaks=0 ${PYTHON:-python3} -c "import pyca"
 else
