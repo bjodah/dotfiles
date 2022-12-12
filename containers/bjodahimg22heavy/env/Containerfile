@@ -80,9 +80,21 @@ COPY 86000-herbie.sh /opt/
 
 RUN /opt/86000-herbie.sh
 
-COPY opt_boost_1_81_0_b1.tar.zst /opt/
+COPY opt_boost_1_81_0_b1.tar.zst 87000-get_symengine.sh /opt/
 
-RUN zstd -d </opt/opt_boost_1_81_0_b1.tar.zst | tar x
+RUN zstd -d </opt/opt_boost_1_81_0_b1.tar.zst | tar x \
+    && CXXFLAGS="-std=c++17 $CXXFLAGS -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -stdlib=libc++ -I/opt/libcxx15-msan/include -I/opt/libcxx15-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no" \
+          LDFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 $LDFLAGS -Wl,-rpath,/opt/libcxx15-msan/lib -L/opt/libcxx15-msan/lib -lc++abi" \
+          CMAKE_PREFIX_PATH="/opt/boost-1.81.0.beta1:$CMAKE_PREFIX_PATH" \
+          CC=clang-15 CXX=clang++-15 /opt/87000-get_symengine.sh 61034b2d2cf97652bf606f0ab7e329a01c986670 /opt/symengine-61034b2-msan Debug   -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON && \
+        CXXFLAGS="-std=c++17" \
+          CC=gcc-12 CXX=g++-12 /opt/87000-get_symengine.sh 61034b2d2cf97652bf606f0ab7e329a01c986670 /opt/symengine-61034b2-rel        Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DINTEGER_CLASS=gmp -DWITH_SYMENGINE_RCP=ON && \
+        CXXFLAGS="-std=c++17" \
+          CC=clang-15 CXX=clang++-15 /opt/87000-get_symengine.sh 61034b2d2cf97652bf606f0ab7e329a01c986670 /opt/symengine-61034b2-tcm  Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DWITH_TCMALLOC=ON && \
+        CXXFLAGS="-Og -g --ggdb3 -std=c++17 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsized-deallocation" \
+          CMAKE_PREFIX_PATH="/opt/boost-1.81.0.beta1:$CMAKE_PREFIX_PATH" \
+          CC=gcc-12 CXX=g++-12 /opt/87000-get_symengine.sh 61034b2d2cf97652bf606f0ab7e329a01c986670 /opt/symengine-61034b2-dbg        Debug   -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp && \
+        rm -rf /tmp/*
 
 # RUN git clone https//github.com/uwplse/herbgrind /opt/herbgrind \
 #     && ln -s /usr/bin/automake /usr/local/bin/automake-1.15 \
