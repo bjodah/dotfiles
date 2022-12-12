@@ -65,11 +65,12 @@ RUN /usr/local/bin/npm -g --prefix /root/.emacs.d.29/.cache/lsp/npm/pyright inst
 RUN cd /opt/bjodah-dotfiles \
     && git pull \
     && git pull \
-    && sed "s/(package-install 'use-package)//g" -i /opt/bjodah-dotfiles/depth-2/.emacs.default/init.el \
+    && sed "s/(package-install 'use-package)/;(package-install 'use-package)/g" -i /opt/bjodah-dotfiles/depth-2/.emacs.default/init.el \
     && git clone --branch fix_gh-669 --depth 1 https://github.com/bjodah/use-package.git /build/use-package \
     && bash -c 'cd /build/use-package; PREFIX=$(realpath $(compgen -G /opt/emacs-29*/)); PATH=$PREFIX/bin:$PATH make PREFIX=$PREFIX -C /build/use-package elc install-lisp' \
     && rm -r /root/.emacs.d/ \
     && /opt/2175-setup-emacs.sh /opt/emacs-29*/ ~/.emacs.d.29 /opt/bjodah-dotfiles \
+    && sed "s/;(package-install 'use-package)/(package-install 'use-package)/g" -i /opt/bjodah-dotfiles/depth-2/.emacs.default/init.el \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
     # && ln -s ~/.emacs.d.29 ~/.emacs.d \
