@@ -7,6 +7,7 @@
     IMAGE=bjodahimg22heavy:nov22.a.2.5   # the default image
     CONTAINER_FOLDER=""
     MOUNT_HOME=0
+    MOUNT_GPG_SOCKET=1
     NAME=bjodah
     WITH_X11=1
     show_help(){
@@ -49,6 +50,10 @@
                 WITH_X11=0
                 shift
                 ;;
+	    --gpg-socket)
+		MOUNT_GPG_SOCKET=1
+		shift
+		;;
             --mount-home)
                 MOUNT_HOME=1
                 shift
@@ -71,7 +76,14 @@
         >&2 echo "No command to execute, exiting."
         exit 1
     fi
+    if [[ $MOUNT_GPG_SOCKET == 1 ]]; then
+	CUR_GPG_SOCK=`gpgconf --list-dir agent-ssh-socket`
+	PODMAN_RUN_ARGS+=("-v ${CUR_GPG_SOCK}:${CUR_GPG_SOCK}")
+    fi
     if [[ $MOUNT_HOME == 1 ]]; then
+	if [[ $MOUNT_GPG_SOCKET == 1 ]]; then
+	    >&2 echo "Cannot currently both mount home and gpg-socket. Choose one."
+	fi
         cd $HOME
         PODMAN_RUN_ARGS+=("-e HOME")
         PRE_CMD="ln -s ~/.ssh /root/.ssh; ln -s ~/.gnupg /root/.gnupg;"

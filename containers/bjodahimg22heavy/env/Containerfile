@@ -85,15 +85,15 @@ COPY opt_boost_1_81_0_b1.tar.zst 87000-get_symengine.sh /opt/
 RUN zstd -d </opt/opt_boost_1_81_0_b1.tar.zst | tar x \
     && CXXFLAGS="-Og -g -ggdb3 -std=c++17 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsized-deallocation" \
           CMAKE_PREFIX_PATH="/opt/boost-1.81.0.beta1:$CMAKE_PREFIX_PATH" \
-          CC=gcc-12 CXX=g++-12 /opt/87000-get_symengine.sh 61034b2d2cf97652bf606f0ab7e329a01c986670 /opt/symengine-61034b2-dbg        Debug   -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp \
+          CC=gcc-12 CXX=g++-12 /opt/87000-get_symengine.sh 3053658c4e5318302201484d5cd6dda2ed0d9897 /opt/symengine-3053658-dbg        Debug   -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp \
     && CXXFLAGS="-std=c++17 $CXXFLAGS -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -stdlib=libc++ -I/opt/libcxx15-msan/include -I/opt/libcxx15-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no" \
           LDFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 $LDFLAGS -Wl,-rpath,/opt/libcxx15-msan/lib -L/opt/libcxx15-msan/lib -lc++abi" \
           CMAKE_PREFIX_PATH="/opt/boost-1.81.0.beta1:$CMAKE_PREFIX_PATH" \
-          CC=clang-15 CXX=clang++-15 /opt/87000-get_symengine.sh 61034b2d2cf97652bf606f0ab7e329a01c986670 /opt/symengine-61034b2-msan Debug   -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON \
+          CC=clang-15 CXX=clang++-15 /opt/87000-get_symengine.sh 3053658c4e5318302201484d5cd6dda2ed0d9897 /opt/symengine-3053658-msan Debug   -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON \
     && CXXFLAGS="-std=c++17" \
-          CC=gcc-12 CXX=g++-12 /opt/87000-get_symengine.sh 61034b2d2cf97652bf606f0ab7e329a01c986670 /opt/symengine-61034b2-rel        Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DINTEGER_CLASS=gmp -DWITH_SYMENGINE_RCP=ON \
+          CC=gcc-12 CXX=g++-12 /opt/87000-get_symengine.sh 3053658c4e5318302201484d5cd6dda2ed0d9897 /opt/symengine-3053658-rel        Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DINTEGER_CLASS=gmp -DWITH_SYMENGINE_RCP=ON \
     && CXXFLAGS="-std=c++17" \
-          CC=clang-15 CXX=clang++-15 /opt/87000-get_symengine.sh 61034b2d2cf97652bf606f0ab7e329a01c986670 /opt/symengine-61034b2-tcm  Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DWITH_TCMALLOC=ON  \
+          CC=clang-15 CXX=clang++-15 /opt/87000-get_symengine.sh 3053658c4e5318302201484d5cd6dda2ed0d9897 /opt/symengine-3053658-tcm  Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DWITH_TCMALLOC=ON  \
     && rm -rf /tmp/*
 
 COPY 88000-update-alternatives-clang.sh 89000-build-ipopt.sh /opt
