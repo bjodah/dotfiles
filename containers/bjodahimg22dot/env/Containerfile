@@ -1,26 +1,14 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dev:nov22.a
+FROM bjodah/bjodahimg22dev:jan23.a
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY emacs_28.2.50.deb 1000-apt-packages.sh 1400-sundials.sh 1600-ttyd.sh /opt/
+COPY 1000-apt-packages.sh 2010-nodejs.sh 2020-yarn.sh 2050-build-emacs-vterm.sh 2060-iwyu.sh ./opt/* /opt/
 
 RUN \
-    dpkg -i /opt/emacs_28.2.50.deb  \
-    && rm /opt/emacs*.deb  \
-    && apt-get --quiet update  \
+    apt-get --quiet update  \
     && /opt/1000-apt-packages.sh  \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
-
-RUN \
-    OPENBLAS_LIBDIR=/usr/lib/$(uname -m)-linux-gnu /opt/1400-sundials.sh 5.8.0  \
-    && OPENBLAS_LIBDIR=/usr/lib/$(uname -m)-linux-gnu /opt/1400-sundials.sh 6.4.1  \
-    && /opt/1600-ttyd.sh  \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3 1000
-
-COPY 2010-nodejs.sh 2020-yarn.sh 2050-build-emacs-vterm.sh 2060-iwyu.sh /opt/
-
-RUN \
-    /opt/2010-nodejs.sh  \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3 1000 \
+    && /opt/2010-nodejs.sh  \
     && cp -s /opt/node-16/bin/* /usr/local/bin  \
     && /opt/2020-yarn.sh  \
     && npm i -g typescript-language-server  \
@@ -28,18 +16,19 @@ RUN \
     && npm i -g bash-language-server  \
     && /usr/local/bin/npm install -g npm@8.19.3 \
     && /usr/local/bin/npm -g --prefix /root/.emacs.d.28/.cache/lsp/npm/pyright install pyright \
-    && bash -c 'EMACS_PREFIX=$(compgen -G /opt/emacs-28*/) /opt/2050-build-emacs-vterm.sh' \
-    && npm cache clean --force \
-    && /opt/2060-iwyu.sh 15
+    && /usr/local/bin/npm cache clean --force \
+    && /opt/2060-iwyu.sh 15 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
 COPY 2120-clone-dotfiles.sh 2175-setup-emacs.sh 2175-setup-emacs.el /opt/
 
 RUN /opt/2120-clone-dotfiles.sh /opt/bjodah-dotfiles \
+    && ls -l /opt \
     && /opt/2175-setup-emacs.sh /opt/emacs-28*/ ~/.emacs.d.28 /opt/bjodah-dotfiles/ \
     && chmod 666 -R             /opt/bjodah-dotfiles  \
     && find                     /opt/bjodah-dotfiles -type d | xargs chmod 777  \
     && git clone https://github.com/magicmonty/bash-git-prompt.git /opt/bash-git-prompt --depth 1 \
-    && rm -rf .emacs.default /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
     
     
