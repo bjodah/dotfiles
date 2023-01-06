@@ -2,11 +2,12 @@
 FROM bjodah/bjodahimg22base:jan23
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY 100-setup_ubuntu_packages.sh 110-setup_llvm_clang.sh 120-download_intel_sde.sh 130-setup_intel_compilers.sh 140-gdb-printers.sh 150-pip-install.sh ./opt/* /opt/
+COPY 100-setup_ubuntu_packages.sh 110-setup_llvm_clang.sh 115-update-alternatives-clang.sh 120-download_intel_sde.sh 130-setup_intel_compilers.sh 140-gdb-printers.sh 150-pip-install.sh ./opt /opt/
 
 RUN apt-get update \
     && /opt/100-setup_ubuntu_packages.sh  \
     && /opt/110-setup_llvm_clang.sh 15  \
+    && /opt/115-update-alternatives-clang.sh 15 1000 \
     && /opt/120-download_intel_sde.sh \
     && /opt/140-gdb-printers.sh \
     && CC=gcc-12 CXX=g++-12 /opt/150-pip-install.sh  \

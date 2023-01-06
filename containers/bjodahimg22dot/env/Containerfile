@@ -2,7 +2,7 @@
 FROM bjodah/bjodahimg22dev:jan23.a
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY 1000-apt-packages.sh 2010-nodejs.sh 2020-yarn.sh 2050-build-emacs-vterm.sh 2060-iwyu.sh ./opt/* /opt/
+COPY 1000-apt-packages.sh 2010-nodejs.sh 2020-yarn.sh 2050-build-emacs-vterm.sh ./opt /opt/
 
 RUN \
     apt-get --quiet update  \
@@ -17,7 +17,6 @@ RUN \
     && /usr/local/bin/npm install -g npm@8.19.3 \
     && /usr/local/bin/npm -g --prefix /root/.emacs.d.28/.cache/lsp/npm/pyright install pyright \
     && /usr/local/bin/npm cache clean --force \
-    && /opt/2060-iwyu.sh 15 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip
 
 COPY 2120-clone-dotfiles.sh 2175-setup-emacs.sh 2175-setup-emacs.el /opt/

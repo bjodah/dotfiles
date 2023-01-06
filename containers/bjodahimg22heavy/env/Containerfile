@@ -1,49 +1,27 @@
 # -*- mode: dockerfile -*-
-FROM bjodah/bjodahimg22dot:nov22.a.2
+FROM bjodah/bjodahimg22dot:jan23.a.1
 
 MAINTAINER Björn Dahlgren <bjodah@DELETEMEgmail.com>
 
-COPY 10100-setup_ubuntu_packages.sh /opt/
+COPY 10100-setup_ubuntu_packages.sh 15000-pip-install.sh 25000-install-pypy.sh 75050-scipy.sh ./opt2 /opt2
 
 RUN \
     apt-get update \
-    && /opt/10100-setup_ubuntu_packages.sh \
+    && /opt2/10100-setup_ubuntu_packages.sh \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-COPY 15000-pip-install.sh /opt/
-
-RUN env CC=gcc-12 CXX=g++-12 /opt/15000-pip-install.sh \
+    && /opt2/15000-pip-install.sh \
     && python3 -c "import z3" \
-    && rm -rf ~/.cache/pip
-
-COPY 25000-install-pypy.sh /opt/
-
-RUN env CC=gcc-12 CXX=g++-12 /opt/25000-install-pypy.sh \
-    && rm -rf ~/.cache/pip
-
-
-COPY 67000-rust.sh /opt/
-
-RUN \
-    mkdir /opt/cargo /opt/rustup \
-    && CARGO_HOME=/opt/cargo PATH="$CARGO_HOME/bin:$PATH" RUSTUP_HOME=/opt/rustup /opt/67000-rust.sh \
-    && env CC=gcc-12 CXX=g++-12 bash -c "source /opt/cargo/env; rustup default stable; cargo install difftastic"
-
-COPY 75000-cpython.sh /opt/
-
-RUN env /opt/75000-cpython.sh 3.11
-
-COPY 75050-scipy.sh /opt/
+    && /opt2/25000-install-pypy.sh \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache/pip
 
 RUN sed -i.bak 's/ scipy / /g' /opt/150-pip-install.sh \
     && echo "see https://github.com/numpy/numpy/issues/22623#issuecomment-1320890687" \
     && /opt/cpython-3.11-release/bin/python3 -m pip install --ignore-installed setuptools==59.2.0 \
-    && env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11-release/bin/python3 /opt/75050-scipy.sh
+    && env PYTHON=/opt/cpython-3.11-release/bin/python3 /opt/75050-scipy.sh
 
-RUN echo "see https://github.com/numpy/numpy/issues/22623#issuecomment-1320890687" \
-    && /opt/cpython-3.11-debug/bin/python3 -m pip install --ignore-installed setuptools==59.2.0 \
-    && env CC=gcc-12 CXX=g++-12 PYTHON=/opt/cpython-3.11-debug/bin/python3   /opt/75050-scipy.sh
+# RUN echo "see https://github.com/numpy/numpy/issues/22623#issuecomment-1320890687" \
+#     && /opt/cpython-3.11-debug/bin/python3 -m pip install --ignore-installed setuptools==59.2.0 \
+#     && env PYTHON=/opt/cpython-3.11-debug/bin/python3   /opt/75050-scipy.sh
 
 RUN /opt/cpython-3.11-release/bin/python3 -c "import scipy; print(scipy.__version__)" \
     && env YARL_NO_EXTENSIONS=1 /opt/cpython-3.11-release/bin/python3 -m pip install https://github.com/aio-libs/yarl/archive/master.tar.gz \
@@ -56,56 +34,33 @@ COPY 85000-julia.sh /opt/
 
 RUN /opt/85000-julia.sh
 
-COPY emacs-pgtk-gcc_29.0.50.deb /opt/
+# COPY emacs-pgtk-gcc_29.0.50.deb /opt/
 
-RUN /usr/local/bin/npm -g --prefix /root/.emacs.d.29/.cache/lsp/npm/pyright install pyright \
-    && dpkg -i /opt/emacs-pgtk-gcc_29.0.50.deb  \
-    && bash -c 'EMACS_PREFIX=$(realpath $(compgen -G /opt/emacs-29*/)) /opt/2050-build-emacs-vterm.sh'
+# RUN /usr/local/bin/npm -g --prefix /root/.emacs.d.29/.cache/lsp/npm/pyright install pyright \
+#     && dpkg -i /opt/emacs-pgtk-gcc_29.0.50.deb  \
+#     && bash -c 'EMACS_PREFIX=$(realpath $(compgen -G /opt/emacs-29*/)) /opt/2050-build-emacs-vterm.sh'
 
-RUN cd /opt/bjodah-dotfiles \
-    && git pull \
-    && git pull \
-    && sed "s/(package-install 'use-package)/;(package-install 'use-package)/g" -i /opt/bjodah-dotfiles/depth-2/.emacs.default/init.el \
-    && git clone --branch fix_gh-669 --depth 1 https://github.com/bjodah/use-package.git /build/use-package \
-    && bash -c 'cd /build/use-package; PREFIX=$(realpath $(compgen -G /opt/emacs-29*/)); PATH=$PREFIX/bin:$PATH make PREFIX=$PREFIX -C /build/use-package elc install-lisp' \
-    && rm -r /root/.emacs.d/ \
-    && /opt/2175-setup-emacs.sh /opt/emacs-29*/ ~/.emacs.d.29 /opt/bjodah-dotfiles \
-    && sed "s/;(package-install 'use-package)/(package-install 'use-package)/g" -i /opt/bjodah-dotfiles/depth-2/.emacs.default/init.el \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# RUN cd /opt/bjodah-dotfiles \
+#     && git pull \
+#     && git pull \
+#     && sed "s/(package-install 'use-package)/;(package-install 'use-package)/g" -i /opt/bjodah-dotfiles/depth-2/.emacs.default/init.el \
+#     && git clone --branch fix_gh-669 --depth 1 https://github.com/bjodah/use-package.git /build/use-package \
+#     && bash -c 'cd /build/use-package; PREFIX=$(realpath $(compgen -G /opt/emacs-29*/)); PATH=$PREFIX/bin:$PATH make PREFIX=$PREFIX -C /build/use-package elc install-lisp' \
+#     && rm -r /root/.emacs.d/ \
+#     && /opt/2175-setup-emacs.sh /opt/emacs-29*/ ~/.emacs.d.29 /opt/bjodah-dotfiles \
+#     && sed "s/;(package-install 'use-package)/(package-install 'use-package)/g" -i /opt/bjodah-dotfiles/depth-2/.emacs.default/init.el \
+#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-    # && ln -s ~/.emacs.d.29 ~/.emacs.d \
-    # && rm ~/.emacs.d
 
-COPY 86000-herbie.sh /opt/
+# COPY 86000-herbie.sh /opt/
+# RUN /opt/86000-herbie.sh
 
-RUN /opt/86000-herbie.sh
+# COPY opt_boost_1_81_0_b1.tar.zst 87000-get_symengine.sh /opt/
 
-COPY opt_boost_1_81_0_b1.tar.zst 87000-get_symengine.sh /opt/
+# RUN zstd -d </opt/opt_boost_1_81_0_b1.tar.zst | tar x \
+#     &&   \
+#     && rm -rf /tmp/*
 
-RUN zstd -d </opt/opt_boost_1_81_0_b1.tar.zst | tar x \
-    && CXXFLAGS="-Og -g -ggdb3 -std=c++17 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsized-deallocation" \
-          CMAKE_PREFIX_PATH="/opt/boost-1.81.0.beta1:$CMAKE_PREFIX_PATH" \
-          CC=gcc-12 CXX=g++-12 /opt/87000-get_symengine.sh 3053658c4e5318302201484d5cd6dda2ed0d9897 /opt/symengine-3053658-dbg        Debug   -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp \
-    && CXXFLAGS="-std=c++17 $CXXFLAGS -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -stdlib=libc++ -I/opt/libcxx15-msan/include -I/opt/libcxx15-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no" \
-          LDFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 $LDFLAGS -Wl,-rpath,/opt/libcxx15-msan/lib -L/opt/libcxx15-msan/lib -lc++abi" \
-          CMAKE_PREFIX_PATH="/opt/boost-1.81.0.beta1:$CMAKE_PREFIX_PATH" \
-          CC=clang-15 CXX=clang++-15 /opt/87000-get_symengine.sh 3053658c4e5318302201484d5cd6dda2ed0d9897 /opt/symengine-3053658-msan Debug   -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON \
-    && CXXFLAGS="-std=c++17" \
-          CC=gcc-12 CXX=g++-12 /opt/87000-get_symengine.sh 3053658c4e5318302201484d5cd6dda2ed0d9897 /opt/symengine-3053658-rel        Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DINTEGER_CLASS=gmp -DWITH_SYMENGINE_RCP=ON \
-    && CXXFLAGS="-std=c++17" \
-          CC=clang-15 CXX=clang++-15 /opt/87000-get_symengine.sh 3053658c4e5318302201484d5cd6dda2ed0d9897 /opt/symengine-3053658-tcm  Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DWITH_TCMALLOC=ON  \
-    && rm -rf /tmp/*
-
-COPY 88000-update-alternatives-clang.sh 89000-build-ipopt.sh /opt
-
-RUN apt-get --quiet update \
-    && apt-get --assume-yes --no-install-recommends install clangd-15 python3-clang-15 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* ~/.cache/pip \
-    && /opt/88000-update-alternatives-clang.sh 15 1000 \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 1000 \
-    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-12 1000 \
-    && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-12 1000 \
-    && /opt/89000-build-ipopt.sh 3.14.10
 
 # RUN git clone https//github.com/uwplse/herbgrind /opt/herbgrind \
 #     && ln -s /usr/bin/automake /usr/local/bin/automake-1.15 \

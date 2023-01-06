@@ -1,10 +1,9 @@
 #!/bin/bash -xe
 
-
 sudo apt-get --assume-yes --no-install-recommends install \
      automake autoconf binutils-dev bison coinor-libipopt-dev cppcheck \
      doxygen dpkg-dev expect fd-find ffmpeg flex fonts-dejavu \
-     fonts-humor-sans freeglut3-dev fish fzf g++-12 gcc-12 \
+     fonts-humor-sans freeglut3-dev fish fzf \
      gcovr gdb lcov \
      libacl1-dev libatomic1 \
      libeigen3-dev libfontconfig1 libfreetype6-dev libgccjit0 libgccjit-12-dev libgdbm-dev \
