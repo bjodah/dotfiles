@@ -1,0 +1,2 @@
+#!/bin/bash
+emx --client --emacs-build 28 $@ -- --x11

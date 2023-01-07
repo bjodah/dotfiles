@@ -41,10 +41,9 @@ else
 fi
 CPYTHON_BUILD="${CPYTHON_SRC}-${CPYTHON_VARIANT}"
 
-if [[ -e "$CPYTHON_BUILD" ]]; then
-    rm -r "$CPYTHON_BUILD"
+if [[ ! -e "$CPYTHON_BUILD" ]]; then
+    cp -ra $CPYTHON_SRC $CPYTHON_BUILD
 fi
-cp -ra $CPYTHON_SRC $CPYTHON_BUILD
 cd $CPYTHON_BUILD
 if [ ! -e $CPYTHON_BUILD/config.status ]; then
     ./configure \

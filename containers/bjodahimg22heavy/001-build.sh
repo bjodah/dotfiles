@@ -10,9 +10,7 @@ for d in build env/$OPT_FOLDER; do
     fi
 done
 
-# I give up, (GNU) make is just *terrible*, e.g. https://stackoverflow.com/a/26518222/790973
-#make -f _Makefile
-# ..instead, let's just stick to bash 
+export CC=gcc-12 CXX=g++-12
 IMAGE=$(grep FROM ./env/Containerfile | head -n 1 | cut -d' ' -f2)
 
 build() {
@@ -21,7 +19,7 @@ build() {
 
 
 if [ ! -e env/$OPT_FOLDER/cargo ]; then
-    build -e CARGO_HOME=/$OPT_FOLDER/cargo -e RUSTUP_HOME=/$OPT_FOLDER/rustup -- "bash 67000-rust.sh && . /$OPT_FOLDER/cargo/env && env CC=gcc-12 CXX=g++-12 cargo install difftastic"
+    build -e CARGO_HOME=/$OPT_FOLDER/cargo -e RUSTUP_HOME=/$OPT_FOLDER/rustup -- "bash 67000-rust.sh && . /$OPT_FOLDER/cargo/env && cargo install difftastic"
 fi
 
 
@@ -34,11 +32,19 @@ fi
 export CPYTHON_VERSION=3.11
 export CPYTHON_VARIANT=release
 CPYTHON_DIR=cpython-3.11-release
-if [ ! -e env/$OPT_FOLDER/$CPYTHON_DIR ]; then
+SCIPY_DIR=env/$OPT_FOLDER/$CPYTHON_DIR/lib/python3.11/site-packages/scipy/
+if [ ! -d $SCIPY_DIR ]; then
     cp ../bjodahimg22base/env/15-pip-install.sh ./build/
-    build -e CPYTHON_VERSION -e CPYTHON_VARIANT -- "\
+    sed -e 's/"numba<0.57"//g' -e 's/trepan3k//g' ../bjodahimg22dev/env/150-pip-install.sh >./build/150-pip-install.sh
+    build -v ~/.cache/pip:/root/.cache/pip -e CPYTHON_VERSION -e CPYTHON_VARIANT -- "\
 bash 75000-cpython.sh /$OPT_FOLDER \
-&& env PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 bash /build/15-pip-install.sh"
+&& env PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 bash /build/15-pip-install.sh \
+&& env PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 bash /build/150-pip-install.sh \
+"
+    if [ ! -d $SCIPY_DIR ]; then
+        >&2 echo "Failed to install scipy?"
+        exit 1
+    fi
 fi
 
 SYMENGINE_COMMIT=fcef5c7d6cc848e3f6c0b9ecc5a22d30e5e98f99
@@ -55,6 +61,21 @@ for SYMENGINE_VARIANT in release debug msan; do  # tcmalloc
     fi
 done
 
+JULIA_MAJOR=1
+JULIA_MINOR=8
+JULIA_PATCH=4
+JL_V2=$JULIA_MAJOR.$JULIA_MINOR
+JL_V3=$JULIA_MAJOR.$JULIA_MINOR.$JULIA_PATCH
+JULIA_DIR=julia-JL_V3
+if [ ! -e env/$OPT_FOLDER/$JULIA_DIR ]; then
+    build -e JL_V2=$JL_V2 -e JL_V3=$JL_V3 -- bash 85000-julia.sh /$OPT_FOLDER
+fi
 
 #89000-build-ipopt.sh 
 
+PYPY39_VERSION=7.3.11
+if [[ ! -e env/$OPT_FOLDER/pypy3.9* ]]; then
+    build -v ~/.cache/pip:/root/.cache/pip -e PYPY39_VERSION=$PYPY39_VERSION -- bash 25000-install-pypy.sh /$OPT_FOLDER
+fi
+
+( ulimit -n 4096; podman build env/ )

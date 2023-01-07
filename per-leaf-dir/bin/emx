@@ -95,7 +95,7 @@ set -g remain-on-exit on  # cf. respawn-pane & respawn-pane -k
 set -g history-limit 15000  # default is 2000 lines
 EOF
 
-PODRUN_ARGS="--image bjodah/bjodahimg22heavy:22.6.a.1.1.1"
+PODRUN_ARGS="--image bjodah/bjodahimg22heavy:jan23.a.1.1"
 
 # if ! podrun $PODRUN_ARGS "test -f /opt/emacs-$EMACS_BUILD/bin/emacs"; then
 EMACS_PREFIX=/opt/emacs-$EMACS_BUILD
