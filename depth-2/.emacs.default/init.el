@@ -206,10 +206,11 @@
   :after treemacs magit)
 
 ;; lsp
-(setq lsp-keymap-prefix "C-c l")
 (use-package lsp-mode
   :ensure t
   :commands lsp
+  :init
+  (setq lsp-keymap-prefix "C-c l")
   :custom
   (lsp-file-watch-threshold 4000)
   ;; (lsp-rust-server 'rls)
@@ -585,7 +586,7 @@
         ('modus-vivendi (modus-themes-load-vivendi)))))
 
   ;; sample Elisp calls (or call `my-modus-themes-saturate' interactively)
-  (my-modus-themes-saturate 40)
+  (my-modus-themes-saturate 25)
 
   :bind ("ESC <f5>" . modus-themes-toggle))
 
