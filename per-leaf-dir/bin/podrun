@@ -89,8 +89,15 @@
     if [[ $WITH_X11 == 1 ]]; then
         PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
         PODMAN_RUN_ARGS+=("-v /tmp/.X11-unix:/tmp/.X11-unix:rw")
-        if [[ -e $HOME/.Xauthority ]]; then
-            PODMAN_RUN_ARGS+=("-v $HOME/.Xauthority:/root/.Xauthority:rw")
+        if [[ -z $XAUTHORITY ]]; then
+            if [[ -e $HOME/.Xauthority ]]; then
+                PODMAN_RUN_ARGS+=("-v $HOME/.Xauthority:/root/.Xauthority:rw")
+            else
+                >&2 echo "Warning, could not locate file: .Xauthority, opening GUI windows might not work."
+            fi
+        else
+            PODMAN_RUN_ARGS+=("-v $XAUTHORITY:$XAUTHORITY:rw")
+            PODMAN_RUN_ARGS+=("-e XAUTHORITY")
         fi
 	# # https://github.com/containers/podman/discussions/13040#discussioncomment-2071464
 	# PODMAN_RUN_ARGS+=("--uidmap $(id -u):0:1")

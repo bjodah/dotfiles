@@ -18,7 +18,8 @@ export CC="gcc"
 export CXX="g++"
 
 if [ ! -e env/opt/emacs-28/share/emacs/site-lisp/vterm-module.so ]; then
-    build -- bash 1700-build-emacs.sh --install /opt/emacs-28 --build-vterm --build-root /build
+    cp 1700-build-emacs.sh 1710-build-emacs-vterm.sh ./build
+    build -- bash /build/1700-build-emacs.sh --install /opt/emacs-28 --build-vterm --build-root /build
 fi
 
 export SUNDIALS_VERSION=6.5.0

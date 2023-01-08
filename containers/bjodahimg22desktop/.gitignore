@@ -1,0 +1,4 @@
+build/
+emacs-*/
+./env/opt/
+./env/root/
