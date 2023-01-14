@@ -36,6 +36,7 @@ SCIPY_DIR=env/$OPT_FOLDER/$CPYTHON_DIR/lib/python3.11/site-packages/scipy/
 if [ ! -d $SCIPY_DIR ]; then
     cp ../bjodahimg22base/env/15-pip-install.sh ./build/
     sed -e 's/"numba<0.57"//g' -e 's/trepan3k//g' ../bjodahimg22dev/env/150-pip-install.sh >./build/150-pip-install.sh
+    mkdir -p ~/.cache/pip
     build -v ~/.cache/pip:/root/.cache/pip -e CPYTHON_VERSION -e CPYTHON_VARIANT -- "\
 bash 75000-cpython.sh /$OPT_FOLDER \
 && env PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 bash /build/15-pip-install.sh \

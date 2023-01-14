@@ -33,7 +33,7 @@ if [ ! -d $SYMENGINE_SRC ]; then
 fi
 
 case $SYMENGINE_VARIANT in
-    rel)
+    release)
         export CXXFLAGS="-std=c++17"
         export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DINTEGER_CLASS=gmp -DWITH_SYMENGINE_RCP=ON"
         ;;
@@ -69,7 +69,7 @@ case $SYMENGINE_VARIANT in
         export CMAKE_PREFIX_PATH="/opt/boost-1.81.0.beta1:$CMAKE_PREFIX_PATH"
         ;; 
     *)
-        >&2 echo "Unhandled case"
+        >&2 echo "Unhandled case: $SYMENGINE_VARIANT"
         exit 1
 esac
 cmake \
@@ -85,7 +85,7 @@ cmake \
     -S $SYMENGINE_SRC \
     -B $SYMENGINE_BUILD
 cmake --build $SYMENGINE_BUILD
-ctest --output-on-failure
+( cd $SYMENGINE_BUILD; ctest --output-on-failure )
 cmake --install $SYMENGINE_BUILD
 cmake --build $SYMENGINE_BUILD --target clean
 ln -s $SYMENGINE_BUILD/compile_commands.json $SYMENGINE_ROOT
