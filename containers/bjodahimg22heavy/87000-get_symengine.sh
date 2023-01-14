@@ -33,14 +33,27 @@ if [ ! -d $SYMENGINE_SRC ]; then
 fi
 
 case $SYMENGINE_VARIANT in
-    release)
+    rel)
         export CXXFLAGS="-std=c++17"
         export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON  -DINTEGER_CLASS=gmp -DWITH_SYMENGINE_RCP=ON"
         ;;
     debug)
+        export CXXFLAGS="-Og -g -ggdb3 -std=c++17 -fsized-deallocation"
+        export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Debug -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp"
+        export CMAKE_PREFIX_PATH="/$OPT_FOLDER/$BOOST_DIR"
+        ;;
+    glibcxxdbg)
         export CXXFLAGS="-Og -g -ggdb3 -std=c++17 -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -fsized-deallocation"
         export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Debug -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp"
         export CMAKE_PREFIX_PATH="/$OPT_FOLDER/$BOOST_DIR"
+        ;;
+    asan)
+        export CXXFLAGS="-std=c++17 -fsanitize=address -Og -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
+        export LDFLAGS="-fsanitize=address" 
+        export CMAKE_PREFIX_PATH="/$OPT_FOLDER/$BOOST_DIR"
+        export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Debug -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON"
+        export CC=clang
+        export CXX=clang++
         ;;
     msan)
         export CXXFLAGS="-std=c++17 -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -stdlib=libc++ -I/opt/libcxx15-msan/include -I/opt/libcxx15-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"

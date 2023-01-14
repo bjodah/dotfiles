@@ -49,7 +49,7 @@ fi
 
 SYMENGINE_COMMIT=fcef5c7d6cc848e3f6c0b9ecc5a22d30e5e98f99
 SYMENGINE_VERSION=${SYMENGINE_COMMIT:0:7}
-for SYMENGINE_VARIANT in release debug msan; do  # tcmalloc
+for SYMENGINE_VARIANT in release debug glibcxxdbg asan msan; do  # tcmalloc
     SYMENGINE_DIR=symengine-${SYMENGINE_VERSION}-${SYMENGINE_VARIANT}
     if [ ! -e env/$OPT_FOLDER/$SYMENGINE_DIR ]; then
         build \
@@ -66,7 +66,7 @@ JULIA_MINOR=8
 JULIA_PATCH=4
 JL_V2=$JULIA_MAJOR.$JULIA_MINOR
 JL_V3=$JULIA_MAJOR.$JULIA_MINOR.$JULIA_PATCH
-JULIA_DIR=julia-JL_V3
+JULIA_DIR=julia-$JL_V3
 if [ ! -e env/$OPT_FOLDER/$JULIA_DIR ]; then
     build -e JL_V2=$JL_V2 -e JL_V3=$JL_V3 -- bash 85000-julia.sh /$OPT_FOLDER
 fi
@@ -74,7 +74,7 @@ fi
 #89000-build-ipopt.sh 
 
 PYPY39_VERSION=7.3.11
-if [[ ! -e env/$OPT_FOLDER/pypy3.9* ]]; then
+if ! compgen -G "env/$OPT_FOLDER/pypy3.9*" >/dev/null; then
     build -v ~/.cache/pip:/root/.cache/pip -e PYPY39_VERSION=$PYPY39_VERSION -- bash 25000-install-pypy.sh /$OPT_FOLDER
 fi
 
