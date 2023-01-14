@@ -173,7 +173,7 @@ if [[ $CREATE_DEB == 1 ]]; then
     mkdir -p $EMACS_DEB_ROOT$INSTALL_PREFIX
     make install prefix=$EMACS_DEB_ROOT$INSTALL_PREFIX
     if [[ $BUILD_VTERM == 1 ]]; then
-        ( cd - ; ./1710-build-emacs-vterm.sh $EMACS_DEB_ROOT$INSTALL_PREFIX )
+        ( cd - ; /build/1710-build-emacs-vterm.sh $EMACS_DEB_ROOT$INSTALL_PREFIX )
     fi
     mkdir $EMACS_DEB_ROOT/DEBIAN
     # libxml2-dev
@@ -205,7 +205,7 @@ EOF
 elif [[ $INSTALL_PREFIX != "" ]]; then
     sudo make install
     if [[ $BUILD_VTERM == 1 ]]; then
-        ( cd -; ./1710-build-emacs-vterm.sh $INSTALL_PREFIX )
+        ( cd -; /build/1710-build-emacs-vterm.sh $INSTALL_PREFIX )
     fi
     make clean
 else

@@ -1,0 +1,3 @@
+FROM bjodah/bjodahimg22heavy:jan23.a.1.1
+
+COPY ./opt /opt
