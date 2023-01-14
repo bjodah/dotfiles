@@ -10,13 +10,17 @@ COPY 10100-setup_ubuntu_packages.sh 15000-pip-install.sh 75050-scipy.sh ./opt2 /
 RUN \
     apt-get update \
     && /opt2/10100-setup_ubuntu_packages.sh \
+    && env CC=gcc-12 CXX=g++-12 /opt2/15000-pip-install.sh \
+    && python3 -c "import z3" \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache/pip
+
+
+COPY 10500-setup_intel_compilers.sh /opt2
+
+RUN /opt2/10500-setup_intel_compilers.sh \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN \
-    env CC=gcc-12 CXX=g++-12 /opt2/15000-pip-install.sh \
-    && python3 -c "import z3" \
-    && rm -rf /tmp/* /var/tmp/* /root/.cache/pip
 
 #25000-install-pypy.sh
     # && env CC=gcc-12 CXX=g++-12 /opt2/25000-install-pypy.sh \
