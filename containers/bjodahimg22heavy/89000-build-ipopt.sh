@@ -92,3 +92,5 @@ for CONFIG in asan glibcxxdbg dbg rel; do
     cp compile_commands.json $IPOPT_PREFIX/
     cd - 
 done
+
+env PKG_CONFIG_PATH=${PREFIX_ROOT}-rel/lib/pkgconfig python3 -m pip install cyipopt
