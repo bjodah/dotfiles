@@ -29,24 +29,49 @@ if [ ! -e env/$OPT_FOLDER/$BOOST_DIR/ ]; then
     build -e BOOST_MAJOR=1 -e BOOST_MINOR=81 -e BOOST_PATCH=0 -- bash ./750-boost.sh /$OPT_FOLDER
 fi
 
-export CPYTHON_VERSION=3.11
-export CPYTHON_VARIANT=release
-CPYTHON_DIR=cpython-3.11-release
-SCIPY_DIR=env/$OPT_FOLDER/$CPYTHON_DIR/lib/python3.11/site-packages/scipy/
-if [ ! -d $SCIPY_DIR ]; then
-    cp ../bjodahimg22base/env/15-pip-install.sh ./build/
-    sed -e 's/"numba<0.57"//g' -e 's/trepan3k//g' ../bjodahimg22dev/env/150-pip-install.sh >./build/150-pip-install.sh
+for VERSION_VARIANT in 3.11-release v3.12.0a4-debug; do
+    export CPYTHON_VERSION=${VERSION_VARIANT%%-*}
+    export CPYTHON_VARIANT=${VERSION_VARIANT##*-}
+    CPYTHON_DIR=cpython-${CPYTHON_VERSION}-${CPYTHON_VARIANT}
     mkdir -p ~/.cache/pip
-    build -v ~/.cache/pip:/root/.cache/pip -e CPYTHON_VERSION -e CPYTHON_VARIANT -- "\
-bash 75000-cpython.sh /$OPT_FOLDER \
-&& env PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 bash /build/15-pip-install.sh \
-&& env PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 bash /build/150-pip-install.sh \
-"
-    if [ ! -d $SCIPY_DIR ]; then
-        >&2 echo "Failed to install scipy?"
-        exit 1
+    if [ ! -d env/$OPT_FOLDER/$CPYTHON_DIR ]; then
+        build -v ~/.cache/pip:/root/.cache/pip -e CPYTHON_VERSION -e CPYTHON_VARIANT -- "\
+bash 75000-cpython.sh /$OPT_FOLDER"
     fi
+    if ! build -- "/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 -c 'import scipy'"; then
+        cp ../bjodahimg22base/env/15-pip-install.sh ./build/
+        if [[ $CPYTHON_VERSION == *3.12* ]]; then
+            cp 75050-scipy.sh ./build
+#/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 -m pip uninstall cython && \
+            build -v ~/.cache/pip:/root/.cache/pip -e CPYTHON_VERSION -e CPYTHON_VARIANT -- "\
+/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 -m pip install https://github.com/cython/cython/archive/master.tar.gz \
+&& env PATH=/$OPT_FOLDER/$CPYTHON_DIR/bin:$PATH PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 CC='ccache $CC' CXX='ccache $CXX' bash /build/75050-scipy.sh"
+        else
+            build -v ~/.cache/pip:/root/.cache/pip -e CPYTHON_VERSION -e CPYTHON_VARIANT -- "/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 -m pip install scipy"
+        fi
+        if ! build -- "/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 -c 'import scipy'"; then
+            >&2 echo "Failed to install scipy?"
+            exit 1
+        fi
+    fi    
+    if ! build -- "/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 -c 'import mpmath'"; then
+        build -v ~/.cache/pip:/root/.cache/pip -- "env PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 CC='ccache $CC' CXX='ccache $CXX' bash /build/15-pip-install.sh"
+    fi
+    if ! build -- "/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 -c 'import jupyter'"; then
+        sed -e 's/"numba<0.57"//g' -e 's/trepan3k//g' ../bjodahimg22dev/env/150-pip-install.sh >./build/150-pip-install.sh
+        if [[ $CPYTHON_VERSION == *3.12* ]]; then
+            sed -i \
+                -e 's/pylatex//g' \
+                -e 's@"scipy>=1.9.3"@@g' \
+                -e 's/statsmodels//g' \
+                -e 's/scikit-optimize//g' \
+                -e 's/"cython<3"/"cython>=3.0.0a11"/g' \
+                -e 's/"numpy<1.24"/"numpy>=1.24.1"/g' \
+                ./build/150-pip-install.sh
+        fi
+        build -v ~/.cache/pip:/root/.cache/pip -- "env PYTHON=/$OPT_FOLDER/$CPYTHON_DIR/bin/python3 CC='ccache $CC' CXX='ccache $CXX' bash /build/150-pip-install.sh"
 fi
+done
 
 SYMENGINE_COMMIT=fcef5c7d6cc848e3f6c0b9ecc5a22d30e5e98f99
 SYMENGINE_VERSION=${SYMENGINE_COMMIT:0:7}
