@@ -65,6 +65,12 @@ fi
 if [[ ! -d "$THIS_BUILD" ]]; then
     mkdir $THIS_BUILD
 fi
+if [[ ! -e .dir-locals.el ]]; then
+    cat <<EOF>.dir-locals.el
+    ((nil .
+            ((compile-command . "cmake --build $THIS_BUILD -- -j 1 && ctest $THIS_BUILD"))))
+    EOF
+fi
 cat <<EOF>$THIS_RUNDIR/.tmux.conf
 unbind C-b
 set -g prefix 'C-\'

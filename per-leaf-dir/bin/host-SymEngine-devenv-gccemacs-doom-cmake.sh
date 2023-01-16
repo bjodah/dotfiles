@@ -58,7 +58,7 @@ else
  -DWITH_MPFR=ON \
  -DWITH_MPC=ON \
  -DINTEGER_CLASS=flint"
-    EXTRA_ENV="-e FLINT_ROOT=/opt/flint2-2.9.0-debug"
+    EXTRA_ENV="-e FLINT_ROOT=/opt/flint2-2.9.0-release"
     export THIS_BUILD=build-flint-gccemacs-doom
 fi
 
