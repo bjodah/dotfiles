@@ -56,7 +56,7 @@ fi
 THIS_BUILD="${THIS_BUILD:-build-$CONTAINER_FOLDER}"
 if [[ -e compile_commands.json ]]; then
     if [[ -L compile_commands.json && $(readlink compile_commands.json) == $THIS_BUILD/compile_commands.json ]]; then
-       :
+        :
     else
         >&2 echo "Please move compile_commands.json"
         exit 1
@@ -69,7 +69,7 @@ if [[ ! -e .dir-locals.el ]]; then
     cat <<EOF>.dir-locals.el
     ((nil .
             ((compile-command . "cmake --build $THIS_BUILD -- -j 1 && ctest $THIS_BUILD"))))
-    EOF
+EOF
 fi
 cat <<EOF>$THIS_RUNDIR/.tmux.conf
 unbind C-b
