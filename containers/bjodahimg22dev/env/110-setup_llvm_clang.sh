@@ -19,3 +19,7 @@ sudo apt-get --assume-yes --no-install-recommends install \
     libclang-${MAJOR_VERSION}-dev \
     libclang-common-${MAJOR_VERSION}-dev \
     python3-clang-${MAJOR_VERSION}
+
+
+# Fix for lldb-15 (https://github.com/llvm/llvm-project/issues/55575#issuecomment-1379470228)
+cp -ra /usr/lib/llvm-15/lib/python3.10/dist-packages/lldb/* /usr/lib/python3/dist-packages/lldb/

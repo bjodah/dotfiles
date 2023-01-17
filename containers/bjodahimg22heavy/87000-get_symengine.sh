@@ -48,25 +48,25 @@ case $SYMENGINE_VARIANT in
         export CMAKE_PREFIX_PATH="/$OPT_FOLDER/$BOOST_DIR"
         ;;
     asan)
-        export CXXFLAGS="-std=c++17 -fsanitize=address -Og -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
+        export CXXFLAGS="-std=c++17 -fsanitize=address -Og -glldb"
         export LDFLAGS="-fsanitize=address" 
         export CMAKE_PREFIX_PATH="/$OPT_FOLDER/$BOOST_DIR"
-        export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Debug -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON"
+        export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Debug -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON -DHAVE_GCC_ABI_DEMANGLE=no"
         export CC=clang
         export CXX=clang++
         ;;
     msan)
-        export CXXFLAGS="-std=c++17 -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -stdlib=libc++ -I/opt/libcxx15-msan/include -I/opt/libcxx15-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb -DHAVE_GCC_ABI_DEMANGLE=no"
+        export CXXFLAGS="-std=c++17 -fsanitize=memory -fsanitize-memory-track-origins=2 -fsanitize-memory-param-retval -stdlib=libc++ -I/opt/libcxx15-msan/include -I/opt/libcxx15-msan/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O1 -glldb"
         export LDFLAGS="-fsanitize=memory -fsanitize-memory-track-origins=2 -Wl,-rpath,/opt/libcxx15-msan/lib -L/opt/libcxx15-msan/lib -lc++abi" 
         export CMAKE_PREFIX_PATH="/$OPT_FOLDER/$BOOST_DIR"
-        export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Debug -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON"
+        export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Debug -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=OFF -DINTEGER_CLASS=boostmp -DWITH_SYMENGINE_RCP=ON  -DHAVE_GCC_ABI_DEMANGLE=no"
         export CC=clang-15
         export CXX=clang++-15
         ;;
     tcmalloc)
         export CXXFLAGS="-std=c++17" CC=clang-15 CXX=clang++-15
         export CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DWITH_COTIRE=OFF -DWITH_BFD=OFF -DWITH_LLVM=ON -DWITH_TCMALLOC=ON"
-        export CMAKE_PREFIX_PATH="/opt/boost-1.81.0.beta1:$CMAKE_PREFIX_PATH"
+        export CMAKE_PREFIX_PATH="/$OPT_FOLDER/$BOOST_DIR:$CMAKE_PREFIX_PATH"
         ;; 
     *)
         >&2 echo "Unhandled case: $SYMENGINE_VARIANT"

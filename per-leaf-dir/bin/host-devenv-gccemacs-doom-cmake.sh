@@ -53,9 +53,9 @@ CONTAINER_FOLDER=gccemacs-doom
 if [[ ! -e CMakeLists.txt ]]; then
     >&2 echo "Not in a CMake-based source folder?"
 fi
-THIS_BUILD="${THIS_BUILD:-build-$CONTAINER_FOLDER}"
+THIS_BUILD="${THIS_BUILD:-${PWD}/build-$CONTAINER_FOLDER}"
 if [[ -e compile_commands.json ]]; then
-    if [[ -L compile_commands.json && $(readlink compile_commands.json) == $THIS_BUILD/compile_commands.json ]]; then
+    if [[ -L compile_commands.json && $(realpath "$(readlink compile_commands.json)") == $THIS_BUILD/compile_commands.json ]]; then
         :
     else
         >&2 echo "Please move compile_commands.json"
@@ -68,7 +68,7 @@ fi
 if [[ ! -e .dir-locals.el ]]; then
     cat <<EOF>.dir-locals.el
     ((nil .
-            ((compile-command . "cmake --build $THIS_BUILD -- -j 1 && ctest $THIS_BUILD"))))
+            ((compile-command . "cmake --build $THIS_BUILD -- -j 1 && cd $THIS_BUILD" && ctest ."))))
 EOF
 fi
 cat <<EOF>$THIS_RUNDIR/.tmux.conf
@@ -85,7 +85,7 @@ EOF
 if [[ $HOST_TTYD != "" ]]; then
     echo "\; \\"<$(head -c -1 $THIS_RUNDIR/launch-tmux.sh) >$THIS_RUNDIR/launch-tmux.sh
     echo "new-window \"ttyd --port $HOST_TTYD tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock\"" >>$THIS_RUNDIR/launch-tmux.sh
-    EMACS_FLAGS="-nw $EMACS_FLAGS"
+    EMACS_FLAGS="-t $EMACS_FLAGS"
 fi
 
 
@@ -98,7 +98,7 @@ if [[ $NO_EVIL == 1 ]]; then
    ~/.emacs.d/bin/doom sync
 fi
 while ! test -e $(pwd)/compile_commands.json; do sleep 1; done
-emacs $EMACS_FLAGS --eval '(load "/opt/my-rundir/launch-emacs.el")'
+emacsclient -a "" $EMACS_FLAGS --eval '(load "/opt/my-rundir/launch-emacs.el")' -c
 EOF
 chmod +x $THIS_RUNDIR/launch-emacs.sh
 cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
@@ -137,12 +137,12 @@ EOF
 if [[ ! -d ~/.ccache/ ]]; then
     mkdir ~/.ccache/
 fi
-THIS_CLANGD_CACHE=${THIS_CLANGD_CACHE:-~/.cache/clangd}
+THIS_CLANGD_CACHE=${THIS_CLANGD_CACHE:-$HOME/.cache/clangd}
 if [[ ! -e $THIS_CLANGD_CACHE ]]; then
     mkdir $THIS_CLANGD_CACHE
 fi
 
-THIS_CCACHE=${THIS_CLANGD_CACHE:-~/.ccache}
+THIS_CCACHE=${THIS_CLANGD_CACHE:-$HOME/.ccache}
 if [[ ! -e $THIS_CCACHE ]]; then
     mkdir $THIS_CCACHE
 fi
@@ -150,7 +150,6 @@ fi
 
 {  # this scope saves us from surprises if editing this file during podman executiong below
     podrun \
-        $* \
         --cont-img-dir $CONTAINER_FOLDER \
         --name host-dev-env-gccemacs-doom-cmake \
         --volume $THIS_CCACHE:/root/.ccache \
@@ -159,6 +158,7 @@ fi
         --publish 7682:7682 \
         -e THIS_IS_RUNNING_IN_CONTAINER=1 \
         -e CXX=clang++-15 \
+        $* \
         -- /opt/my-rundir/launch-tmux.sh
     exit 0
         # --volume "$THIS_FOLDER":/opt/my-scripts/ \

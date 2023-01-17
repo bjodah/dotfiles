@@ -25,4 +25,8 @@ RUN ~/.emacs.d/bin/doom sync
 
 COPY ./.doom.d/config.el ./.doom.d/packages.el ./.doom.d/init.el /root/.doom.d/
 
-RUN ~/.emacs.d/bin/doom sync
+RUN ~/.emacs.d/bin/doom sync \
+    && curl -Ls https://github.com/domtronn/all-the-icons.el/archive/master.tar.gz | tar zx -C $HOME/.local/share --strip-components=1 --wildcards "all-the-icons.el-master/fonts/*.ttf" \
+    && fc-cache -f -v \
+    && cp -ra /usr/lib/llvm-15/lib/python3.10/dist-packages/lldb/* /usr/lib/python3/dist-packages/lldb/ \
+    && apt update && apt-get -y install libboost-math-dev && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
