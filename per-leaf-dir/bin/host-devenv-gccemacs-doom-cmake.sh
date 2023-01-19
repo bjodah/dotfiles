@@ -128,15 +128,12 @@ cat <<EOF>$THIS_RUNDIR/launch-emacs.el
 )
 EOF
 
-if [[ ! -d ~/.ccache/ ]]; then
-    mkdir ~/.ccache/
-fi
 THIS_CLANGD_CACHE=${THIS_CLANGD_CACHE:-~/.cache/clangd}
 if [[ ! -e $THIS_CLANGD_CACHE ]]; then
     mkdir $THIS_CLANGD_CACHE
 fi
 
-THIS_CCACHE=${THIS_CLANGD_CACHE:-~/.ccache}
+THIS_CCACHE=${THIS_CCACHE:-~/.ccache}
 if [[ ! -e $THIS_CCACHE ]]; then
     mkdir $THIS_CCACHE
 fi

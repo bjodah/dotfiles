@@ -107,6 +107,10 @@ RUN apt-get --quiet update \
     && update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-12 1000 \
     && /opt/89000-build-ipopt.sh 3.14.10
 
+RUN python3 -m pip install jupyter_contrib_nbextensions \
+    && python3 -m jupyter contrib nbextension install \
+    && python3 -m jupyter nbextension enable codefolding/main
+
 # RUN git clone https//github.com/uwplse/herbgrind /opt/herbgrind \
 #     && ln -s /usr/bin/automake /usr/local/bin/automake-1.15 \
 #     && make && make install
