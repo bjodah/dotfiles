@@ -2,7 +2,7 @@
 # adapted from:
 # https://github.com/nodejs/docker-node/blob/main/16/buster-slim/Dockerfile
 
-NODE_VERSION=16.18.1  # 18.12.1
+NODE_VERSION=16.19.0  # 18.12.1
 set -euxo pipefail
 PREFIX="${1:-/opt/node-16}"
 if [ ! -d "$PREFIX" ]; then

@@ -7,6 +7,7 @@ show_help(){
     echo "Usage:"
     echo "--client                     runs as client"
     echo "--daemon                     runs as a daemon"
+
     echo "--broadway <display-number>  e.g. 5, then open http://localhost:8085"
     echo "--emacs-build <build-id>     e.g. 29pg for /opt/emacs-29pg"
     echo ""
@@ -17,7 +18,7 @@ show_help(){
     echo "  $ emx --emacs-build 29pg --profile default -- --x11"
 }
 declare -a EMACS_ARGS
-EMACS_BUILD=""
+EMACS_BUILD="29"
 USE_BROADWAY=""
 RUN_AS_DAEMON=0
 RUN_AS_CLIENT=0
@@ -39,11 +40,6 @@ while [ $# -gt 0 ]; do
         --emacs-build)
             shift
             EMACS_BUILD=$1
-            if [[ $EMACS_BUILD = 28* ]]; then
-                export EMACS_VERSION=28
-            elif [[ $EMACS_BUILD = 29* ]]; then
-                export EMACS_VERSION=29
-            fi
             shift
             ;;
         -h|--help|\?)
@@ -81,6 +77,12 @@ if [ ! -e ~/.emx/.emacs-eln-cache ]; then
    mkdir ~/.emx/.emacs-eln-cache
 fi
 
+if [[ $EMACS_BUILD = 28* ]]; then
+    export EMACS_VERSION=28
+elif [[ $EMACS_BUILD = 29* ]]; then
+    export EMACS_VERSION=29
+fi
+
 set -x
 
 
@@ -95,7 +97,7 @@ set -g remain-on-exit on  # cf. respawn-pane & respawn-pane -k
 set -g history-limit 15000  # default is 2000 lines
 EOF
 
-PODRUN_ARGS="--image bjodah/bjodahimg22heavy:22.6.a.1.1.1"
+PODRUN_ARGS="--image bjodah/bjodahimg22desktop:jan23.a.1.1.1"
 
 # if ! podrun $PODRUN_ARGS "test -f /opt/emacs-$EMACS_BUILD/bin/emacs"; then
 EMACS_PREFIX=/opt/emacs-$EMACS_BUILD
@@ -139,7 +141,7 @@ else
         PODRUN_ARGS="--name emx-broadway -p 0.0.0.0:808$USE_BROADWAY:808$USE_BROADWAY $PODRUN_ARGS"
         cat <<EOF>~/.emx/launch.sh
 tmux  -2 -S tmux-podrun.sock -f /emx/.tmux.conf new -s emx "broadwayd --address=0.0.0.0 :$USE_BROADWAY" \
-    \; new-window "GDK_BACKEND=broadway BROADWAY_DISPLAY=:$USE_BROADWAY $EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]:-''}"
+    \; new-window "GDK_DEBUG=settings GDK_BACKEND=broadway BROADWAY_DISPLAY=:$USE_BROADWAY $EMACS_PREFIX/bin/$EMACS_BIN ${EMACS_ARGS[@]:-''}"
 EOF
         TMUX_ARGS=""
 	if [[ "${DISPLAY:-}" != "" ]]; then

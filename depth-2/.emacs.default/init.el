@@ -206,10 +206,11 @@
   :after treemacs magit)
 
 ;; lsp
-(setq lsp-keymap-prefix "C-c l")
 (use-package lsp-mode
   :ensure t
   :commands lsp
+  :init
+  (setq lsp-keymap-prefix "C-c l")
   :custom
   (lsp-file-watch-threshold 4000)
   ;; (lsp-rust-server 'rls)
@@ -268,6 +269,8 @@
 
 ;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
 
+
+;; (setq lsp-json-schemas `[(:fileMatch ["tsconfig.json"] :url "http://json.schemastore.org/tsconfig")])
 
 (use-package lsp-pyright
   :ensure t
@@ -557,6 +560,34 @@
   :config
   ;; Load the theme of your choice:
   (modus-themes-load-vivendi) ;; OR (modus-themes-load-operandi)
+  ;; https://protesilaos.com/emacs/modus-themes#h:4589acdc-2505-41fc-9f5e-699cfc45ab00
+  (defun my-modus-themes-saturate (percent)
+    "Saturate current Modus theme palette overrides by PERCENT."
+    (interactive
+     (list (read-number "Saturation by percent: ")))
+    (let* ((theme (modus-themes--current-theme))
+           (palette (pcase theme
+                      ('modus-operandi modus-themes-operandi-colors)
+                      ('modus-vivendi modus-themes-vivendi-colors)
+                      (_ (error "No Modus theme is active"))))
+           (overrides (pcase theme
+                        ('modus-operandi 'modus-themes-operandi-color-overrides)
+                        ('modus-vivendi 'modus-themes-vivendi-color-overrides)
+                        (_ (error "No Modus theme is active")))))
+      (let (name cons colors)
+        (dolist (cons palette)
+          (setq name (color-saturate-name (cdr cons) percent))
+          (setq name (format "%s" name))
+          (setq cons `(,(car cons) . ,name))
+          (push cons colors))
+        (set overrides colors))
+      (pcase theme
+        ('modus-operandi (modus-themes-load-operandi))
+        ('modus-vivendi (modus-themes-load-vivendi)))))
+
+  ;; sample Elisp calls (or call `my-modus-themes-saturate' interactively)
+  (my-modus-themes-saturate 25)
+
   :bind ("ESC <f5>" . modus-themes-toggle))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

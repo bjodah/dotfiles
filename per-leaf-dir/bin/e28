@@ -1,0 +1,2 @@
+podrun --image bjodahimg22heavy:jan23.a.1.3 --x11 -- "set -e; bash /opt/bjodah-dotfiles/install_defaults.sh; rm -r /root/.emacs.default; ln -s /root/.emacs.d.28 /root/.emacs.default; /opt/emacs-28/bin/emacs $@"
+

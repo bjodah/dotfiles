@@ -8,6 +8,7 @@ show_help(){
     echo "--build-root           a shallow clone of emacs' repo will be put under this dir"
     echo "--cflags               Specify CFLAGS, defaults to optimized build"
     echo "--make-command         default: make, e.g.: 'bear -- make'"
+    echo "--build-vterm          compiles vterm-module.so"
     echo ""
     echo "One of:"
     echo "--create-deb <outdir>  Build a debian dpkg/apt package, or:..."
@@ -21,6 +22,7 @@ EMACS_BRANCH="emacs-28"
 WITH_NATIVE_COMP=0
 WITH_PGTK=0
 CREATE_DEB=0
+BUILD_VTERM=0
 INSTALL_PREFIX="/usr/local"
 BUILD_ROOT=""
 CFLAGS_GIVEN=""
@@ -65,6 +67,10 @@ while [ $# -gt 0 ]; do
 	    CREATE_DEB_OUTDIR="$1"
 	    shift
 	    ;;
+	--build-vterm)
+	    BUILD_VTERM=1
+	    shift
+	    ;;
 	--install)
 	    shift
 	    INSTALL_PREFIX=$1
@@ -94,20 +100,19 @@ if [[ $BUILD_ROOT == "" ]]; then
     exit 1
 fi
 mkdir -p ${BUILD_ROOT}
-cd ${BUILD_ROOT}
 if [[ $EMACS_BRANCH == "master" ]]; then
     EMACS_SRC_DIR="emacs-master"
 else
-    EMACS_SRC_DIR=$EMACS_BRANCH
+    EMACS_SRC_DIR=${BUILD_ROOT}/$EMACS_BRANCH
 fi
 if [[ ! -e $EMACS_SRC_DIR ]]; then
     git clone --depth 1 --branch $EMACS_BRANCH https://github.com/emacs-mirror/emacs $EMACS_SRC_DIR
 fi
-cd $EMACS_SRC_DIR
 
 
 # Resources:
 # http://www.cesarolea.com/posts/emacs-native-compile/
+cd $EMACS_SRC_DIR
 
 ./autogen.sh
 
@@ -117,7 +122,7 @@ if [[ $CFLAGS_GIVEN == "" ]]; then
     else
 	export ARCH_FLAGS=""
     fi
-    CFLAGS_GIVEN="-O3 -pipe $ARCH_FLAGS -fomit-frame-pointer"
+    CFLAGS_GIVEN="-Os -pipe $ARCH_FLAGS -fomit-frame-pointer"
 fi
 
 CONFIGURE_FLAGS="\
@@ -157,15 +162,19 @@ fi
 if [[ $INSTALL_PREFIX != "" ]]; then
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --prefix=$INSTALL_PREFIX"
 fi
-( set -x; CC=${CC:-"gcc-12"} CXX=${CXX:-"g++-12"} CFLAGS="$CFLAGS_GIVEN" ./configure $CONFIGURE_FLAGS )
+( set -x; CC="ccache ${CC:-'gcc-12'}" CXX="ccache ${CXX:-'g++-12'}" CFLAGS="$CFLAGS_GIVEN" ./configure $CONFIGURE_FLAGS )
 
 $MAKE_COMMAND -j $(nproc) $MAKE_FLAGS
+
 
 if [[ $CREATE_DEB == 1 ]]; then
     EMACS_VERSION=$(grep -oP "AC_INIT\([\[]?GNU Emacs[\]]?,[ \[]+\K([0-9\.]+)(?=[ \]]*, .*)" configure.ac)
     EMACS_DEB_ROOT=$BUILD_ROOT/emacs${EMACS_FEATURES}_${EMACS_VERSION}
     mkdir -p $EMACS_DEB_ROOT$INSTALL_PREFIX
     make install prefix=$EMACS_DEB_ROOT$INSTALL_PREFIX
+    if [[ $BUILD_VTERM == 1 ]]; then
+        ( cd - ; /build/1710-build-emacs-vterm.sh $EMACS_DEB_ROOT$INSTALL_PREFIX )
+    fi
     mkdir $EMACS_DEB_ROOT/DEBIAN
     # libxml2-dev
     EMACS_DEB_DEP="libgif7, libotf1, libm17n-0, librsvg2-2, libtiff5, libjansson4, libacl1, libgmp10, libwebp7, libsqlite3-0, libxml2"
@@ -195,6 +204,9 @@ EOF
     mv ${BUILD_ROOT}/emacs${EMACS_FEATURES}_${EMACS_VERSION}.deb "${CREATE_DEB_OUTDIR}"
 elif [[ $INSTALL_PREFIX != "" ]]; then
     sudo make install
+    if [[ $BUILD_VTERM == 1 ]]; then
+        ( cd -; /build/1710-build-emacs-vterm.sh $INSTALL_PREFIX )
+    fi
     make clean
 else
     >&2 echo "Unknown state, exiting."
