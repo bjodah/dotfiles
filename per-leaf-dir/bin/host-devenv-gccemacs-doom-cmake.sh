@@ -141,8 +141,7 @@ THIS_CLANGD_CACHE=${THIS_CLANGD_CACHE:-$HOME/.cache/clangd}
 if [[ ! -e $THIS_CLANGD_CACHE ]]; then
     mkdir $THIS_CLANGD_CACHE
 fi
-
-THIS_CCACHE=${THIS_CLANGD_CACHE:-$HOME/.ccache}
+THIS_CCACHE=${THIS_CCACHE:-$HOME/.ccache}
 if [[ ! -e $THIS_CCACHE ]]; then
     mkdir $THIS_CCACHE
 fi

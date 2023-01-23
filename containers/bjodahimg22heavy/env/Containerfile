@@ -78,6 +78,10 @@ RUN /opt2/10500-setup_intel_compilers.sh \
 #     && rm -rf /tmp/*
 
 
+RUN python3 -m pip install jupyter_contrib_nbextensions \
+    && python3 -m jupyter contrib nbextension install \
+    && python3 -m jupyter nbextension enable codefolding/main
+
 # RUN git clone https//github.com/uwplse/herbgrind /opt/herbgrind \
 #     && ln -s /usr/bin/automake /usr/local/bin/automake-1.15 \
 #     && make && make install
