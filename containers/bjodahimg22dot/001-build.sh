@@ -2,6 +2,7 @@
 set -euxo pipefail
 
 OPT_FOLDER=opt
+SRC_FOLDER=src
 
 for d in build env/$OPT_FOLDER; do
     if [ ! -d ./$d ]; then
@@ -11,7 +12,7 @@ done
 IMAGE=$(grep FROM ./env/Containerfile | head -n 1 | cut -d' ' -f2)
 
 build () {
-    podrun -v ./build:/build -v ./env/$OPT_FOLDER/:/$OPT_FOLDER -v ~/.ccache:/root/.ccache --image $IMAGE -e CXX -e CC $@
+    podrun -v ./build:/build -v ./env/$OPT_FOLDER/:/$OPT_FOLDER -v ./env/$SRC_FOLDER/:/$SRC_FOLDER -v ~/.ccache:/root/.ccache --image $IMAGE -e CXX -e CC $@
 }
 
 export CC="gcc"

@@ -1,4 +1,4 @@
-if which npm; then
+if which npm >/dev/null; then
     NPM_PREFIX=/opt/npm-global
     if [ ! -d ${NPM_PREFIX} ]; then
         mkdir ${NPM_PREFIX}

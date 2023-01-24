@@ -88,7 +88,6 @@
     fi
     if [[ $WITH_X11 == 1 ]]; then
         PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
-        PODMAN_RUN_ARGS+=("-v /tmp/.X11-unix:/tmp/.X11-unix:rw")
         if [[ -z $XAUTHORITY ]]; then
             if [[ -e $HOME/.Xauthority ]]; then
                 PODMAN_RUN_ARGS+=("-v $HOME/.Xauthority:/root/.Xauthority:rw")
@@ -99,6 +98,8 @@
             PODMAN_RUN_ARGS+=("-v $XAUTHORITY:$XAUTHORITY:rw")
             PODMAN_RUN_ARGS+=("-e XAUTHORITY")
         fi
+	PODMAN_RUN_ARGS+=("--net host")
+    fi
 	# # https://github.com/containers/podman/discussions/13040#discussioncomment-2071464
 	# PODMAN_RUN_ARGS+=("--uidmap $(id -u):0:1")
 	# PODMAN_RUN_ARGS+=("--gidmap $(id -g):0:1")
@@ -107,13 +108,10 @@
 	# The above doesn't really work, podman starts *copying* the whole filesystem
 	# with 'storage-chown-by-maps' consuming all CPU and disk read-write.
 	#
-	# Instead pass the following to 
-	PODMAN_RUN_ARGS+=("--net host")
-    fi
-
-#          --user $UID:$GID \
-#	   -e LOGNAME \
-#          --cap-add=SYS_PTRACE \
+	# Instead pass the following
+        #          --user $UID:$GID \
+        #	   -e LOGNAME \
+        #          --cap-add=SYS_PTRACE \
     set -euxo pipefail
  
     if which podman; then
@@ -151,9 +149,11 @@
 	    $PODMAN build -t $IMAGE "$CONT_IMG_DIR/env"
 	fi
     fi
-
     if [[ $NAME == "" ]]; then
         NAME=$(echo $IMAGE | cut -d: -f1 |  sed 's#/#-#g')
+    fi
+    if [[ ${PODRUN_IMAGE_OVERRIDE:-''} != "" ]]; then
+        IMAGE="${PODRUN_IMAGE_OVERRIDE}"
     fi
     if [[ $DO_MOUNT_CWD != 0 ]]; then
         PODMAN_RUN_ARGS+=("-v $PWD:$PWD")
