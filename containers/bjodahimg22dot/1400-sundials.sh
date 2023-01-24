@@ -156,5 +156,4 @@ cmake --build ${SUNDIALS_BUILD}
 cmake --install ${SUNDIALS_BUILD}
 cmake --build ${SUNDIALS_BUILD} --target clean
 chmod a+r -R ${BUILD_ROOT}
-ln -s ${BUILD_ROOT}/compile_commands.json ${SUNDIALS_ROOT}/
-
+ln -s ${SUNDIALS_BUILD}/compile_commands.json ${SUNDIALS_ROOT}/
