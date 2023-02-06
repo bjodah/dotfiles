@@ -7,13 +7,17 @@ PREFIX=$1
 if [ ! -d $PREFIX ]; then
     >&2 echo "Non-existent PREFIX (first arg): $PREFIX"
 fi
-#SUNDIALS_VERSION=${1:-6.4.1}
+#SUNDIALS_VERSION=${1:-6.5.0}
 SUNDIALS_ROOT=$PREFIX/sundials-$SUNDIALS_VERSION-$SUNDIALS_VARIANT
+SRC_ROOT=${SRC_ROOT:-"/src"}
 BUILD_ROOT=${BUILD_ROOT:-"/build"}
+if [ -d ${SRC_ROOT} ]; then
+    mkdir -p ${SRC_ROOT}
+fi
 if [ -d ${BUILD_ROOT} ]; then
     mkdir -p ${BUILD_ROOT}
 fi
-SUNDIALS_SRC=${BUILD_ROOT}/sundials-${SUNDIALS_VERSION}
+SUNDIALS_SRC=${SRC_ROOT}/sundials-${SUNDIALS_VERSION}
 SUNDIALS_BUILD=${BUILD_ROOT}/sundials-${SUNDIALS_VERSION}-${SUNDIALS_VARIANT}
 
 if [ ! -z "$OPENBLAS_LIBDIR" ]; then
@@ -24,7 +28,7 @@ fi
 
 if [ ! -d $SUNDIALS_SRC ]; then
     SUNDIALS_SRC_URL="https://github.com/llnl/sundials/releases/download/v${SUNDIALS_VERSION}/sundials-${SUNDIALS_VERSION}.tar.gz"
-    curl -Ls "${SUNDIALS_SRC_URL}" | tar xz -C /build
+    curl -Ls "${SUNDIALS_SRC_URL}" | tar xz -C $SRC_ROOT
 fi
 
 case $SUNDIALS_VARIANT in
@@ -152,5 +156,4 @@ cmake --build ${SUNDIALS_BUILD}
 cmake --install ${SUNDIALS_BUILD}
 cmake --build ${SUNDIALS_BUILD} --target clean
 chmod a+r -R ${BUILD_ROOT}
-ln -s ${BUILD_ROOT}/compile_commands.json ${SUNDIALS_ROOT}/
-
+ln -s ${SUNDIALS_BUILD}/compile_commands.json ${SUNDIALS_ROOT}/

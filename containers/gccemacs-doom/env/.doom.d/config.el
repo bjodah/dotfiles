@@ -54,7 +54,7 @@
 ;; they are implemented.
 
 (after! flycheck
-        (setq flycheck-c/c++-clang-executable "clang++-14"))
+        (setq flycheck-c/c++-clang-executable "clang++"))
 
 (after! vterm
         (setq vterm-shell "/usr/bin/fish"))

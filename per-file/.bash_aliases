@@ -22,3 +22,4 @@ alias fd="fdfind"
 alias uuid='python -c "import uuid; import base64; print(\"_\" + base64.b32encode(uuid.uuid4().bytes).decode().strip(\"=\"))"'
 alias ll='ls -laFrth --color=auto'
 alias tmx='export MPLBACKEND=Agg; tmux'
+alias dmesg-less='sudo dmesg --color=always | less -R'
