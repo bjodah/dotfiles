@@ -592,6 +592,9 @@
 
   :bind ("ESC <f5>" . modus-themes-toggle))
 
+(use-package monokai-theme
+  :ensure t
+)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
 (global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
@@ -602,7 +605,8 @@
     (add-hook 'after-init-hook (lambda () (load-theme
                                         ;'tangotango
                                         ;'pitchkai
-                                           'modus-vivendi
+                                        ;'modus-vivendi
+                                           'monokai
                                            )))
   (if (functionp 'tool-bar-mode)
     (tool-bar-mode 0))

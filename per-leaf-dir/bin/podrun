@@ -31,7 +31,7 @@
         echo "Example:"
         echo ' $ podrun -v ~/.ssh:/root/.ssh -v ~/.gnupg:/root/.gnupg --image alpine:latest'
         echo ' $ podrun --x11 --image docker.io/silex/emacs:master-alpine -- emacs ~/.bashrc '
-        echo ' $ podrun --x11 --cont-img-dir ~/dotfiles/containers/gccemacs-doom -- ~/.emacs.d/bin/doom sync; emacs ~/.bashrc '
+        echo ' $ podrun --x11 --cont-img-dir ~/dotfiles/containers/gccemacs-doom/env -- ~/.emacs.d/bin/doom sync; emacs ~/.bashrc '
     }
     declare -a PODMAN_RUN_ARGS
     while [ $# -gt 0 ]; do
@@ -137,14 +137,15 @@
                 CONT_IMG_DIR="$CANDIDATE_FOLDER"
             fi
         fi
-        if [[ -e $CONT_IMG_DIR/../podrun-args.sh ]]; then
-            source $CONT_IMG_DIR/../podrun-args.sh
-        fi
 	ENV_HASH=$(cat "$CONT_IMG_DIR"/* | openssl sha256 | cut -f2 -d' ')
 	if [[ -z "$CONT_IMG_BASENAME" ]]; then
 	    CONT_IMG_BASENAME=$(basename $(realpath ${CONT_IMG_DIR}))
 	fi
-	IMAGE="localhost/${CONT_IMG_BASENAME}:${ENV_HASH:0:8}"
+        CONT_IMG_ARGS_FILE=$CONT_IMG_DIR/../podrun-args-$CONT_IMG_BASENAME.sh
+        if [[ -e $CONT_IMG_ARGS_FILE ]]; then
+            source $CONT_IMG_ARGS_FILE
+        fi
+	IMAGE="${CONT_IMG_BASENAME}:${ENV_HASH:0:8}"  # localhost/
 	if ! $PODMAN image ls | grep $IMAGE; then
 	    $PODMAN build -t $IMAGE "$CONT_IMG_DIR"
 	fi
