@@ -47,13 +47,13 @@ if [[ ! -d ${THIS_RUNDIR:-""} ]]; then
     THIS_RUNDIR="$(mktemp -d)"
     # trap "rm -r \"${THIS_RUNDIR}\"" EXIT INT TERM
 fi
-CONTAINER_FOLDER=gccemacs-doom
+CONTAINER_FOLDER=gccemacs-doom/env
 # THIS_FOLDER=$(dirname $(realpath $BASH_SOURCE))
 # THIS_FNAME=$(basename $(realpath $BASH_SOURCE))
 if [[ ! -e CMakeLists.txt ]]; then
     >&2 echo "Not in a CMake-based source folder?"
 fi
-THIS_BUILD="${THIS_BUILD:-${PWD}/build-$CONTAINER_FOLDER}"
+THIS_BUILD="${THIS_BUILD:-${PWD}/build-$CONTAINER_FOLDER%/env}"
 if [[ -e compile_commands.json ]]; then
     if [[ -L compile_commands.json && $(realpath "$(readlink compile_commands.json)") == $THIS_BUILD/compile_commands.json ]]; then
         :
@@ -105,7 +105,7 @@ cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
 #!/bin/bash
 set -euxo pipefail
 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
-     new -s ${CONTAINER_FOLDER}-$(basename $(dirname $(realpath $BASH_SOURCE))) \
+     new -s ${CONTAINER_FOLDER%/env}-$(basename $(dirname $(realpath $BASH_SOURCE))) \
      "set -x \\
      ; cmake \\
              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \\
