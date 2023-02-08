@@ -126,8 +126,10 @@
         >&2 echo "Neither podman nor docker found on \$PATH"
         exit 1
     fi
-   
-    if [[ -z "$IMAGE" && ! -z "$CONT_IMG_DIR" ]]; then
+
+    if [[ ${PODRUN_IMAGE_OVERRIDE:-''} != "" ]]; then
+        IMAGE="${PODRUN_IMAGE_OVERRIDE}"
+    elif [[ -z "$IMAGE" && ! -z "$CONT_IMG_DIR" ]]; then
         if [[ ! -d "$CONT_IMG_DIR" ]]; then
             CANDIDATE_FOLDER="$(dirname $(realpath $BASH_SOURCE))/../../containers/$CONT_IMG_DIR/"
             if [[ ! -d "$CANDIDATE_FOLDER" ]]; then
@@ -152,9 +154,6 @@
     fi
     if [[ $NAME == "" ]]; then
         NAME=$(echo $IMAGE | cut -d: -f1 |  sed 's#/#-#g')
-    fi
-    if [[ ${PODRUN_IMAGE_OVERRIDE:-''} != "" ]]; then
-        IMAGE="${PODRUN_IMAGE_OVERRIDE}"
     fi
     if [[ $DO_MOUNT_CWD != 0 ]]; then
         PODMAN_RUN_ARGS+=("-v $PWD:$PWD")
