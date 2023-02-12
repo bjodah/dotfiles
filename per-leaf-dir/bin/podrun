@@ -8,7 +8,7 @@
     CONT_IMG_DIR=""
     CONT_IMG_BASENAME=""
     NAME=""
-    WITH_X11=0
+    WITH_GUI=0
     DO_MOUNT_CWD=1
     show_help(){
         echo "Launch an container using podman-run with some defaults:"
@@ -25,13 +25,13 @@
         echo "--cont-img-basename  basename if basename of img-dir is not suitable"
         echo "--image              name of image (overrides --cont-img-dir), e.g. ubuntu:jammy"
         echo "--name               name of container, default is basename of image"
-        echo "--x11                set DISPLAY, mount X11 socket folder."
+        echo "--gui                set DISPLAY, mount X11 socket folder."
         echo "--no-mount-cwd       disable default mounting of current working directory"
         echo ""
         echo "Example:"
         echo ' $ podrun -v ~/.ssh:/root/.ssh -v ~/.gnupg:/root/.gnupg --image alpine:latest'
-        echo ' $ podrun --x11 --image docker.io/silex/emacs:master-alpine -- emacs ~/.bashrc '
-        echo ' $ podrun --x11 --cont-img-dir ~/dotfiles/containers/gccemacs-doom/env -- ~/.emacs.d/bin/doom sync; emacs ~/.bashrc '
+        echo ' $ podrun --gui --image docker.io/silex/emacs:master-alpine -- emacs ~/.bashrc '
+        echo ' $ podrun --gui --cont-img-dir ~/dotfiles/containers/gccemacs-doom/env -- ~/.emacs.d/bin/doom sync; emacs ~/.bashrc '
     }
     declare -a PODMAN_RUN_ARGS
     while [ $# -gt 0 ]; do
@@ -64,8 +64,8 @@
                 CONT_IMG_BASENAME=$1
                 shift
                 ;;
-            --x11)
-                WITH_X11=1
+            --gui|--x11)
+                WITH_GUI=1
                 shift
                 ;;
             --)
@@ -86,19 +86,27 @@
         >&2 echo "No command to execute, exiting."
         exit 1
     fi
-    if [[ $WITH_X11 == 1 ]]; then
-        PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
-        if [[ -z $XAUTHORITY ]]; then
-            if [[ -e $HOME/.Xauthority ]]; then
-                PODMAN_RUN_ARGS+=("-v $HOME/.Xauthority:/root/.Xauthority:rw")
-            else
-                >&2 echo "Warning, could not locate file: .Xauthority, opening GUI windows might not work."
-            fi
+    if [[ $WITH_GUI == 1 ]]; then
+        PODMAN_RUN_ARGS+=("-e XDG_SESSION_TYPE")
+        if [[ ${XDG_SESSION_TYPE:-x11} == wayland ]]; then
+            PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY")
+            #PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY:ro")
+            PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:ro")
+            PODMAN_RUN_ARGS+=("-e XDG_RUNTIME_DIR")
         else
-            PODMAN_RUN_ARGS+=("-v $XAUTHORITY:$XAUTHORITY:rw")
-            PODMAN_RUN_ARGS+=("-e XAUTHORITY")
+            PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
+            if [[ -z $XAUTHORITY ]]; then
+                if [[ -e $HOME/.Xauthority ]]; then
+                    PODMAN_RUN_ARGS+=("-v $HOME/.Xauthority:/root/.Xauthority:rw")
+                else
+                    >&2 echo "Warning, could not locate file: .Xauthority, opening GUI windows might not work."
+                fi
+            else
+                PODMAN_RUN_ARGS+=("-v $XAUTHORITY:$XAUTHORITY:rw")
+                PODMAN_RUN_ARGS+=("-e XAUTHORITY")
+            fi
+	    PODMAN_RUN_ARGS+=("--net host")
         fi
-	PODMAN_RUN_ARGS+=("--net host")
     fi
 	# # https://github.com/containers/podman/discussions/13040#discussioncomment-2071464
 	# PODMAN_RUN_ARGS+=("--uidmap $(id -u):0:1")
