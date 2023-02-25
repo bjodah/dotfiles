@@ -894,7 +894,7 @@
 
 (defun ipython ()
     (interactive)
-    (term "/usr/bin/ipython3")) ;; note: C-x becomes C-c in term
+    (term "ipython")) ;; note: C-x becomes C-c in term
 
 (add-hook 'markdown-mode-hook
     (function (lambda ()

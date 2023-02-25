@@ -87,7 +87,6 @@
         exit 1
     fi
     if [[ $WITH_GUI == 1 ]]; then
-        PODMAN_RUN_ARGS+=("-e XDG_SESSION_TYPE")
         if [[ ${XDG_SESSION_TYPE:-x11} == wayland ]]; then
             PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY")
             #PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY:ro")

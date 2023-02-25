@@ -9,7 +9,7 @@
     MOUNT_HOME=0
     MOUNT_GPG_SOCKET=1
     NAME=bjodah
-    WITH_X11=1
+    WITH_GUI=1
     show_help(){
         echo "Launch a container using podman run with some nice defaults"
         echo "also supports building container images on-the-fly."
@@ -18,7 +18,7 @@
         echo "--name              name of containerimage, default: $NAME"
         echo "--image             name of containerimage, default: $IMAGE"
         echo "--container-folder  name of container folder to build image from."
-        echo "--no-x11            do not set DISPLAY, do not mount X11 socket folder."
+        echo "--no-gui            do not set DISPLAY et al., do not mount X11 socket folder."
         echo "--mount-home        Mount home folder *AND* symlink ~/.ssh ~/.gnupg folders"
         echo ""
         echo "Example:"
@@ -46,8 +46,8 @@
                 CONTAINER_FOLDER=$1
                 shift
                 ;;
-            --no-x11)
-                WITH_X11=0
+            --no-gui)
+                WITH_GUI=0
                 shift
                 ;;
 	    --gpg-socket)
@@ -88,14 +88,42 @@
         PODMAN_RUN_ARGS+=("-e HOME")
         PRE_CMD="ln -s ~/.ssh /root/.ssh; ln -s ~/.gnupg /root/.gnupg;"
     fi
-    if [[ $WITH_X11 == 1 ]]; then
-        PODMAN_RUN_ARGS+=("-e DISPLAY")
+    # https://github.com/containers/toolbox/blob/31e01ac46b0e1caa0e72275148e5c364e9c08459/src/pkg/utils/utils.go#L69-L94
+    preserved_vars=(COLORTERM \
+                         DBUS_SESSION_BUS_ADDRESS \
+                         DBUS_SYSTEM_BUS_ADDRESS \
+                         DESKTOP_SESSION \
+                         LANG \
+                         SHELL \
+                         SSH_AUTH_SOCK \
+                         TERM \
+                         TOOLBOX_PATH \
+                         USER \
+                         VTE_VERSION \
+                         XAUTHORITY \
+                         XDG_DATA_DIRS \
+                         XDG_MENU_PREFIX \
+                         XDG_RUNTIME_DIR \
+                         XDG_SEAT \
+                         XDG_VTNR )
+    if [[ $WITH_GUI == 1 ]]; then
+        preserved_vars+=( DISPLAY \
+                              WAYLAND_DISPLAY \
+                              XDG_SESSION_CLASS \
+                              XDG_SESSION_DESKTOP \
+                              XDG_SESSION_ID \
+                              XDG_SESSION_TYPE \
+                              XDG_CURRENT_DESKTOP )
         PODMAN_RUN_ARGS+=("-v /tmp/.X11-unix:/tmp/.X11-unix:rw")
     fi
+    preserved_vars+=(LOGNAME)
+    for var in "${preserved_vars[@]}"; do
+        if [ "${!var+var_is_set}" = "var_is_set" ]; then
+            PODMAN_RUN_ARGS+=(-e "$var=${!var}")
+        fi
+    done
 
-#          --user $UID:$GID \
-#	   -e LOGNAME \
-#          --cap-add=SYS_PTRACE \
+
     set -euxo pipefail
     
     if [[ ! -z "$CONTAINER_FOLDER" ]]; then
@@ -124,6 +152,15 @@
         PODMAN_CMD=podman
     fi
 
+    if [ "${PODMAN_CVMD}" = podman ]; then
+        PODMAN_RUN_ARGS+=(--user $(id -u):$(id -g))
+        PODMAN_RUN_ARGS+=(--userns keep-id)
+#          --user $UID:$GID \
+#	   -e LOGNAME \
+#          --cap-add=SYS_PTRACE \
+    fi
+
+        
     ${PODMAN_CMD} run \
            ${PODMAN_RUN_ARGS[@]} \
            -e TERM=xterm-256color\
