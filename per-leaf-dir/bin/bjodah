@@ -4,7 +4,7 @@
 # The curly braces on the line below allows us to edit this file without worrying
 # if doing so while the script is running.
 {
-    IMAGE=bjodahimg22heavy:jan23.a.1.1   # the default image
+    IMAGE=bjodah/tomevermes-patchwork:23.b.2.1.1.5   # the default image
     CONTAINER_FOLDER=""
     MOUNT_HOME=0
     MOUNT_GPG_SOCKET=1
@@ -152,7 +152,7 @@
         PODMAN_CMD=podman
     fi
 
-    if [ "${PODMAN_CVMD}" = podman ]; then
+    if [ "${PODMAN_CMD}" = podman ]; then
         PODMAN_RUN_ARGS+=(--user $(id -u):$(id -g))
         PODMAN_RUN_ARGS+=(--userns keep-id)
 #          --user $UID:$GID \

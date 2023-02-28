@@ -85,8 +85,8 @@ set -g remain-on-exit on  # cf. respawn-pane & respawn-pane -k
 set -g history-limit 15000  # default is 2000 lines
 EOF
 
-PODRUN_ARGS="--image bjodah/tomvermes-patchwork:23.b.1.1.1"
-EMACS_PREFIX=$(compgen -G /opt*/emacs-*)
+PODRUN_ARGS="--image bjodah/tomevermes-patchwork:23.b.2.1.1.4"
+EMACS_PREFIX="\$(ls -d /opt*/emacs-* | head -n 1)"
 
 if [[ $RUN_AS_CLIENT == 1 ]]; then
     # EMACS_BIN="emacsclient -nc -s /emx/emx-server"
@@ -99,7 +99,7 @@ else
                     set -x && \
                     chmod 700 /emx && \
                     . /emx/launch.sh"
-    COMMON_EMACS_FLAGS="--init-directory=$(compgen -g /opt*/emacs-d-*)"
+    COMMON_EMACS_FLAGS="--init-directory=\$(ls -d /opt*/emacs-d-* | head -n 1)"
     if [[ $RUN_AS_DAEMON == 1 ]]; then
         if [[ $USE_BROADWAY != "" ]]; then
             >&2 echo "Cannot combine daemon and broadway"

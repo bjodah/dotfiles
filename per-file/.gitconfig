@@ -25,9 +25,10 @@
     ap = add -p
 
     # list branches sorted by last modified
-    b = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+    b = branch
+    br = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
     bd = branch --delete
-    br = branch --remotes --sort='-authordate'
+    bra = branch --remotes --sort='-authordate'
 
     clxfd = clean -xfd
 
