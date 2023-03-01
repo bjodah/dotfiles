@@ -4,10 +4,10 @@
 # The curly braces on the line below allows us to edit this file without worrying
 # if doing so while the script is running.
 {
-    IMAGE=bjodah/tomevermes-patchwork:23.b.2.1.1.5   # the default image
+    IMAGE=bjodah/tomevermes-patchwork:23.c.2.1.1.1   # the default image
     CONTAINER_FOLDER=""
     MOUNT_HOME=0
-    MOUNT_GPG_SOCKET=1
+    MOUNT_GPG_SOCKET=0
     NAME=bjodah
     WITH_GUI=1
     show_help(){
