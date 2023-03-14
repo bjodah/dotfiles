@@ -1,48 +1,23 @@
 # -*- mode: dockerfile -*-
 # -*- compile-command: "podman build ." -*-
 
-FROM bjodahimg22heavy:22.6.a.1.1.1
+#FROM bjodah/bjodahimg22dot:jan23.a.1
+FROM bjodah/tomevermes-dev:23.c.2
 
 
-# RUN apt-get update \
-#     && apt-get --quiet --assume-yes upgrade \
-#     && apt-get --quiet --assume-yes install apt-transport-https ca-certificates \
-#     && update-ca-certificates \
-#     && apt-get --quiet --assume-yes --no-install-recommends install \
-#         ccache \
-#         cmake \
-#         curl \
-#         fish \
-#         git \
-#         gnupg2 \
-#         libgmp-dev \
-#         libjson-c-dev \
-#         libtool-bin \
-#         libvterm-dev \
-#         libwebsockets-dev \
-#         make \
-#         ninja-build \
-#         python3-pip\
-#         ripgrep \
-#         tmux \
-#         unzip \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+#ENV CXX=clang++-15 CC=clang-15 PATH=/opt/emacs-28/bin:$PATH
+ENV CXX=clang++ CC=clang PATH=/opt-2/emacs-29/bin:$PATH
 
-# COPY 11-setup_llvm_clang.sh /opt/
+# RUN git clone --branch fix-straight --depth 1 https://github.com/rafa-dot-el/doomemacs.git ~/.emacs.d \
+#     && ~/.emacs.d/bin/doom sync
 
-# RUN /opt/11-setup_llvm_clang.sh 14 \
-#     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN git clone --branch fix-straight --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d \
+    && ~/.emacs.d/bin/doom sync
 
-ENV CXX=clang++-14 CC=clang-14 PATH=/opt/emacs-29pg/bin:$PATH
-
-RUN git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d \
-    && yes | ~/.emacs.d/bin/doom install
-
-RUN git clone --depth 1 https://github.com/akermu/emacs-libvterm /opt/emacs-libvterm && \
-    cd /opt/emacs-libvterm/; mkdir build; cmake -DCMAKE_INSTALL_PREFIX=/opt/emacs-29pg/share/emacs/site-lisp -S . -B build && \
-    cmake --build ./build/ && \
-    cmake --install ./build && cp vterm-module.so /opt/emacs-29pg/share/emacs/site-lisp
+# RUN git clone --depth 1 https://github.com/akermu/emacs-libvterm /opt/emacs-libvterm && \
+#     cd /opt/emacs-libvterm/; mkdir build; cmake -DCMAKE_INSTALL_PREFIX=/opt/emacs-28/share/emacs/site-lisp -S . -B build && \
+#     cmake --build ./build/ && \
+#     cmake --install ./build && cp vterm-module.so /opt/emacs-28/share/emacs/site-lisp
 
 
 ADD doom-base-config.tar.gz /root/
@@ -53,8 +28,7 @@ RUN ~/.emacs.d/bin/doom sync
 
 COPY ./.doom.d/config.el ./.doom.d/packages.el ./.doom.d/init.el /root/.doom.d/
 
-RUN ~/.emacs.d/bin/doom sync
-
-RUN apt-get update \
-    && apt-get --assume-yes --no-install-recommends install \
-        libmpc-dev
+RUN ~/.emacs.d/bin/doom sync \
+    && curl -Ls https://github.com/domtronn/all-the-icons.el/archive/master.tar.gz | tar zx -C $HOME/.local/share --strip-components=1 --wildcards "all-the-icons.el-master/fonts/*.ttf" \
+    && fc-cache -f -v \
+    && apt update && apt-get -y install libboost-math1.81-dev neovim && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
