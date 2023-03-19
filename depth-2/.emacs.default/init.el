@@ -219,12 +219,13 @@
          (c-mode . lsp)
          (c++-mode . lsp)
          (rust-mode . lsp)
-         (sh-mode . lsp)
+         ;; (sh-mode . lsp)  ;; bash-ls is such a joke...
          (typescript-mode . lsp)
          (python-mode . lsp)
          (java-mode . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
 )
+
 
 (use-package ccls
   :ensure t
@@ -593,6 +594,18 @@
 (use-package monokai-theme
   :ensure t
 )
+
+
+(use-package flymake-shellcheck
+  :ensure t
+  :commands flymake-shellcheck-load
+  :init
+  (add-hook 'sh-mode-hook 'flymake-shellcheck-load))
+
+(add-hook 'sh-mode-hook
+          (function (lambda()
+                      (add-to-list 'lsp-disabled-clients 'bash-ls))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
 (global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
@@ -661,13 +674,8 @@
 
 
 
-
-
 ;; yas-next-field-or-maybe-expand
 
-;; (add-hook 'sh-mode-hook
-;;           (function (lambda()
-;;                       (add-to-list 'lsp-enabled-clients 'bash-ls))))
 
 ;; (require 'smart-operator)
 ;; (add-hook 'python-mode-hook

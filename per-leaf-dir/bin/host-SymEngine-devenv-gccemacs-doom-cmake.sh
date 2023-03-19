@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euxo pipefail
+set -euo pipefail
 
 show_help() {
     echo "Host a development environment (emacs) for symengine using a container."
@@ -10,6 +10,7 @@ show_help() {
     echo "Example:"
     echo ""
     echo '  $ cd ~/vc/symengine && $BASH_SOURCE --boost -- --host-ttyd 7762 --emacs-flags "-nw" -- --x11'
+    echo '  $ host-SymEngine-devenv-gccemacs-doom-cmake.sh -- -- -e CXXFLAGS="-Wno-inconsistent-missing-override"'
 }
 
 if ! grep project CMakeLists.txt | grep symengine; then
@@ -43,7 +44,7 @@ while [ $# -gt 0 ]; do
             exit 1
     esac
 done
-
+set -x
 
 CMAKE_ARGS="\
  -DCMAKE_BUILD_TYPE=Debug \
@@ -54,7 +55,7 @@ CMAKE_ARGS="\
 
 
 export EMACS_COMMANDS="\
-(lsp-workspace-folders-add \"/usr/include/llvm-15/\") \
+(lsp-workspace-folders-add \"/usr/include/llvm-16/\") \
 (split-window-below) \
 (other-window 1) \
 (find-file \"symengine/basic.h\")\
@@ -65,8 +66,8 @@ if [[ $USE_LLVM == 1 ]]; then
     EXTRA_ENV=""
 else
     CMAKE_ARGS="-DWITH_LLVM:BOOL=OFF $CMAKE_ARGS"
-    export CXXFLAGS="-std=c++17 -fsanitize=address -nostdinc++ -I/opt/libcxx15-debug/include -I/opt/libcxx15-debug/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb"
-    export LDFLAGS="-fsanitize=address -Wl,-rpath,/opt/libcxx15-debug/lib -L/opt/libcxx15-debug/lib -lc++abi"
+    export CXXFLAGS="-std=c++17 -fsanitize=address -stdlib=libc++ -nostdinc++ -I/opt-2/libcxx16-debug/include -I/opt-2/libcxx16-debug/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb"
+    export LDFLAGS="-fsanitize=address -Wl,-rpath,/opt-2/libcxx16-debug/lib -L/opt-2/libcxx16-debug/lib -lc++abi"
     EXTRA_ENV="-e CXXFLAGS -e LDFLAGS"
 fi
 
@@ -74,14 +75,14 @@ if [[ $USE_BOOST == 1 ]]; then
     CMAKE_ARGS="$CMAKE_ARGS\
  -DINTEGER_CLASS=boostmp"
     export THIS_BUILD=${PWD}/build-boost-gccemacs-doom
-    EXTRA_ENV="-e CMAKE_PREFIX_PATH=/opt2/boost-1.81.0 $EXTRA_ENV"
+    #EXTRA_ENV="-e CMAKE_PREFIX_PATH=/opt2/boost-1.81.0 $EXTRA_ENV"
 else
     CMAKE_ARGS="$CMAKE_ARGS\
  -DWITH_GMP=ON \
  -DWITH_MPFR=ON \
  -DWITH_MPC=ON \
  -DINTEGER_CLASS=flint"
-    EXTRA_ENV="-e FLINT_ROOT=/opt/flint2-2.9.0-release $EXTRA_ENV"
+    EXTRA_ENV="-e FLINT_ROOT=/opt-2/flint2-2.9.0-release $EXTRA_ENV"
     export THIS_BUILD=${PWD}/build-flint-gccemacs-doom
 fi
 

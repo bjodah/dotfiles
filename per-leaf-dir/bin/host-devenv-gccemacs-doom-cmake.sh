@@ -156,7 +156,8 @@ fi
         --volume "$THIS_RUNDIR":/opt/my-rundir/ \
         --publish 7682:7682 \
         -e THIS_IS_RUNNING_IN_CONTAINER=1 \
-        -e CXX=clang++-15 \
+        -e CXX=clang++ \
+        -e CCC=clang \
         $* \
         -- /opt/my-rundir/launch-tmux.sh
     exit 0
