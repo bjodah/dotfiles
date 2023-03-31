@@ -65,8 +65,8 @@ if [[ $USE_LLVM == 1 ]]; then
     EXTRA_ENV=""
 else
     CMAKE_ARGS="-DWITH_LLVM:BOOL=OFF $CMAKE_ARGS"
-    export CXXFLAGS="-std=c++17 -fsanitize=address -nostdinc++ -I/opt/libcxx15-debug/include -I/opt/libcxx15-debug/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb"
-    export LDFLAGS="-fsanitize=address -Wl,-rpath,/opt/libcxx15-debug/lib -L/opt/libcxx15-debug/lib -lc++abi"
+    export CXXFLAGS="-std=c++17 -fsanitize=address -stdlib=libc++ -nostdinc++ -I/opt/libcxx15-debug/include -I/opt/libcxx15-debug/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb"
+    export LDFLAGS="-fsanitize=address -Wl,-rpath,/opt-2/libcxx16-debug/lib -L/opt-2/libcxx16-debug/lib -lc++abi"
     EXTRA_ENV="-e CXXFLAGS -e LDFLAGS"
 fi
 
