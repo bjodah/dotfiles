@@ -85,7 +85,7 @@ set -g remain-on-exit on  # cf. respawn-pane & respawn-pane -k
 set -g history-limit 15000  # default is 2000 lines
 EOF
 
-PODRUN_ARGS="--image bjodah/tomevermes-patchwork:23.b.2.1.1.4"
+PODRUN_ARGS="--image bjodah/tomevermes-patchwork:23.c.2.2.2.1"
 EMACS_PREFIX="\$(ls -d /opt*/emacs-* | head -n 1)"
 
 if [[ $RUN_AS_CLIENT == 1 ]]; then
@@ -129,9 +129,6 @@ fi
 
 podrun \
     -v ~/.emx:/emx \
-    -v $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR \
-    -e XDG_RUNTIME_DIR \
-    -e EMACS_VERSION \
     $PODRUN_ARGS \
     $* \
     -- "bash -c \"$LAUNCH_COMMAND\""
