@@ -533,6 +533,9 @@
   (require 'org-roam-protocol)
 )
 
+(use-package julia-mode
+  :ensure t)
+
 (use-package rmsbolt ;; live disassembly
   :ensure t)
 
