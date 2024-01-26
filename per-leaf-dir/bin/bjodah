@@ -4,7 +4,7 @@
 # The curly braces on the line below allows us to edit this file without worrying
 # if doing so while the script is running.
 {
-    IMAGE=bjodah/tomevermes-patchwork:23.d.2.1.1.1   # the default image
+    IMAGE=bjodah/tomevermes-patchwork:23.h.1.2.7.1   # the default image
     CONTAINER_FOLDER=""
     MOUNT_HOME=0
     MOUNT_GPG_SOCKET=0
@@ -23,6 +23,7 @@
         echo ""
         echo "Example:"
         echo ' $ bjodah -- emacs ~/.bashrc '
+        echo ' $ bjodah --net=host -- jupyter notebook --NotebookApp.allow_origin="*" --ip=0.0.0.0'
     }
     declare -a PODMAN_RUN_ARGS
     while [ $# -gt 0 ]; do

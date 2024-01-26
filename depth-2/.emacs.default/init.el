@@ -563,7 +563,7 @@
   ;; (modus-themes-load-themes)
   :config
   ;; Load the theme of your choice:
-  (modus-themes-load-vivendi) ;; OR (modus-themes-load-operandi)
+  (modus-themes-load-theme 'modus-vivendi) ;; or modus-operandi
   ;; https://protesilaos.com/emacs/modus-themes#h:4589acdc-2505-41fc-9f5e-699cfc45ab00
   (defun my-modus-themes-saturate (percent)
     "Saturate current Modus theme palette overrides by PERCENT."
