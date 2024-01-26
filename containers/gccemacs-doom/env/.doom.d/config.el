@@ -66,3 +66,17 @@
     (setq lsp-ui-sideline-enable nil) ;; e.g. "Extract expression into function...."
     (setq lsp-lens-enable nil) ;; bullet 3: https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
     ))
+
+
+(use-package! org-ref
+  :after org
+
+  :commands
+  (org-ref-cite-hydra/body
+   org-ref-bibtex-hydra/body)
+
+  )
+
+(after! org
+  (require 'org-ref)
+)

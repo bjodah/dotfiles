@@ -12,10 +12,6 @@
     rebase = false
 [gpg]
     program = gpg2
-[include]
-    path = ~/.gitconfig-local
-[includeIf "gitdir:~/wvc/"]
-    path = ~/wvc/.gitconfig
 [color]
     ui = true # always
 [github]
@@ -94,8 +90,18 @@
 	helper = !/usr/bin/gh auth git-credential
 [safe]
 	directory = /work
+
 [filter "lfs"]
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
+
+[include]
+    path = ~/.gitconfig-local
+
+[includeIf "gitdir:~/wvc/"]
+    path = ~/wvc/.gitconfig
+
+[includeIf "gitdir:~/.data/vc/**"]
+    path = ~/.data/vc/.gitconfig
