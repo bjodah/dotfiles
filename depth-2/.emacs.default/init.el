@@ -467,7 +467,8 @@
   :config
   (global-set-key (kbd "C-x w") 'elfeed)
   (setq elfeed-feeds
-        '("https://fa.bianp.net/blog/feed/"
+        '("https://www.phoronix.com/rss.php"
+          "https://fa.bianp.net/blog/feed/"
           "https://lemire.me/blog/feed/"
           "https://hbfs.wordpress.com/feed/"
           "https://easyperf.net/feed.xml"
