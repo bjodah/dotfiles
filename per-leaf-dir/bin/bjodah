@@ -4,7 +4,7 @@
 # The curly braces on the line below allows us to edit this file without worrying
 # if doing so while the script is running.
 {
-    IMAGE=bjodah/tomevermes-patchwork:23.h.1.2.7.1   # the default image
+    IMAGE=bjodah/triceratops-5   # the default image
     CONTAINER_FOLDER=""
     MOUNT_HOME=0
     MOUNT_GPG_SOCKET=0
@@ -161,11 +161,19 @@
 #          --cap-add=SYS_PTRACE \
     fi
 
-        
+    TMPFILE=$(mktemp)
+    cleanup() {
+        sudo rm -- "$TMPFILE"
+    }
+    trap cleanup EXIT
+    echo "$LOGNAME ALL=(ALL) NOPASSWD: ALL">"$TMPFILE"
+    sudo chown 100000:100000 "$TMPFILE"
+
     ${PODMAN_CMD} run \
            ${PODMAN_RUN_ARGS[@]} \
            -e TERM=xterm-256color\
            -v "$PWD":"$PWD" \
+           -v "$TMPFILE":/etc/sudoers.d/logname \
            -w "$PWD" \
            --detach-keys=ctrl-\] \
            --security-opt seccomp=unconfined \

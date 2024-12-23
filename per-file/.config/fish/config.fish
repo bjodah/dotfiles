@@ -10,10 +10,10 @@ if status is-interactive
     set -U fish_color_escape              brcyan
     set -U fish_color_history_current     --bold
     set -U fish_color_host                normal
-    set -U fish_color_match               --background=brblue
+    set -U fish_color_match               --background=brcyan
     set -U fish_color_normal              normal
     set -U fish_color_operator            cyan
-    set -U fish_color_param               brblue
+    set -U fish_color_param               brcyan
     set -U fish_color_quote               yellow
     set -U fish_color_redirection         bryellow
     set -U fish_color_search_match        'bryellow' '--background=brblack'
