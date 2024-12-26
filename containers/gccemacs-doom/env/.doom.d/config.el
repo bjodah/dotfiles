@@ -80,3 +80,7 @@
 (after! org
   (require 'org-ref)
 )
+
+
+(unless (member "Symbols Nerd Font Mono" (font-family-list))
+  (nerd-icons-install-fonts t))

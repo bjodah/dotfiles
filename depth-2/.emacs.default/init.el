@@ -167,10 +167,6 @@
   :bind ("C-," . 'company-files)
   )
 
-;; Get packages
-(use-package use-package-ensure-system-package
-  :ensure t)
-
 ;; treemacs
 (use-package treemacs
   :ensure t
