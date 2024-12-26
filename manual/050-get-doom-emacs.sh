@@ -38,19 +38,3 @@ if [ ! -d $HOME/.doom.d ]; then
 fi
 
 $HOME/.emacs.doom/bin/doom sync
-TMPFILE=$(mktemp)
-cleanup() {
-    rm "$TMPFILE"
-}
-trap "cleanup" EXIT TERM INT
-cat <<EOF >$TMPFILE
-(progn
-  (load-file "$HOME/.emacs.doom/early-init.el")
-  (use-package nerd-icons)
-  (require 'nerd-icons)
-  (unless (member "Symbols Nerd Font Mono" (font-family-list))
-    (nerd-icons-install-fonts t))
-  (kill-emacs)
-)
-EOF
-emacs -nw --init-directory $HOME/.emacs.doom --eval "(load-file \"$TMPFILE\")"
