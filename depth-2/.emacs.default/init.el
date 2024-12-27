@@ -41,7 +41,11 @@
       (scroll-bar-mode 0)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       (set-frame-font "Fira Code")
-      (set-face-attribute 'default nil :height 85)
+      (if (string= (system-name) "argus")
+          (set-face-attribute 'default nil :height 140)
+        (set-face-attribute 'default nil :height 85)
+        )
+
       )
   (progn
     (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
@@ -165,10 +169,6 @@
   (setq company-minimum-prefix-length 1)
   :bind ("C-," . 'company-files)
   )
-
-;; Get packages
-(use-package use-package-ensure-system-package
-  :ensure t)
 
 ;; treemacs
 (use-package treemacs

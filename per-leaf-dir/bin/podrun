@@ -88,10 +88,12 @@
     fi
     if [[ $WITH_GUI == 1 ]]; then
         if [[ ${XDG_SESSION_TYPE:-x11} == wayland ]]; then
-            PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY")
-            #PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY:ro")
-            PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:ro")
-            PODMAN_RUN_ARGS+=("-e XDG_RUNTIME_DIR")
+            PODMAN_RUN_ARGS+=("--volume "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY":/tmp/$WAYLAND_DISPLAY --device /dev/dri --volume $XDG_RUNTIME_DIR/bus:/tmp/bus")
+            PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY=/tmp/$WAYLAND_DISPLAY")
+            PODMAN_RUN_ARGS+=("-e DBUS_SESSION_BUS_ADDRESS=/tmp/bus")
+            #PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY")
+            #PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:ro")
+            #PODMAN_RUN_ARGS+=("-e XDG_RUNTIME_DIR")
         else
             PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
             if [[ -z $XAUTHORITY ]]; then

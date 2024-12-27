@@ -80,3 +80,11 @@
 (after! org
   (require 'org-ref)
 )
+
+
+(use-package! nerd-icons
+              :config 
+              (unless (member "Symbols Nerd Font Mono" (font-family-list))
+                (nerd-icons-install-fonts t))
+              )
+

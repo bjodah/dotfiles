@@ -11,6 +11,7 @@
 (package! evil-tutor)
 (package! all-the-icons)
 (package! org-ref)
+(package! nerd-icons)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
