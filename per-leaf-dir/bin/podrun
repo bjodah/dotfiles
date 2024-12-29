@@ -9,6 +9,7 @@
     CONT_IMG_BASENAME=""
     NAME=""
     WITH_GUI=0
+    WITH_GPU=0
     DO_MOUNT_CWD=1
     show_help(){
         echo "Launch an container using podman-run with some defaults:"
@@ -26,6 +27,7 @@
         echo "--image              name of image (overrides --cont-img-dir), e.g. ubuntu:jammy"
         echo "--name               name of container, default is basename of image"
         echo "--gui                set DISPLAY, mount X11 socket folder."
+        echo "--gpu                mount /dev/dri, for OpenGL, test with e.g. glxgears from mesa-utils"
         echo "--no-mount-cwd       disable default mounting of current working directory"
         echo ""
         echo "Example:"
@@ -68,6 +70,10 @@
                 WITH_GUI=1
                 shift
                 ;;
+            --gpu)
+                WITH_GPU=1
+                shift
+                ;;
             --)
                 shift
                 break
@@ -85,6 +91,9 @@
     if [ $# -eq 0 ]; then
         >&2 echo "No command to execute, exiting."
         exit 1
+    fi
+    if [[ $WITH_GPU == 1 ]]; then
+        PODMAN_RUN_ARGS+=("--device /dev/dri:/dev/dri:rwm")
     fi
     if [[ $WITH_GUI == 1 ]]; then
         if [[ ${XDG_SESSION_TYPE:-x11} == wayland ]]; then
