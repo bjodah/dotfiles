@@ -33,31 +33,27 @@
 
 ;; -----------------------------------------------------------------------------------------------
 
-(if (< emacs-major-version 27)
-    (package-initialize)
+(defun bjodah/customize-window (frame)
+  (scroll-bar-mode 0)
+  (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
+  (set-frame-font "Fira Code")
+  (if (string= (system-name) "argus")
+      (set-face-attribute 'default nil :height 140)
+    (set-face-attribute 'default nil :height 85)
+    )
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil)))
   )
-(if window-system
-    (progn
-      (scroll-bar-mode 0)
-      (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
-      (set-frame-font "Fira Code")
-      (if (string= (system-name) "argus")
-          (set-face-attribute 'default nil :height 140)
-        (set-face-attribute 'default nil :height 85)
-        )
 
-      )
+(if window-system
+    (add-hook 'after-make-frame-functions 'bjodah/customize-window)
   (progn
     (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
     (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
   (xterm-mouse-mode))
 
 ;; the window-system if-check above does not help with emacs --daemon, hence:
-(defun my/disable-scroll-bars (frame)
-  (modify-frame-parameters frame
-                           '((vertical-scroll-bars . nil)
-                             (horizontal-scroll-bars . nil))))
-(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
 
 (require 'savehist)
