@@ -1,0 +1,6 @@
+mmm.info*
+*.elc
+*.tar.gz
+mmm-mode-pkg.el
+mmm-mode-autoloads.el
+mmm.html
