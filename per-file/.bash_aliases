@@ -16,6 +16,7 @@ alias ccat="batcat -pp"
 alias eem="emacs -l ~/.emacs-evil"
 alias ec="emacsclient"
 alias ect='emacsclient -a "" -t'
+alias ecc='emacsclient -a "" -c'
 alias enw="emacs -nw"
 alias enwq="emacs -nw -q"
 alias fd="fdfind"

@@ -33,25 +33,41 @@
 
 ;; -----------------------------------------------------------------------------------------------
 
-(defun bjodah/customize-window (frame)
-  (scroll-bar-mode 0)
-  (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
-  (set-frame-font "Fira Code")
-  (if (string= (system-name) "argus")
-      (set-face-attribute 'default nil :height 140)
-    (set-face-attribute 'default nil :height 85)
-    )
+(defun bjodah/customize-frame (frame)
   (modify-frame-parameters frame
                            '((vertical-scroll-bars . nil)
                              (horizontal-scroll-bars . nil)))
   )
 
-(if window-system
-    (add-hook 'after-make-frame-functions 'bjodah/customize-window)
-  (progn
-    (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
-    (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4))))
+(defun bjodah/customize-window ()
+  (cond
+   ((string= system-name "argus") (set-face-attribute 'default nil :height 140))
+   (t (set-face-attribute 'default nil :height 85))
+   )
+  (scroll-bar-mode 0)
+      (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
+      (set-frame-font "Fira Code"))
+
+(add-hook 'after-init-hook 'bjodah/customize-window)
+(if (daemonp)
+    (add-hook 'server-after-make-frame-hook
+              (lambda ()
+                (select-frame (car (frame-list)))
+                (bjodah/customize-window)))
+  )
+(unless window-system
+  (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
+  (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4)))
   (xterm-mouse-mode))
+      
+    ;;     (add-hook 'after-make-frame-functions 'bjodah/customize-frame)
+    ;;   (bjodah/customize-window))
+    ;; (progn
+      
+    ;;   (if (string= (system-name) "argus")
+    ;;       (set-face-attribute 'default nil :height 140)
+    ;;     (set-face-attribute 'default nil :height 85))
+    ;;   )
 
 ;; the window-system if-check above does not help with emacs --daemon, hence:
 
@@ -226,14 +242,15 @@
 )
 
 
-(use-package ccls
-  :ensure t
-  :hook ((c-mode c++-mode) .
-         (lambda () (require 'ccls) (lsp)))
-  :config
-  ;; (with-eval-after-load "lsp-mode"
-  ;;   (add-to-list 'lsp-enabled-clients 'ccls))
-)
+
+;; (use-package ccls ;; I'm using clangd for now, might be interesting for parallel emacs conf.
+;;   :ensure t
+;;   :hook ((c-mode c++-mode) .
+;;          (lambda () (require 'ccls) (lsp)))
+;;   :config
+;;   (with-eval-after-load "lsp-mode"
+;;     (add-to-list 'lsp-enabled-clients 'ccls))
+;; )
 (use-package lsp-ui
   :ensure t
   :after lsp-mode
