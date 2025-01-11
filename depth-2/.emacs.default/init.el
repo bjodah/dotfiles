@@ -395,12 +395,18 @@
   (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
 )
 
-(use-package jupyter :ensure t)
+(use-package jupyter
+  :ensure t)
 (use-package tex
   :defer t
   :ensure auctex
   :config
   (setq TeX-auto-save t))
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install t))
+
 (use-package cmake-mode
   :ensure t)
 (use-package yaml-mode
