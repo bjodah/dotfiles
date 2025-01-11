@@ -51,23 +51,21 @@
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(package-selected-packages
-   '(standard-themes systemd go-mode julia-mode pdf-tools
-                     flymake-shellcheck bison-mode gruvbox-theme
-                     fish-mode modus-themes org-babel nginx-mode
-                     rmsbolt org-roam god-mode elfeed
-                     quelpa-use-package quelpa idle-highlight-mode
-                     highlight-symbol evil lsp-pyright ispc-mode
-                     all-the-icons tangotango-theme dakrone-theme
-                     darkburn-theme gruber-darker-theme soothe-theme
-                     moe-theme glsl-mode cuda-mode yasnippet-snippets
-                     yasnippet validate auctex jupyter ein realgud
-                     forge cython-mode lsp-mode treemacs rg
-                     use-package-ensure-system-package vterm
-                     monokai-theme monokai typescript-mode lsp-java
-                     rust-mode company flycheck lsp-ui dockerfile-mode
-                     treemacs-magit which-key dap-mode ccls
-                     realgud-lldb yaml-mode cmake-mode mmm-mode
-                     use-package))
+   '(all-the-icons auctex bison-mode ccls cmake-mode company cuda-mode
+                   cython-mode dakrone-theme dap-mode darkburn-theme
+                   dockerfile-mode ein elfeed evil fish-mode flycheck
+                   flymake-shellcheck forge glsl-mode go-mode god-mode
+                   gptel gruber-darker-theme gruvbox-theme
+                   highlight-symbol idle-highlight-mode ispc-mode
+                   julia-mode jupyter lsp-java lsp-mode lsp-pyright
+                   lsp-ui mmm-mode modus-themes moe-theme monokai
+                   monokai-theme nginx-mode org-babel org-roam
+                   pdf-tools quelpa quelpa-use-package realgud
+                   realgud-lldb rg rmsbolt rust-mode soothe-theme
+                   standard-themes systemd tangotango-theme treemacs
+                   treemacs-magit typescript-mode use-package
+                   use-package-ensure-system-package validate vterm
+                   which-key yaml-mode yasnippet yasnippet-snippets))
  '(preview-image-type 'dvipng)
  '(preview-scale-function 2)
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
@@ -82,4 +80,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 90 :width normal)))))
+ )

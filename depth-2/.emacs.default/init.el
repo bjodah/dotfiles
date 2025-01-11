@@ -59,18 +59,8 @@
   (global-set-key (kbd "<mouse-4>") (lambda () (interactive) (scroll-down-line 4)))
   (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4)))
   (xterm-mouse-mode))
-      
-    ;;     (add-hook 'after-make-frame-functions 'bjodah/customize-frame)
-    ;;   (bjodah/customize-window))
-    ;; (progn
-      
-    ;;   (if (string= (system-name) "argus")
-    ;;       (set-face-attribute 'default nil :height 140)
-    ;;     (set-face-attribute 'default nil :height 85))
-    ;;   )
 
-;; the window-system if-check above does not help with emacs --daemon, hence:
-
+(bjodah/customize-window)
 
 (require 'savehist)
 (savehist-mode 1)
@@ -88,6 +78,19 @@
   (progn
     (package-refresh-contents)
     (package-install 'use-package)))
+
+
+(use-package gptel
+  :ensure t
+  :config
+
+  (setq
+   gptel-model 'gemini-pro
+   gptel-backend (gptel-make-gemini "Gemini"
+                                    :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/g-gmni.* | tail -c+19 | head -c 39"))
+                                    :stream t))
+                                        ;(setq gptel-api-key "your key")
+  )
 
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
@@ -265,6 +268,32 @@
   ("C-<down>" . lsp-ui-find-next-reference)
   ("C-<up>" . lsp-ui-find-prev-reference)
   )
+
+(use-package lsp-pyright
+  :ensure t
+  :init (setq lsp-pyright-auto-install-server t)
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+
+(use-package lsp-java
+  :ensure t
+  ;; :after lsp
+  :config
+  ;; (with-eval-after-load "lsp-mode"
+  ;;   (add-to-list 'lsp-enabled-clients 'jdtls))
+  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
+        lsp-java-format-settings-profile "GoogleStyle"
+        lsp-java-save-actions-organize-imports t
+        lsp-java-references-code-lens-enabled t
+        lsp-java-implementations-code-lens-enabled t
+        lsp-file-watch-ignored
+        '(".idea" ".ensime_cache" ".eunit" "node_modules"
+          ".git" ".hg" ".fslckout" "_FOSSIL_"
+          ".bzr" "_darcs" ".tox" ".svn" ".stack-work"
+          "build"))
+)
+
 ;; (use-package company-lsp <--- deprecated apparently company-capf is used instead
 ;;   :ensure t
 ;;   :commands company-lsp)
@@ -289,12 +318,6 @@
 
 ;; (setq lsp-json-schemas `[(:fileMatch ["tsconfig.json"] :url "http://json.schemastore.org/tsconfig")])
 
-(use-package lsp-pyright
-  :ensure t
-  :init (setq lsp-pyright-auto-install-server t)
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
 
 (use-package rust-mode
   :ensure t
@@ -322,23 +345,6 @@
   (which-key-mode))
 (setq ccls-executable "/usr/local/bin/ccls")
 
-(use-package lsp-java
-  :ensure t
-  ;; :after lsp
-  :config
-  ;; (with-eval-after-load "lsp-mode"
-  ;;   (add-to-list 'lsp-enabled-clients 'jdtls))
-  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
-        lsp-java-format-settings-profile "GoogleStyle"
-        lsp-java-save-actions-organize-imports t
-        lsp-java-references-code-lens-enabled t
-        lsp-java-implementations-code-lens-enabled t
-        lsp-file-watch-ignored
-        '(".idea" ".ensime_cache" ".eunit" "node_modules"
-          ".git" ".hg" ".fslckout" "_FOSSIL_"
-          ".bzr" "_darcs" ".tox" ".svn" ".stack-work"
-          "build"))
-)
 
 (use-package cython-mode :ensure t)
 (add-hook 'cython-mode-hook (lambda () (which-function-mode -1))) ;; https://github.com/bbatsov/prelude/issues/940#issuecomment-210505475
@@ -1033,4 +1039,6 @@
   ;;   (find-file "//ODEN/Profile\$/bjorningvar/Documents/main.org"))
   ;; (open-main-org)
 )
+
+
 ;;; init.el ends here
