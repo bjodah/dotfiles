@@ -4,6 +4,8 @@
     signingkey = 79429A91
     #DE7E083195C707C5B8EDB0DA735FEE8A79429A91
     #signingkey = DC372128
+[init]
+    defaultBranch = master
 [commit]
     gpgsign = true
 [push]
@@ -90,6 +92,9 @@
 	helper = !/usr/bin/gh auth git-credential
 [safe]
 	directory = /work
+	directory = /tyr/wcc
+	directory = /tyr/wvc
+	directory = /tyr/wvc/scripts
 
 [filter "lfs"]
 	required = true
@@ -100,10 +105,16 @@
 [include]
     path = ~/.gitconfig-local
 
-[includeIf "gitdir:~/wvc/"]
+[includeIf "gitdir:~/wvc/**"]
     path = ~/wvc/.gitconfig
 
 [includeIf "gitdir:~/.data/vc/**"]
     path = ~/.data/vc/.gitconfig
-[init]
-	defaultBranch = master
+[includeIf "gitdir:~/vc/**"]
+    path = ~/.data/vc/.gitconfig
+[includeIf "gitdir:~/kinetgine/**"]
+    path = ~/.data/vc/.gitconfig
+[includeIf "gitdir:~/phd-thesis-dahlgren/**"]
+    path = ~/.data/vc/.gitconfig
+[includeIf "gitdir:~/summation-cxx/**"]
+    path = ~/.data/vc/.gitconfig

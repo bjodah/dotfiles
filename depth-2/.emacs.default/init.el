@@ -42,7 +42,7 @@
 (defun bjodah/customize-window ()
   (cond
    ((string= system-name "argus") (set-face-attribute 'default nil :height 140))
-   (t (set-face-attribute 'default nil :height 85))
+   (t (set-face-attribute 'default nil :height 100))
    )
   (scroll-bar-mode 0)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
@@ -219,6 +219,13 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
+(use-package sqlite3
+  :ensure t)
+(use-package magit
+  :defer t
+  :ensure forge)
+(use-package forge
+  :after magit)
 (use-package treemacs-magit
   :ensure t
   :after treemacs magit)
@@ -349,11 +356,6 @@
 (use-package cython-mode :ensure t)
 (add-hook 'cython-mode-hook (lambda () (which-function-mode -1))) ;; https://github.com/bbatsov/prelude/issues/940#issuecomment-210505475
 (use-package dockerfile-mode :ensure t)
-(use-package magit
-  :defer t
-  :ensure forge)
-(use-package forge
-  :after magit)
 (use-package realgud :ensure t)
 
 ;; (use-package quelpa-use-package
@@ -399,7 +401,7 @@
   :ensure t)
 (use-package tex
   :defer t
-  :ensure auctex
+  ;:ensure auctex
   :config
   (setq TeX-auto-save t))
 (use-package pdf-tools
