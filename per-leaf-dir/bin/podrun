@@ -101,6 +101,7 @@
         fi
         if [[ -e /mnt/wslg/ ]]; then
             PODMAN_RUN_ARGS+=("-v /mnt/wslg/:/mnt/wslg/:rw")
+            PRE_CMD="ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix;${PRE_CMD:-}"
         fi
         # if [[ ${XDG_SESSION_TYPE:-x11} == wayland ]]; then
         if [[ ${WAYLAND_DISPLAY:-""} == wayland* ]]; then
@@ -110,20 +111,19 @@
             PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY")
             PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR:rw")
             PODMAN_RUN_ARGS+=("-e XDG_RUNTIME_DIR")
-        else
-            PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
-            if [[ -z $XAUTHORITY ]]; then
-                if [[ -e $HOME/.Xauthority ]]; then
-                    PODMAN_RUN_ARGS+=("-v $HOME/.Xauthority:/root/.Xauthority:rw")
-                else
-                    >&2 echo "Warning, could not locate file: .Xauthority, opening GUI windows might not work."
-                fi
-            else
-                PODMAN_RUN_ARGS+=("-v $XAUTHORITY:$XAUTHORITY:rw")
-                PODMAN_RUN_ARGS+=("-e XAUTHORITY")
-            fi
-	    PODMAN_RUN_ARGS+=("--net host")
         fi
+        PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
+        if [[ -z $XAUTHORITY ]]; then
+            if [[ -e $HOME/.Xauthority ]]; then
+                PODMAN_RUN_ARGS+=("-v $HOME/.Xauthority:/root/.Xauthority:rw")
+            else
+                >&2 echo "Warning, could not locate file: .Xauthority, opening GUI windows might not work."
+            fi
+        else
+            PODMAN_RUN_ARGS+=("-v $XAUTHORITY:$XAUTHORITY:rw")
+            PODMAN_RUN_ARGS+=("-e XAUTHORITY")
+        fi
+        #PODMAN_RUN_ARGS+=("--net host")
     fi
 	# # https://github.com/containers/podman/discussions/13040#discussioncomment-2071464
 	# PODMAN_RUN_ARGS+=("--uidmap $(id -u):0:1")
