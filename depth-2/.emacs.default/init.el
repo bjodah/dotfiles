@@ -23,7 +23,7 @@
      ;; If you edit it by hand, you could mess it up, so be careful.
      ;; Your init file should contain only one such instance.
      ;; If there is more than one, they won't work right.
-     '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 100 :width normal)))))
+     '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 110 :width normal)))))
   (message "on MS Windows?")
   )
 
@@ -42,7 +42,7 @@
 (defun bjodah/customize-window ()
   (cond
    ((string= system-name "argus") (set-face-attribute 'default nil :height 140))
-   (t (set-face-attribute 'default nil :height 100))
+   (t (set-face-attribute 'default nil :height 105))
    )
   (scroll-bar-mode 0)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
@@ -122,6 +122,12 @@
         (dap-auto-configure-mode t                           "Automatically configure dap.")
         (dap-auto-configure-features
          '(sessions locals breakpoints expressions tooltip)  "Remove the button panel in the top.")
+        :bind (("<f5>" . dap-step-in)
+               ("<f6>" . dap-next)
+               ("<f7>" . dap-step-out)
+               ("<f8>" . dap-continue)
+               ("<f9>" . dap-breakpoint-toggle))
+
         :config
         (require 'dap-lldb)
         (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode-11"))

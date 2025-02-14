@@ -21,6 +21,9 @@
      (vc-git-annotate-switches . "-w")))
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
+ '(org-format-latex-options
+   '(:foreground default :background default :scale 1.25 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+                 ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
    '(sqlite3 all-the-icons auctex bison-mode ccls cmake-mode company cuda-mode cython-mode dakrone-theme dap-mode darkburn-theme dockerfile-mode ein elfeed evil fish-mode flycheck flymake-shellcheck forge glsl-mode go-mode god-mode gptel gruber-darker-theme gruvbox-theme highlight-symbol idle-highlight-mode ispc-mode julia-mode jupyter lsp-java lsp-mode lsp-pyright lsp-ui mmm-mode modus-themes moe-theme monokai monokai-theme nginx-mode org-babel org-roam pdf-tools quelpa quelpa-use-package realgud realgud-lldb rg rmsbolt rust-mode soothe-theme standard-themes systemd tangotango-theme treemacs treemacs-magit typescript-mode use-package use-package-ensure-system-package validate vterm which-key yaml-mode yasnippet yasnippet-snippets))
  '(preview-image-type 'dvipng)
