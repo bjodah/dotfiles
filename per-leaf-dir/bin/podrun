@@ -104,6 +104,8 @@
             PRE_CMD="ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix;${PRE_CMD:-}"
         fi
         # if [[ ${XDG_SESSION_TYPE:-x11} == wayland ]]; then
+        PODMAN_RUN_ARGS+=("--net host")
+
         if [[ ${WAYLAND_DISPLAY:-""} == wayland* ]]; then
             #PODMAN_RUN_ARGS+=("--volume "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY":/tmp/$WAYLAND_DISPLAY --device /dev/dri --volume $XDG_RUNTIME_DIR/bus:/tmp/bus")
             #PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY=/tmp/$WAYLAND_DISPLAY")
@@ -111,8 +113,7 @@
             PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY")
             PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR:rw")
             PODMAN_RUN_ARGS+=("-e XDG_RUNTIME_DIR")
-        else
-            PODMAN_RUN_ARGS+=("--net host")
+            #PODMAN_RUN_ARGS+=("-e XDG_SESSTION_TYPE")
         fi
         PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
         if [[ -z $XAUTHORITY ]]; then
