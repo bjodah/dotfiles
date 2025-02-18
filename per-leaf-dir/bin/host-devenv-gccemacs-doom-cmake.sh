@@ -104,6 +104,9 @@ chmod +x $THIS_RUNDIR/launch-emacs.sh
 cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
 #!/bin/bash
 set -euxo pipefail
+. /etc/profile.d/cmake.sh
+rm /etc/profile.d/cmake.sh  # patch for tomevermes-dot:23.h.1.2, it was overwriting PATH
+export PATH="\$(compgen -G "/opt-?/llvm-??/bin/"):\$(compgen -G "/opt-?/emacs-??/bin/"):\$PATH"
 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
      new -s ${CONTAINER_FOLDER%/env}-$(basename $(dirname $(realpath $BASH_SOURCE))) \
      "set -x \\

@@ -118,3 +118,6 @@
     path = ~/.data/vc/.gitconfig
 [includeIf "gitdir:~/summation-cxx/**"]
     path = ~/.data/vc/.gitconfig
+[http]
+	postBuffer = 524288000
+	version = HTTP/1.1
