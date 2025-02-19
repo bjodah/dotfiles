@@ -83,14 +83,30 @@
 (use-package gptel
   :ensure t
   :config
-
   (setq
    gptel-model 'gemini-pro
    gptel-backend (gptel-make-gemini "Gemini"
                                     :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/g-gmni.* | tail -c+19 | head -c 39"))
                                     :stream t))
+  :bind ("C-c C-." . 'gptel-send)
+
                                         ;(setq gptel-api-key "your key")
   )
+
+
+(gptel-make-openai "Groq"               ;Any name you want
+  :host "api.groq.com"
+  :endpoint "/openai/v1/chat/completions"
+  :stream t
+  :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/grq-min-nyckel-16feb.txt | tail -c+19 | head -c -6"))
+
+  :models '(llama-3.1-70b-versatile
+            llama-3.1-8b-instant
+            llama3-70b-8192
+            llama3-8b-8192
+            mixtral-8x7b-32768
+            gemma-7b-it))
+
 
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
@@ -521,8 +537,13 @@
           ))
   )
 
+;(package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode"))
+
 (use-package org
-  :ensure t
+  ;:ensure t // built-in I believe
+  :defer ;; https://abode.karthinks.com/org-latex-preview/
+  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
+                :branch "dev")
   :config
   (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
   (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
@@ -928,7 +949,7 @@
 		     (delete-trailing-whitespace)
                      ;(pep8)
                      )))
-       (local-set-key (kbd "C-c C-c") 'py-execute-buffer-python3)
+       ;(local-set-key (kbd "C-c C-c") 'py-execute-buffer-python3)
        (local-set-key (kbd "C-c o") 'pep8)
        (local-set-key (kbd "C-c p") (lambda () (interactive) (occur "\\bdef \\|\\bclass \\|=[ ]?lambda")))
        ;; (jedi:setup)
