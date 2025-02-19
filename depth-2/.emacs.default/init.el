@@ -79,6 +79,28 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
+;; whisper for Speech-To-Text (STT)
+(use-package whisper
+  :load-path (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el")
+  :bind ("C-c ," . whisper-run)
+  :config
+  (setq whisper-install-directory nil
+        whisper-model "/home/bjorn/rovc/whisper.cpp/models/ggml-large-v3-turbo.bin"
+        whisper-language "en"
+        whisper-translate nil
+        whisper-use-threads (/ (num-processors) 2)))
+
+(defun whisper--my-command (input-file)
+  `("/home/bjorn/rovc/whisper.cpp/build-cuda/bin/command"
+    ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
+    "--task" ,(if whisper-translate "translate" "transcribe")
+    "--model" ,whisper-model
+    "--language" ,whisper-language
+    "--output_dir" "/tmp/"
+    "--output_format" "txt"
+    ,input-file))
+
+(advice-add 'whisper-command :override #'whisper--my-command)
 
 (use-package gptel
   :ensure t
@@ -88,7 +110,7 @@
    gptel-backend (gptel-make-gemini "Gemini"
                                     :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/g-gmni.* | tail -c+19 | head -c 39"))
                                     :stream t))
-  :bind ("C-c C-." . 'gptel-send)
+  :bind ("C-c ." . 'gptel-send)
 
                                         ;(setq gptel-api-key "your key")
   )
