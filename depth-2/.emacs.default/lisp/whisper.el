@@ -508,6 +508,7 @@ Depending on the COMMAND we either show the indicator or hide it."
 
   (pcase whisper-server-mode
     ('local (whisper--transcribe-via-local-server))
+    ('custom (whisper--transcribe-via-local-server))
     ('openai (whisper--transcribe-via-openai))
     ('nil
     (message "[-] Transcribing/Translating audio")

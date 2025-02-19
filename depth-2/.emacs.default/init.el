@@ -79,28 +79,43 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
+;http://www.emacswiki.org/emacs/LoadPath
+(add-to-list 'load-path
+                                        ;"~/.emacs.d/lisp/"
+             (format "%s%s" (file-name-directory load-file-name) "lisp/")
+             ;(format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
+             )
+;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
+(require 'whisper)
+
 ;; whisper for Speech-To-Text (STT)
 (use-package whisper
-  :load-path (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el")
+  ;:load-path (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
+  ;:ensure
   :bind ("C-c ," . whisper-run)
   :config
-  (setq whisper-install-directory nil
-        whisper-model "/home/bjorn/rovc/whisper.cpp/models/ggml-large-v3-turbo.bin"
+  (setq whisper-install-whispercpp 'manual ;nil
+        whisper-install-directory "/opt/"
+        whisper-server-mode 'custom
+        whisper-server-host "127.0.0.1"
+        whisper-server-port 8642
+        whisper-model "large-v3-turbo"
         whisper-language "en"
         whisper-translate nil
-        whisper-use-threads (/ (num-processors) 2)))
+        ;whisper-use-threads (/ (num-processors) 2)
+        ))
 
-(defun whisper--my-command (input-file)
-  `("/home/bjorn/rovc/whisper.cpp/build-cuda/bin/command"
-    ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
-    "--task" ,(if whisper-translate "translate" "transcribe")
-    "--model" ,whisper-model
-    "--language" ,whisper-language
-    "--output_dir" "/tmp/"
-    "--output_format" "txt"
-    ,input-file))
+;; (defun whisper--my-command (input-file)
+;;   `("/home/bjorn/rovc/whisper.cpp/build-cuda/bin/command"
+;;     ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
+;;     "--task" ,(if whisper-translate "translate" "transcribe")
+;;     "--model" ,whisper-model
+;;     "--language" ,whisper-language
+;;     "--output_dir" "/tmp/"
+;;     "--output_format" "txt"
+;;     ,input-file))
 
-(advice-add 'whisper-command :override #'whisper--my-command)
+;; (advice-add 'whisper-command :override #'whisper--my-command)
 
 (use-package gptel
   :ensure t
@@ -461,11 +476,7 @@
   :ensure t)
 ;; mmm-mako
 
-;http://www.emacswiki.org/emacs/LoadPath
-(add-to-list 'load-path
-                                        ;"~/.emacs.d/lisp/"
-             (format "%s%s" (file-name-directory load-file-name) "lisp/")
-             )
+
 (message (format "%s%s" (file-name-directory load-file-name) "lisp/"))
 (require 'sln-mode)
 (require 'mmm-mako)
@@ -563,9 +574,11 @@
 
 (use-package org
   ;:ensure t // built-in I believe
-  :defer ;; https://abode.karthinks.com/org-latex-preview/
-  :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
-                :branch "dev")
+
+  ;; :defer ;; https://abode.karthinks.com/org-latex-preview/
+  ;; :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
+  ;;               :branch "dev")
+
   :config
   (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
   (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
