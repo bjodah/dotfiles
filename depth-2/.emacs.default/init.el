@@ -94,34 +94,23 @@
   ;:ensure
   :bind ("C-c ," . whisper-run)
   :config
-  (setq whisper-install-whispercpp 'manual ;nil
-        whisper-install-directory "/opt/"
+  (setq whisper-install-whispercpp nil ;'manual
+        ;whisper-install-directory "/opt/"
         whisper-server-mode 'custom
         whisper-server-host "127.0.0.1"
         whisper-server-port 8642
         whisper-model "large-v3-turbo"
-        whisper-language "en"
+        whisper-language "sv"
         whisper-translate nil
         ;whisper-use-threads (/ (num-processors) 2)
         ))
 
-;; (defun whisper--my-command (input-file)
-;;   `("/home/bjorn/rovc/whisper.cpp/build-cuda/bin/command"
-;;     ,@(when whisper-use-threads (list "--threads" (number-to-string whisper-use-threads)))
-;;     "--task" ,(if whisper-translate "translate" "transcribe")
-;;     "--model" ,whisper-model
-;;     "--language" ,whisper-language
-;;     "--output_dir" "/tmp/"
-;;     "--output_format" "txt"
-;;     ,input-file))
-
-;; (advice-add 'whisper-command :override #'whisper--my-command)
 
 (use-package gptel
   :ensure t
   :config
   (setq
-   gptel-model 'gemini-pro
+   gptel-model 'gemini-2.0-flash-exp
    gptel-backend (gptel-make-gemini "Gemini"
                                     :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/g-gmni.* | tail -c+19 | head -c 39"))
                                     :stream t))

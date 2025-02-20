@@ -133,9 +133,12 @@ responsibility to override `whisper-command' with appropriate function."
 Possible values:
 - nil: Use local whisper.cpp directly
 - local: Run whisper.cpp as local HTTP server
+- custom: Use URL of already running network accessible instance of
+          whisper.cpp's whisper-server
 - openai: Use OpenAI's Whisper API (requires API key)"
   :type '(choice (const :tag "Direct" nil)
                 (const :tag "Local Server" local)
+                (const :tag "Custom Server" custom)
                 (const :tag "OpenAI API" openai))
   :set (lambda (sym val)
          (set-default sym val)
@@ -491,7 +494,8 @@ Depending on the COMMAND we either show the indicator or hide it."
   "Transcribe audio using the local whisper server."
   (message "[-] Transcribing via local server")
   (whisper--setup-mode-line :show 'transcribing)
-  (whisper--ensure-server)
+  (unless (eq whisper-server-mode 'custom)
+    (whisper--ensure-server))
   (setq whisper--transcribing-process
         (whisper--process-curl-request
          (format "http://%s:%d/inference" whisper-server-host whisper-server-port)
@@ -511,63 +515,63 @@ Depending on the COMMAND we either show the indicator or hide it."
     ('custom (whisper--transcribe-via-local-server))
     ('openai (whisper--transcribe-via-openai))
     ('nil
-    (message "[-] Transcribing/Translating audio")
-    (setq whisper--using-whispercpp (whisper--using-whispercpp-p))
-    (whisper--setup-mode-line :show 'transcribing)
-    (setq whisper--transcribing-process
-          (make-process
-           :name "whisper-transcribing"
-           :command (whisper-command whisper--temp-file)
-           :connection-type nil
-           :buffer (get-buffer-create whisper--stdout-buffer-name)
-           :stderr (if (and whisper-show-progress-in-mode-line whisper--using-whispercpp)
-                       (make-pipe-process
-                        :name "whisper-stderr"
-                        :filter #'whisper--get-whispercpp-progress)
-                     (get-buffer-create whisper--stderr-buffer-name))
-           :coding 'utf-8
-         :sentinel (lambda (_process event)
-                     (unwind-protect
-                         (when-let* ((whisper--stdout-buffer (get-buffer whisper--stdout-buffer-name))
-                                     (finished (and (buffer-live-p whisper--stdout-buffer)
-                                                    (string-equal "finished\n" event))))
-                           (with-current-buffer whisper--stdout-buffer
-                             (goto-char (point-min))
-                             (skip-chars-forward " \n")
-                             (when (> (point) (point-min))
-                               (delete-region (point-min) (point)))
-                             (goto-char (point-max))
-                             (skip-chars-backward " \n")
-                             (when (> (point-max) (point))
-                               (delete-region (point) (point-max)))
-                             (when (= (buffer-size) 0)
-                               (error "Whisper command produced no output"))
-                             (goto-char (point-min))
-                             (run-hook-wrapped 'whisper-after-transcription-hook
-                                               (lambda (f)
-                                                 (with-current-buffer whisper--stdout-buffer
-                                                   (save-excursion
-                                                     (funcall f)))
-                                                 nil))
-                             (when (> (buffer-size) 0)
-                               (if whisper-insert-text-at-point
-                                   (with-current-buffer (marker-buffer whisper--marker)
-                                     (goto-char whisper--marker)
-                                     (insert-buffer-substring whisper--stdout-buffer)
-                                     (when whisper-return-cursor-to-start
-                                       (goto-char whisper--marker)))
-                                 (with-current-buffer
-                                     (get-buffer-create
-                                      (format "*whisper-%s*" (format-time-string "%+4Y%m%d%H%M%S")))
-                                   (insert-buffer-substring whisper--stdout-buffer)
-                                   (display-buffer (current-buffer)))))))
-                       (set-marker whisper--marker nil)
-                       (setq whisper--point-buffer nil)
-                       (kill-buffer whisper--stdout-buffer-name)
-                       (unless whisper-show-progress-in-mode-line (kill-buffer whisper--stderr-buffer-name))
-                       (whisper--setup-mode-line :hide 'transcribing)
-                       (message nil)
-                       (run-hooks 'whisper-after-insert-hook))))))))
+     (message "[-] Transcribing/Translating audio")
+     (setq whisper--using-whispercpp (whisper--using-whispercpp-p))
+     (whisper--setup-mode-line :show 'transcribing)
+     (setq whisper--transcribing-process
+           (make-process
+            :name "whisper-transcribing"
+            :command (whisper-command whisper--temp-file)
+            :connection-type nil
+            :buffer (get-buffer-create whisper--stdout-buffer-name)
+            :stderr (if (and whisper-show-progress-in-mode-line whisper--using-whispercpp)
+                        (make-pipe-process
+                         :name "whisper-stderr"
+                         :filter #'whisper--get-whispercpp-progress)
+                      (get-buffer-create whisper--stderr-buffer-name))
+            :coding 'utf-8
+            :sentinel (lambda (_process event)
+                        (unwind-protect
+                            (when-let* ((whisper--stdout-buffer (get-buffer whisper--stdout-buffer-name))
+                                        (finished (and (buffer-live-p whisper--stdout-buffer)
+                                                       (string-equal "finished\n" event))))
+                              (with-current-buffer whisper--stdout-buffer
+                                (goto-char (point-min))
+                                (skip-chars-forward " \n")
+                                (when (> (point) (point-min))
+                                  (delete-region (point-min) (point)))
+                                (goto-char (point-max))
+                                (skip-chars-backward " \n")
+                                (when (> (point-max) (point))
+                                  (delete-region (point) (point-max)))
+                                (when (= (buffer-size) 0)
+                                  (error "Whisper command produced no output"))
+                                (goto-char (point-min))
+                                (run-hook-wrapped 'whisper-after-transcription-hook
+                                                  (lambda (f)
+                                                    (with-current-buffer whisper--stdout-buffer
+                                                      (save-excursion
+                                                        (funcall f)))
+                                                    nil))
+                                (when (> (buffer-size) 0)
+                                  (if whisper-insert-text-at-point
+                                      (with-current-buffer (marker-buffer whisper--marker)
+                                        (goto-char whisper--marker)
+                                        (insert-buffer-substring whisper--stdout-buffer)
+                                        (when whisper-return-cursor-to-start
+                                          (goto-char whisper--marker)))
+                                    (with-current-buffer
+                                        (get-buffer-create
+                                         (format "*whisper-%s*" (format-time-string "%+4Y%m%d%H%M%S")))
+                                      (insert-buffer-substring whisper--stdout-buffer)
+                                      (display-buffer (current-buffer)))))))
+                          (set-marker whisper--marker nil)
+                          (setq whisper--point-buffer nil)
+                          (kill-buffer whisper--stdout-buffer-name)
+                          (unless whisper-show-progress-in-mode-line (kill-buffer whisper--stderr-buffer-name))
+                          (whisper--setup-mode-line :hide 'transcribing)
+                          (message nil)
+                          (run-hooks 'whisper-after-insert-hook))))))))
 
 (defun whisper--check-model-consistency ()
   "Check if chosen language and model are consistent."
@@ -749,7 +753,7 @@ This is a dwim function that does different things depending on current state:
 - When recording is in progress, stops it and starts transcribing.
 - When transcribing is in progress, cancels it."
   (interactive "P")
-  (if (process-live-p whisper--transcribing-process)
+  (if (process-live-p whisper--transcribing-process)          
       (when (yes-or-no-p "A transcribing is already in progress, kill it?")
         (kill-process whisper--transcribing-process))
 
@@ -776,14 +780,17 @@ This is a dwim function that does different things depending on current state:
           file))
         ((and (pred file-readable-p) file) file)))
       (setq whisper--using-whispercpp nil)
-      (if whisper-install-whispercpp
-          (whisper--check-install-and-run nil "whisper-start")
-        ;; if user is bringing their own inference engine, we at least check the command exists
-        (let ((command (car (whisper-command whisper--temp-file))))
-          (if (or (file-exists-p command)
-                  (executable-find command))
-              (whisper--record-audio)
-            (error (format "Couldn't find %s in PATH, nor is it a file" command)))))))))
+      (whisper--record-audio)
+
+      ;; (if whisper-install-whispercpp
+      ;;     (whisper--check-install-and-run nil "whisper-start")
+      ;;   ;; if user is bringing their own inference engine, we at least check the command exists
+      ;;   (let ((command (car (whisper-command whisper--temp-file))))
+      ;;     (if (or (file-exists-p command)
+      ;;             (executable-find command))
+      ;;         (whisper--record-audio)
+      ;;       (error (format "Couldn't find %s in PATH, nor is it a file" command)))))
+      ))))
 
 ;;;###autoload
 (defun whisper-file ()
