@@ -5,7 +5,8 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
-   '("8dbbcb2b7ea7e7466ef575b60a92078359ac260c91fe908685b3983ab8e20e3f"
+   '("712dda0818312c175a60d94ba676b404fc815f8c7e6c080c9b4061596c60a1db"
+     "8dbbcb2b7ea7e7466ef575b60a92078359ac260c91fe908685b3983ab8e20e3f"
      "c7a926ad0e1ca4272c90fce2e1ffa7760494083356f6bb6d72481b879afce1f2"
      "c1638a7061fb86be5b4347c11ccf274354c5998d52e6d8386e997b862773d1d2"
      "c71fd8fbda070ff5462e052d8be87423e50d0f437fbc359a5c732f4a4c535c43"
@@ -54,7 +55,15 @@
    '(:foreground default :background default :scale 1.25 :html-foreground
                  "Black" :html-background "Transparent" :html-scale
                  1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(auctex cape cmake-mode company corfu cython-mode dockerfile-mode ein
+            elfeed embark-consult flycheck flymake-shellcheck forge
+            god-mode gptel julia-mode jupyter lsp-java lsp-pyright
+            lsp-ui marginalia mmm-mode modus-themes monokai-theme
+            nginx-mode orderless org-roam pdf-tools realgud rg rmsbolt
+            rust-mode sqlite3 treemacs-magit typescript-mode
+            use-package validate vertico vterm which-key yaml-mode
+            yasnippet-snippets))
  '(preview-image-type 'dvipng)
  '(preview-scale-function 2)
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))

@@ -66,6 +66,10 @@
 (savehist-mode 1)
 (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
 
+(require 'recentf)
+(recentf-mode 1)
+
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
@@ -87,6 +91,7 @@
              )
 ;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
 (require 'whisper)
+(require 'my-text-to-speech)
 
 ;; whisper for Speech-To-Text (STT)
 (use-package whisper
@@ -98,13 +103,12 @@
         ;whisper-install-directory "/opt/"
         whisper-server-mode 'custom
         whisper-server-host "127.0.0.1"
-        whisper-server-port 8642
+        whisper-server-port 8007 ;8642
         whisper-model "large-v3-turbo"
-        whisper-language "sv"
+        whisper-language "en" ;; "sv"
         whisper-translate nil
         ;whisper-use-threads (/ (num-processors) 2)
         ))
-
 
 (use-package gptel
   :ensure t
@@ -120,18 +124,29 @@
   )
 
 
-(gptel-make-openai "Groq"               ;Any name you want
+(gptel-make-openai "Groq"
   :host "api.groq.com"
   :endpoint "/openai/v1/chat/completions"
   :stream t
   :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/grq-min-nyckel-16feb.txt | tail -c+19 | head -c -6"))
 
-  :models '(llama-3.1-70b-versatile
+  :models '(deepseek-r1-distill-llama-70b-specdec
+            llama-3.3-70b-specdec
+            llama-3.3-70b-versatile
             llama-3.1-8b-instant
-            llama3-70b-8192
-            llama3-8b-8192
-            mixtral-8x7b-32768
-            gemma-7b-it))
+            llama-3.2-3b-preview
+            qwen-2.5-coder-32b
+            gemma2-9b-it))
+
+(gptel-make-openai "localhost-8000"
+  :stream t
+  :protocol "http"
+  :host "localhost:8000"
+  :key "duck123" ;(lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/vllm-local-api-key.txt"))
+  ;:models '(Qwen/Qwen2.5-Coder-32B-Instruct-AWQ)
+  ;:models '(stelterlab/phi-4-AWQ)
+  :models '(TabbyAPI-QwenCoder14B)
+)
 
 
 ;; Reduce load time
@@ -266,6 +281,179 @@
         ("C-x t B"   . treemacs-bookmark)
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
+
+;; parts from jamescherti/minimal-emacs.d below:
+(use-package vertico ;; e.g. M-x now shows multiple choices
+  :ensure t
+  :defer t
+  :commands vertico-mode
+  :hook (after-init . vertico-mode))
+
+(use-package orderless
+  ;; Vertico leverages Orderless' flexible matching capabilities, allowing users
+  ;; to input multiple patterns separated by spaces, which Orderless then
+  ;; matches in any order against the candidates.
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package marginalia  ;; helpful text to the right of vertico options
+  ;; Marginalia allows Embark to offer you preconfigured actions in more contexts.
+  ;; In addition to that, Marginalia also enhances Vertico by adding rich
+  ;; annotations to the completion candidates displayed in Vertico's interface.
+  :ensure t
+  :defer t
+  :commands (marginalia-mode marginalia-cycle)
+  :hook (after-init . marginalia-mode))
+
+(use-package embark
+  ;; Embark is an Emacs package that acts like a context menu, allowing
+  ;; users to perform context-sensitive actions on selected items
+  ;; directly from the completion interface.
+  :ensure t
+  :defer t
+  :commands (embark-act
+             embark-dwim
+             embark-export
+             embark-collect
+             embark-bindings
+             embark-prefix-help-command)
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package consult
+  :ensure t
+  :bind (;; C-c bindings in `mode-specific-map'
+         ("C-c M-x" . consult-mode-command)
+         ("C-c h" . consult-history)
+         ("C-c k" . consult-kmacro)
+         ("C-c m" . consult-man)
+         ("C-c i" . consult-info)
+         ([remap Info-search] . consult-info)
+         ;; C-x bindings in `ctl-x-map'
+         ("C-x M-:" . consult-complex-command)
+         ("C-x b" . consult-buffer)
+         ("C-x 4 b" . consult-buffer-other-window)
+         ("C-x 5 b" . consult-buffer-other-frame)
+         ("C-x t b" . consult-buffer-other-tab)
+         ("C-x r b" . consult-bookmark)
+         ("C-x p b" . consult-project-buffer)
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)
+         ("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)
+         ;; M-g bindings in `goto-map'
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flymake)
+         ("M-g g" . consult-goto-line)
+         ("M-g M-g" . consult-goto-line)
+         ("M-g o" . consult-outline)
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings in `search-map'
+         ("M-s d" . consult-find)
+         ("M-s c" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)
+         ;; Isearch integration
+         ("M-s e" . consult-isearch-history)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)
+         ("M-s e" . consult-isearch-history)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ;; Minibuffer history
+         :map minibuffer-local-map
+         ("M-s" . consult-history)
+         ("M-r" . consult-history))
+
+  ;; Enable automatic preview at point in the *Completions* buffer.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  :init
+  ;; Optionally configure the register formatting. This improves the register
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  :config
+  (consult-customize
+   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   ;; :preview-key "M-."
+   :preview-key '(:debounce 0.4 any))
+  (setq consult-narrow-key "<"))
+
+(use-package corfu
+  :ensure t
+  :defer t
+  :commands (corfu-mode global-corfu-mode)
+
+  :hook ((prog-mode . corfu-mode)
+         (shell-mode . corfu-mode)
+         (eshell-mode . corfu-mode))
+
+  :custom
+  ;; Hide commands in M-x which do not apply to the current mode.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; Disable Ispell completion function. As an alternative try `cape-dict'.
+  (text-mode-ispell-word-completion nil)
+  (tab-always-indent 'complete)
+
+  ;; Enable Corfu
+  :config
+  (global-corfu-mode))
+
+(use-package cape
+  :ensure t
+  :defer t
+  :commands (cape-dabbrev cape-file cape-elisp-block)
+  :bind ("C-c p" . cape-prefix-map)
+  :init
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block))
+
+
 
 (use-package sqlite3
   :ensure t)
@@ -644,34 +832,35 @@
   ;; (modus-themes-load-themes)
   :config
   ;; Load the theme of your choice:
-  (modus-themes-load-theme 'modus-vivendi) ;; or modus-operandi
-  ;; https://protesilaos.com/emacs/modus-themes#h:4589acdc-2505-41fc-9f5e-699cfc45ab00
-  (defun my-modus-themes-saturate (percent)
-    "Saturate current Modus theme palette overrides by PERCENT."
-    (interactive
-     (list (read-number "Saturation by percent: ")))
-    (let* ((theme (modus-themes--current-theme))
-           (palette (pcase theme
-                      ('modus-operandi modus-themes-operandi-colors)
-                      ('modus-vivendi modus-themes-vivendi-colors)
-                      (_ (error "No Modus theme is active"))))
-           (overrides (pcase theme
-                        ('modus-operandi 'modus-themes-operandi-color-overrides)
-                        ('modus-vivendi 'modus-themes-vivendi-color-overrides)
-                        (_ (error "No Modus theme is active")))))
-      (let (name cons colors)
-        (dolist (cons palette)
-          (setq name (color-saturate-name (cdr cons) percent))
-          (setq name (format "%s" name))
-          (setq cons `(,(car cons) . ,name))
-          (push cons colors))
-        (set overrides colors))
-      (pcase theme
-        ('modus-operandi (modus-themes-load-operandi))
-        ('modus-vivendi (modus-themes-load-vivendi)))))
+  (modus-themes-load-theme 'modus-vivendi-tinted) ;; or modus-operandi-tinted
 
-  ;; sample Elisp calls (or call `my-modus-themes-saturate' interactively)
-  (my-modus-themes-saturate 25)
+  ;; https://protesilaos.com/emacs/modus-themes#h:4589acdc-2505-41fc-9f5e-699cfc45ab00
+  ;; (defun my-modus-themes-saturate (percent)
+  ;;   "Saturate current Modus theme palette overrides by PERCENT."
+  ;;   (interactive
+  ;;    (list (read-number "Saturation by percent: ")))
+  ;;   (let* ((theme (modus-themes--current-theme))
+  ;;          (palette (pcase theme
+  ;;                     ('modus-operandi modus-themes-operandi-colors)
+  ;;                     ('modus-vivendi modus-themes-vivendi-colors)
+  ;;                     (_ (error "No Modus theme is active"))))
+  ;;          (overrides (pcase theme
+  ;;                       ('modus-operandi 'modus-themes-operandi-color-overrides)
+  ;;                       ('modus-vivendi 'modus-themes-vivendi-color-overrides)
+  ;;                       (_ (error "No Modus theme is active")))))
+  ;;     (let (name cons colors)
+  ;;       (dolist (cons palette)
+  ;;         (setq name (color-saturate-name (cdr cons) percent))
+  ;;         (setq name (format "%s" name))
+  ;;         (setq cons `(,(car cons) . ,name))
+  ;;         (push cons colors))
+  ;;       (set overrides colors))
+  ;;     (pcase theme
+  ;;       ('modus-operandi (modus-themes-load-operandi))
+  ;;       ('modus-vivendi (modus-themes-load-vivendi)))))
+
+  ;; ;; sample Elisp calls (or call `my-modus-themes-saturate' interactively)
+  ;; (my-modus-themes-saturate 25)
 
   :bind ("ESC <f5>" . modus-themes-toggle))
 
@@ -808,8 +997,8 @@
 (global-set-key (kbd "ESC <f2>") 'split-window-below)
 (global-set-key (kbd "ESC <f3>") 'split-window-right)
 (global-set-key (kbd "ESC <f4>") 'delete-window)
-(global-set-key (kbd "M-<left>") 'previous-buffer)
-(global-set-key (kbd "M-<right>") 'next-buffer)
+(global-set-key (kbd "C-c C-<left>") 'previous-buffer)
+(global-set-key (kbd "C-c C-<right>") 'next-buffer)
 
 
 

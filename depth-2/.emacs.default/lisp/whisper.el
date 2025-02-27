@@ -498,7 +498,8 @@ Depending on the COMMAND we either show the indicator or hide it."
     (whisper--ensure-server))
   (setq whisper--transcribing-process
         (whisper--process-curl-request
-         (format "http://%s:%d/inference" whisper-server-host whisper-server-port)
+         ;;(format "http://%s:%d/inference" whisper-server-host whisper-server-port)
+         (format "http://%s:%d/v1/audio/transcriptions" whisper-server-host whisper-server-port)
          (list "Content-Type: multipart/form-data")
          (list (concat "file=@" whisper--temp-file)
                "temperature=0.0"
