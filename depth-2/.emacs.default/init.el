@@ -138,6 +138,15 @@
             qwen-2.5-coder-32b
             gemma2-9b-it))
 
+;; xAI offers an OpenAI compatible API
+(gptel-make-openai "xAI"           ;Any name you want
+  :host "api.x.ai"
+  :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/xai-2025-feb.*"))
+  :endpoint "/v1/chat/completions"
+  :stream t
+  :models '(;; xAI now only offers `grok-beta` as of the time of this writing
+            grok-beta))
+
 (gptel-make-openai "localhost-8000"
   :stream t
   :protocol "http"
@@ -147,6 +156,62 @@
   ;:models '(stelterlab/phi-4-AWQ)
   :models '(TabbyAPI-QwenCoder14B)
 )
+
+(use-package minuet
+  :ensure t
+  :bind
+ (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
+     ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
+     ("C-c m" . #'minuet-configure-provider)
+     :map minuet-active-mode-map
+     ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
+     ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
+     ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
+     ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
+     ;; Accept the first line of completion, or N lines with a numeric-prefix:
+     ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
+     ("M-a" . #'minuet-accept-suggestion-line)
+     ("M-e" . #'minuet-dismiss-suggestion))
+
+    :init
+    ;; if you want to enable auto suggestion.
+    ;; Note that you can manually invoke completions without enable minuet-auto-suggestion-mode
+
+    ;(add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
+
+    :config
+    ;; You can use M-x minuet-configure-provider to interactively configure provider and model
+    (setq minuet-provider 'openai-fim-compatible)
+    (setq minuet-n-completions 3) ; recommended for Local LLM for resource saving
+    ;; I recommend beginning with a small context window size and incrementally
+    ;; expanding it, depending on your local computing power. A context window
+    ;; of 512, serves as an good starting point to estimate your computing
+    ;; power. Once you have a reliable estimate of your local computing power,
+    ;; you should adjust the context window to a larger value.
+    (setq minuet-context-window 512)
+    (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:8000/v1/completions")
+    ;; an arbitrary non-null environment variable as placeholder
+    (plist-put minuet-openai-fim-compatible-options :name "Tabby-localhost-8000")
+    (plist-put minuet-openai-fim-compatible-options :api-key (defun my-tabby-api-key () "duck123"))
+    ;; The model is set by the llama-cpp server and cannot be altered
+    ;; post-launch.
+    (plist-put minuet-openai-fim-compatible-options :model "PLACEHOLDER")
+
+    ;; Llama.cpp does not support the `suffix` option in FIM completion.
+    ;; Therefore, we must disable it and manually populate the special
+    ;; tokens required for FIM completion.
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :suffix nil :template)
+    (minuet-set-optional-options
+     minuet-openai-fim-compatible-options
+     :prompt
+     (defun minuet-llama-cpp-fim-qwen-prompt-function (ctx)
+         (format "<|fim_prefix|>%s\n%s<|fim_suffix|>%s<|fim_middle|>"
+                 (plist-get ctx :language-and-tab)
+                 (plist-get ctx :before-cursor)
+                 (plist-get ctx :after-cursor)))
+     :template)
+
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
 
 
 ;; Reduce load time
@@ -812,57 +877,33 @@
   :ensure t
   )
 
-(use-package modus-themes
+(use-package all-the-icons
   :ensure t
-  :init
-  ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-italic-constructs t
-	modus-themes-bold-constructs t ;nil
-	modus-themes-region '(accented)
-	modus-themes-paren-match '(bold intense)
-	modus-themes-headings '((1 . (rainbow overline background 1.4))
-				(2 . (rainbow background 1.3))
-				(3 . (rainbow bold 1.2))
-				(t . (semilight 1.1)))
-	modus-themes-scale-headings t
-	modus-themes-org-blocks 'tinted-background
-	)
+  ; :commands all-the-icons-install-fonts
+  )
 
-  ;; Load the theme files before enabling a theme
-  ;; (modus-themes-load-themes)
+(use-package nerd-icons
+  :ensure t
+  ; :commands nerd-icons-install-fonts
+  )
+
+(use-package doom-themes
+  :ensure t
   :config
-  ;; Load the theme of your choice:
-  (modus-themes-load-theme 'modus-vivendi-tinted) ;; or modus-operandi-tinted
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t)
 
-  ;; https://protesilaos.com/emacs/modus-themes#h:4589acdc-2505-41fc-9f5e-699cfc45ab00
-  ;; (defun my-modus-themes-saturate (percent)
-  ;;   "Saturate current Modus theme palette overrides by PERCENT."
-  ;;   (interactive
-  ;;    (list (read-number "Saturation by percent: ")))
-  ;;   (let* ((theme (modus-themes--current-theme))
-  ;;          (palette (pcase theme
-  ;;                     ('modus-operandi modus-themes-operandi-colors)
-  ;;                     ('modus-vivendi modus-themes-vivendi-colors)
-  ;;                     (_ (error "No Modus theme is active"))))
-  ;;          (overrides (pcase theme
-  ;;                       ('modus-operandi 'modus-themes-operandi-color-overrides)
-  ;;                       ('modus-vivendi 'modus-themes-vivendi-color-overrides)
-  ;;                       (_ (error "No Modus theme is active")))))
-  ;;     (let (name cons colors)
-  ;;       (dolist (cons palette)
-  ;;         (setq name (color-saturate-name (cdr cons) percent))
-  ;;         (setq name (format "%s" name))
-  ;;         (setq cons `(,(car cons) . ,name))
-  ;;         (push cons colors))
-  ;;       (set overrides colors))
-  ;;     (pcase theme
-  ;;       ('modus-operandi (modus-themes-load-operandi))
-  ;;       ('modus-vivendi (modus-themes-load-vivendi)))))
-
-  ;; ;; sample Elisp calls (or call `my-modus-themes-saturate' interactively)
-  ;; (my-modus-themes-saturate 25)
-
-  :bind ("ESC <f5>" . modus-themes-toggle))
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (nerd-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
 
 (use-package monokai-theme
   :ensure t
@@ -886,12 +927,12 @@
 
 
 (if (>= emacs-major-version 28)
-    (add-hook 'after-init-hook (lambda () (load-theme
-                                        ;'tangotango
-                                        ;'pitchkai
-                                        ;'modus-vivendi
-                                           'monokai
-                                           )))
+    ;; (add-hook 'after-init-hook (lambda () (load-theme
+    ;;                                     ;'tangotango
+    ;;                                     ;'pitchkai
+    ;;                                     ;'modus-vivendi
+    ;;                                        'monokai
+    ;;                                        )))
   (if (functionp 'tool-bar-mode)
     (tool-bar-mode 0))
 )

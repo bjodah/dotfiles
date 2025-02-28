@@ -1,6 +1,6 @@
 ;;; my-text-to-speech.el --- Text-to-Speech using API endpoint -*- lexical-binding: t; -*-
 
-(defun my-text-to-speech-non-blocking ()
+(defun my-text-to-speech ()
   "Send the currently marked selection to a local TTS server and play audio non-blocking.
 
 Requires `curl` and `ffplay` to be installed and in your PATH.
@@ -27,4 +27,4 @@ To use:
   (unless (region-active-p)
     (message "No region selected. Please mark the text you want to convert to speech.")))
 
-(provide 'my-text-to-speech-non-blocking)
+(provide 'my-text-to-speech)

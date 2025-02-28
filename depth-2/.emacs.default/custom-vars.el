@@ -56,14 +56,16 @@
                  "Black" :html-background "Transparent" :html-scale
                  1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
-   '(auctex cape cmake-mode company corfu cython-mode dockerfile-mode ein
-            elfeed embark-consult flycheck flymake-shellcheck forge
-            god-mode gptel julia-mode jupyter lsp-java lsp-pyright
-            lsp-ui marginalia mmm-mode modus-themes monokai-theme
-            nginx-mode orderless org-roam pdf-tools realgud rg rmsbolt
-            rust-mode sqlite3 treemacs-magit typescript-mode
-            use-package validate vertico vterm which-key yaml-mode
-            yasnippet-snippets))
+   '(all-the-icons auctex cape cmake-mode company corfu cython-mode
+                   dockerfile-mode doom-themes ein elfeed
+                   embark-consult flycheck flymake-shellcheck forge
+                   god-mode gptel julia-mode jupyter lsp-java
+                   lsp-pyright lsp-ui marginalia minuet mmm-mode
+                   modus-themes monokai-theme nerd-icons nginx-mode
+                   orderless org-roam pdf-tools realgud rg rmsbolt
+                   rust-mode sqlite3 treemacs-magit typescript-mode
+                   use-package validate vertico vterm which-key
+                   yaml-mode yasnippet-snippets))
  '(preview-image-type 'dvipng)
  '(preview-scale-function 2)
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
