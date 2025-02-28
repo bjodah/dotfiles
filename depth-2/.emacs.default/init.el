@@ -118,9 +118,20 @@
    gptel-backend (gptel-make-gemini "Gemini"
                                     :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/g-gmni.* | tail -c+19 | head -c 39"))
                                     :stream t))
-  :bind ("C-c ." . 'gptel-send)
-
-                                        ;(setq gptel-api-key "your key")
+  :bind (("C-c ." . 'gptel-send)
+         ("C-c >" . (lambda ()
+                      (interactive)
+                      (let ((buffer (get-buffer "*gptel*")))
+                        (if buffer
+                            (let ((window (get-buffer-window buffer)))
+                              (if window
+                                  (select-window window)
+                                (gptel "*gptel*")
+                                ))
+                          (gptel "*gptel*"))
+                        (let ((window (get-buffer-window "*gptel*")))
+                          (if window (select-window window)
+                            (switch-to-buffer "*gptel*")))))))
   )
 
 
@@ -793,7 +804,7 @@
   :config
   (global-set-key (kbd "C-x w") 'elfeed)
   (setq elfeed-feeds
-        '("https://www.phoronix.com/rss.php"
+        '(;;"https://www.phoronix.com/rss.php"
           "https://fa.bianp.net/blog/feed/"
           "https://lemire.me/blog/feed/"
           "https://hbfs.wordpress.com/feed/"
@@ -893,14 +904,14 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-one t)
+  (load-theme 'doom-monokai-classic t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (nerd-icons must be installed!)
   (doom-themes-neotree-config)
   ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (setq doom-themes-treemacs-theme "doom-colors") ; use "doom-colors" for less minimal icon theme
   (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
