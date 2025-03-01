@@ -158,6 +158,16 @@
   :models '(;; xAI now only offers `grok-beta` as of the time of this writing
             grok-beta))
 
+(gptel-make-openai "DeepSeek"       ;Any name you want
+  :host "api.deepseek.com"
+  :endpoint "/chat/completions"
+  :stream t
+  :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/dpsk-2025-feb.*"))
+  :models '(deepseek-chat ; v3
+            deepseek-reasoner ; r1
+            ))
+
+
 (gptel-make-openai "localhost-8000"
   :stream t
   :protocol "http"
