@@ -141,13 +141,14 @@
   :stream t
   :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/grq-min-nyckel-16feb.txt | tail -c+19 | head -c -6"))
 
-  :models '(deepseek-r1-distill-llama-70b-specdec
+  :models '(;deepseek-r1-distill-llama-70b-specdec <-- use browser: https://inference.cerebras.ai/
             llama-3.3-70b-specdec
-            llama-3.3-70b-versatile
-            llama-3.1-8b-instant
-            llama-3.2-3b-preview
+            ;llama-3.3-70b-versatile
+            ;llama-3.1-8b-instant
+            ;llama-3.2-3b-preview
             qwen-2.5-coder-32b
-            gemma2-9b-it))
+                                        ;gemma2-9b-it
+            ))
 
 ;; xAI offers an OpenAI compatible API
 (gptel-make-openai "xAI"           ;Any name you want
