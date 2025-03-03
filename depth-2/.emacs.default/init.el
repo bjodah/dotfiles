@@ -41,7 +41,7 @@
 
 (defun bjodah/customize-window ()
   (cond
-   ((string= system-name "argus") (set-face-attribute 'default nil :height 140))
+   ((string= (system-name) "argus") (set-face-attribute 'default nil :height 140))
    (t (set-face-attribute 'default nil :height 105))
    )
   (scroll-bar-mode 0)
@@ -49,6 +49,7 @@
       (set-frame-font "Fira Code"))
 
 (add-hook 'after-init-hook 'bjodah/customize-window)
+(add-hook 'after-load-theme-hook 'bjodah/customize-window)
 (if (daemonp)
     (add-hook 'server-after-make-frame-hook
               (lambda ()
@@ -179,12 +180,37 @@
   :models '(TabbyAPI-QwenCoder14B)
 )
 
+(defun bjodah/minuet-use-groq ()
+    ;; GROQ for speed:
+    (plist-put minuet-openai-compatible-options :end-point "https://api.groq.com/openai/v1/chat/completions")
+    (plist-put minuet-openai-compatible-options :api-key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/grq-min-nyckel-16feb.txt | tail -c+19 | head -c -6")))
+    (plist-put minuet-openai-compatible-options :model "llama-3.3-70b-specdec")
+
+    ;; Prioritize throughput for faster completion
+    ;(minuet-set-optional-options minuet-openai-compatible-options :provider '(:sort "throughput"))
+    (minuet-set-optional-options minuet-openai-compatible-options :max_tokens 256)
+    (minuet-set-optional-options minuet-openai-compatible-options :top_p 0.9)
+    )
+
+(defun bjodah/minuet-use-smollm2 ()
+    ;; GROQ for speed:
+    (plist-put minuet-openai-compatible-options :end-point "http://localhost:8001/v1/chat/completions")
+    (plist-put minuet-openai-compatible-options :api-key (defun my-tabby-api-key () "duck123"))
+    (plist-put minuet-openai-compatible-options :model "HuggingFaceTB/SmolLM2-1.7B-Instruct")
+
+    ;; Prioritize throughput for faster completion
+    (minuet-set-optional-options minuet-openai-compatible-options :max_tokens 128)
+    (minuet-set-optional-options minuet-openai-compatible-options :top_p 0.9)
+    (setq minuet-context-window 200) ;; TODO: we need to reset this to 16000 somewhere
+    ;; TODO: customize the prompts, this is not a great model for coding, more conversational style.
+    )
+
 (use-package minuet
   :ensure t
   :bind
- (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
+ (("M-o" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
      ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
-     ("C-c m" . #'minuet-configure-provider)
+     ("M-p" . #'minuet-configure-provider)
      :map minuet-active-mode-map
      ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
      ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
@@ -202,15 +228,18 @@
     ;(add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
 
     :config
+    (setq minuet-auto-suggestion-throttle-delay 0.5)
+    (setq minuet-auto-suggestion-debounce-delay 0.3)
+
     ;; You can use M-x minuet-configure-provider to interactively configure provider and model
-    (setq minuet-provider 'openai-fim-compatible)
-    (setq minuet-n-completions 3) ; recommended for Local LLM for resource saving
+    (setq minuet-provider 'openai-fim-compatible)  ;; change to 'OpenAI-compatible to use GROQ/Smollm2
+    (setq minuet-n-completions 1) ; 1 is recommended for Local LLM for resource saving
     ;; I recommend beginning with a small context window size and incrementally
     ;; expanding it, depending on your local computing power. A context window
     ;; of 512, serves as an good starting point to estimate your computing
     ;; power. Once you have a reliable estimate of your local computing power,
     ;; you should adjust the context window to a larger value.
-    (setq minuet-context-window 512)
+    (setq minuet-context-window 2048) ;; 512
     (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:8000/v1/completions")
     ;; an arbitrary non-null environment variable as placeholder
     (plist-put minuet-openai-fim-compatible-options :name "Tabby-localhost-8000")
@@ -232,8 +261,8 @@
                  (plist-get ctx :before-cursor)
                  (plist-get ctx :after-cursor)))
      :template)
-
-    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256) ; or 56 for local llm?
+    )
 
 
 ;; Reduce load time
@@ -395,6 +424,11 @@
   :commands (marginalia-mode marginalia-cycle)
   :hook (after-init . marginalia-mode))
 
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
 (use-package embark
   ;; Embark is an Emacs package that acts like a context menu, allowing
   ;; users to perform context-sensitive actions on selected items
@@ -422,11 +456,6 @@
                  nil
                  (window-parameters (mode-line-format . none)))))
 
-(use-package embark-consult
-  :ensure t
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
-
 (use-package consult
   :ensure t
   :bind (;; C-c bindings in `mode-specific-map'
@@ -443,7 +472,7 @@
          ("C-x 5 b" . consult-buffer-other-frame)
          ("C-x t b" . consult-buffer-other-tab)
          ("C-x r b" . consult-bookmark)
-         ("C-x p b" . consult-project-buffer)
+         ("C-x P b" . consult-project-buffer)
          ;; Custom M-# bindings for fast register access
          ("M-#" . consult-register-load)
          ("M-'" . consult-register-store)

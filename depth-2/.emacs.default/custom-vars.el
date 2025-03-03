@@ -5,7 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
-   '("113a135eb7a2ace6d9801469324f9f7624f8c696b72e3709feb7368b06ddaccc"
+   '("e1f4f0158cd5a01a9d96f1f7cdcca8d6724d7d33267623cc433fe1c196848554"
+     "2771ec93656faf267521dce9ffe1a6ad88cd0bea87aa0e8c4fc80bf355c58c1d"
+     "2721b06afaf1769ef63f942bf3e977f208f517b187f2526f0e57c1bd4a000350"
+     "113a135eb7a2ace6d9801469324f9f7624f8c696b72e3709feb7368b06ddaccc"
      "e4a702e262c3e3501dfe25091621fe12cd63c7845221687e36a79e17cf3a67e0"
      "dd4582661a1c6b865a33b89312c97a13a3885dc95992e2e5fc57456b4c545176"
      "5c7720c63b729140ed88cf35413f36c728ab7c70f8cd8422d9ee1cedeb618de5"
@@ -59,7 +62,8 @@
  '(ein:output-area-inlined-images t t)
  '(flycheck-c/c++-gcc-executable "gcc-12")
  '(ignored-local-variable-values
-   '((vc-default-patch-addressee . "bug-gnu-emacs@gnu.org")
+   '((editorconfig-lisp-use-default-indent . t)
+     (vc-default-patch-addressee . "bug-gnu-emacs@gnu.org")
      (vc-prepare-patches-separately)
      (etags-regen-ignores "test/manual/etags/")
      (etags-regen-regexp-alist
