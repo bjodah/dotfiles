@@ -14,8 +14,10 @@ alias la='ls -A --color=auto'
 alias l='ls -CF --color=auto'
 alias ccat="batcat -pp"
 alias eem="emacs -l ~/.emacs-evil"
+alias emxdt='( ulimit -v 16000000; source ~/venv/bin/activate; emacs --fg-daemon=$(tmux display-message -p "#S") )'
 alias ec="emacsclient"
 alias ect='emacsclient -a "" -t'
+alias ectt='emacsclient -t --socket-name=$(tmux display-message -p "#S")'
 alias ecc='emacsclient -a "" -c'
 alias enw="emacs -nw"
 alias enwq="emacs -nw -q"
