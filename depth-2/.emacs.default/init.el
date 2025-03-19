@@ -1,3 +1,7 @@
+;; I prefer C-x (, C-x ), C-x e for macro related functions
+(global-unset-key (kbd "<f3>")) ; unbind kmacro-start-macro-or-insert-counter from F3
+(global-unset-key (kbd "<f4>")) ; unbind kmacro-end-or-call-macro from F4
+
 (if (and (getenv "DISPLAY") (string-match-p "dark" (shell-command-to-string
                              "gsettings get org.gnome.desktop.interface gtk-theme")))
                                         ;(set-background-color "black")
@@ -184,13 +188,47 @@
     ;; GROQ for speed:
     (plist-put minuet-openai-compatible-options :end-point "https://api.groq.com/openai/v1/chat/completions")
     (plist-put minuet-openai-compatible-options :api-key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/grq-min-nyckel-16feb.txt | tail -c+19 | head -c -6")))
-    (plist-put minuet-openai-compatible-options :model "llama-3.3-70b-specdec")
+    (plist-put minuet-openai-compatible-options :model "llama-3.3-70b-specdec" ;"qwen-2.5-coder-32b"
+               )
 
     ;; Prioritize throughput for faster completion
     ;(minuet-set-optional-options minuet-openai-compatible-options :provider '(:sort "throughput"))
     (minuet-set-optional-options minuet-openai-compatible-options :max_tokens 256)
     (minuet-set-optional-options minuet-openai-compatible-options :top_p 0.9)
     )
+
+(defun bjodah/minuet-use-localhost-fim ()
+    (setq minuet-n-completions 1) ; 1 is recommended for Local LLM for resource saving
+    ;; I recommend beginning with a small context window size and incrementally
+    ;; expanding it, depending on your local computing power. A context window
+    ;; of 512, serves as an good starting point to estimate your computing
+    ;; power. Once you have a reliable estimate of your local computing power,
+    ;; you should adjust the context window to a larger value.
+    (setq minuet-context-window 2048) ;; 512
+    (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:8000/v1/completions")
+    ;; an arbitrary non-null environment variable as placeholder
+    (plist-put minuet-openai-fim-compatible-options :name "Tabby-localhost-8000")
+    (plist-put minuet-openai-fim-compatible-options :api-key (defun my-tabby-api-key () "duck123"))
+    ;; The model is set by the llama-cpp server and cannot be altered
+    ;; post-launch.
+    (plist-put minuet-openai-fim-compatible-options :model "PLACEHOLDER")
+
+    ;; Llama.cpp does not support the `suffix` option in FIM completion.
+    ;; Therefore, we must disable it and manually populate the special
+    ;; tokens required for FIM completion.
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :suffix nil :template)
+    (minuet-set-optional-options
+     minuet-openai-fim-compatible-options
+     :prompt
+     (defun minuet-llama-cpp-fim-qwen-prompt-function (ctx)
+         (format "<|fim_prefix|>%s\n%s<|fim_suffix|>%s<|fim_middle|>"
+                 (plist-get ctx :language-and-tab)
+                 (plist-get ctx :before-cursor)
+                 (plist-get ctx :after-cursor)))
+     :template)
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256) ; or 56 for local llm?
+    (setq minuet-provider 'openai-fim-compatible)
+  )
 
 (defun bjodah/minuet-use-smollm2 ()
     ;; GROQ for speed:
@@ -228,40 +266,12 @@
     ;(add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
 
     :config
+    (bjodah/minuet-use-localhost-fim) ; or bjodah/minuet-use-smollm2
     (setq minuet-auto-suggestion-throttle-delay 0.5)
     (setq minuet-auto-suggestion-debounce-delay 0.3)
 
     ;; You can use M-x minuet-configure-provider to interactively configure provider and model
-    (setq minuet-provider 'openai-fim-compatible)  ;; change to 'OpenAI-compatible to use GROQ/Smollm2
-    (setq minuet-n-completions 1) ; 1 is recommended for Local LLM for resource saving
-    ;; I recommend beginning with a small context window size and incrementally
-    ;; expanding it, depending on your local computing power. A context window
-    ;; of 512, serves as an good starting point to estimate your computing
-    ;; power. Once you have a reliable estimate of your local computing power,
-    ;; you should adjust the context window to a larger value.
-    (setq minuet-context-window 2048) ;; 512
-    (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:8000/v1/completions")
-    ;; an arbitrary non-null environment variable as placeholder
-    (plist-put minuet-openai-fim-compatible-options :name "Tabby-localhost-8000")
-    (plist-put minuet-openai-fim-compatible-options :api-key (defun my-tabby-api-key () "duck123"))
-    ;; The model is set by the llama-cpp server and cannot be altered
-    ;; post-launch.
-    (plist-put minuet-openai-fim-compatible-options :model "PLACEHOLDER")
 
-    ;; Llama.cpp does not support the `suffix` option in FIM completion.
-    ;; Therefore, we must disable it and manually populate the special
-    ;; tokens required for FIM completion.
-    (minuet-set-optional-options minuet-openai-fim-compatible-options :suffix nil :template)
-    (minuet-set-optional-options
-     minuet-openai-fim-compatible-options
-     :prompt
-     (defun minuet-llama-cpp-fim-qwen-prompt-function (ctx)
-         (format "<|fim_prefix|>%s\n%s<|fim_suffix|>%s<|fim_middle|>"
-                 (plist-get ctx :language-and-tab)
-                 (plist-get ctx :before-cursor)
-                 (plist-get ctx :after-cursor)))
-     :template)
-    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256) ; or 56 for local llm?
     )
 
 
@@ -353,16 +363,16 @@
 (use-package flycheck
   :ensure t
   :hook (prog-mode . flycheck-mode))
-(use-package company
-  :ensure t
-  :hook (prog-mode . company-mode)
-  :config
-  (add-to-list 'company-backends 'company-capf)
-  (add-to-list 'company-backends 'company-files)
-  (setq company-tooltip-align-annotations t)
-  (setq company-minimum-prefix-length 1)
-  :bind ("C-," . 'company-files)
-  )
+;; (use-package company
+;;   :ensure t
+;;   :hook (prog-mode . company-mode)
+;;   :config
+;;   (add-to-list 'company-backends 'company-capf)
+;;   (add-to-list 'company-backends 'company-files)
+;;   (setq company-tooltip-align-annotations t)
+;;   (setq company-minimum-prefix-length 1)
+;;   :bind ("C-," . 'company-files)
+;;   )
 
 ;; treemacs
 (use-package treemacs
@@ -468,6 +478,7 @@
          ;; C-x bindings in `ctl-x-map'
          ("C-x M-:" . consult-complex-command)
          ("C-x b" . consult-buffer)
+         ("<f3>" . consult-buffer)
          ("C-x 4 b" . consult-buffer-other-window)
          ("C-x 5 b" . consult-buffer-other-frame)
          ("C-x t b" . consult-buffer-other-tab)
@@ -732,7 +743,7 @@
   :ensure t
   :bind
   ("C-<escape>" . #'god-local-mode)
-  ("ESC M-SPC" . #'god-local-mode)
+  ("ESC M-SPC" . #'god-local-mode) ; ESC ESC space
   :config
   (defun my-god-mode-update-cursor-type ()
     (if god-local-mode
@@ -1266,6 +1277,11 @@
 (defun ipython ()
     (interactive)
     (term "ipython")) ;; note: C-x becomes C-c in term
+
+(defun isympy ()
+    (interactive)
+    (term "isympy")) ;; note: C-x becomes C-c in term
+
 
 (add-hook 'markdown-mode-hook
     (function (lambda ()
