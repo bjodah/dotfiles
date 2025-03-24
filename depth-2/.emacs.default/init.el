@@ -437,6 +437,16 @@
 (load (expand-file-name (concat user-emacs-directory "bjodah-gptel")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-minuet")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-lsp")))
+(use-package aidermacs
+  :ensure t
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :config
+  :custom
+  ; See the Configuration section below
+  (aidermacs-use-architect-mode t)
+  (aidermacs-default-model "openrouter/deepseek/deepseek-chat")
+  (aidermacs-architect-model "openrouter/deepseek/deepseek-r1")
+)
 
 (use-package rust-mode
   :ensure t

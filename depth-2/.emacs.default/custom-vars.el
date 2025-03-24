@@ -55,40 +55,32 @@
      "4b7f40b8a016aebe2f0229c188f6fcc10436881dbfd1469f427679212b5c16e7"
      "5e2cdea6453f8963037723ab91c779b203fb201bf5c377094440f0c465d688ec"
      "fc6697788f00629cd01f4d2cc23f1994d08edb3535e4c0facef6b7247b41f5c7"
-     "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb"
-     default))
+     "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
  '(dired-vc-rename-file t)
  '(doc-view-resolution 200)
  '(ein:output-area-inlined-images t t)
+ '(fill-column 100)
  '(flycheck-c/c++-gcc-executable "gcc-12")
  '(ignored-local-variable-values
-   '((editorconfig-lisp-use-default-indent . t)
-     (vc-default-patch-addressee . "bug-gnu-emacs@gnu.org")
-     (vc-prepare-patches-separately)
-     (etags-regen-ignores "test/manual/etags/")
+   '((editorconfig-lisp-use-default-indent . t) (vc-default-patch-addressee . "bug-gnu-emacs@gnu.org")
+     (vc-prepare-patches-separately) (etags-regen-ignores "test/manual/etags/")
      (etags-regen-regexp-alist
       (("c" "objc") "/[ \11]*DEFVAR_[A-Z_ \11(]+\"\\([^\"]+\\)\"/\\1/"
        "/[ \11]*DEFVAR_[A-Z_ \11(]+\"[^\"]+\",[ \11]\\([A-Za-z0-9_]+\\)/\\1/"))
-     (diff-add-log-use-relative-names . t)
-     (vc-git-annotate-switches . "-w")))
+     (diff-add-log-use-relative-names . t) (vc-git-annotate-switches . "-w")))
  '(inhibit-startup-screen t)
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(org-format-latex-options
-   '(:foreground default :background default :scale 1.25 :html-foreground
-                 "Black" :html-background "Transparent" :html-scale
-                 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+   '(:foreground default :background default :scale 1.25 :html-foreground "Black" :html-background
+                 "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
-   '(all-the-icons auctex cape cmake-mode company corfu cython-mode
-                   dired-preview dockerfile-mode doom-themes ein
-                   elfeed embark-consult flycheck flymake-shellcheck
-                   forge god-mode gptel gptel-quick julia-mode jupyter
-                   lsp-java lsp-pyright lsp-ui marginalia minuet
-                   mmm-mode modus-themes monokai-theme nerd-icons
-                   nginx-mode orderless org-roam pdf-tools realgud rg
-                   rmsbolt rust-mode sqlite3 tangotango-theme
-                   treemacs-magit typescript-mode use-package validate
-                   vertico vterm which-key yaml-mode
-                   yasnippet-snippets))
+   '(aidermacs all-the-icons auctex cape cmake-mode company corfu cython-mode dired-preview
+               dockerfile-mode doom-themes ein elfeed embark-consult flycheck flymake-shellcheck
+               forge god-mode gptel gptel-quick julia-mode jupyter lsp-java lsp-pyright lsp-ui
+               marginalia minuet mmm-mode modus-themes monokai-theme nerd-icons nginx-mode orderless
+               org-roam pdf-tools realgud rg rmsbolt rust-mode sqlite3 tangotango-theme
+               treemacs-magit typescript-mode use-package validate vertico vterm which-key yaml-mode
+               yasnippet-snippets))
  '(package-vc-selected-packages
    '((gptel-quick :url "https://github.com/karthink/gptel-quick")))
  '(preview-image-type 'dvipng)
@@ -105,4 +97,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 100 :width normal)))))
+ )

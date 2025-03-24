@@ -16,3 +16,5 @@ fi
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+
+# [[ -f ~/.bashrc_agent ]] && . ~/.bashrc_agent

@@ -34,6 +34,8 @@
         echo ' $ podrun -v ~/.ssh:/root/.ssh -v ~/.gnupg:/root/.gnupg --image alpine:latest'
         echo ' $ podrun --gui --image docker.io/silex/emacs:master-alpine -- emacs ~/.bashrc '
         echo ' $ podrun --gui --cont-img-dir ~/dotfiles/containers/gccemacs-doom/env -- ~/.emacs.d/bin/doom sync; emacs ~/.bashrc '
+        echo ''
+        echo 'Note that you can override both --image and --cont-img-dir with the environment variable PODRUN_IMAGE_OVERRIDE.'
     }
     declare -a PODMAN_RUN_ARGS
     while [ $# -gt 0 ]; do
