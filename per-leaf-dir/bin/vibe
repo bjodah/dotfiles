@@ -1,0 +1,24 @@
+#!/bin/bash
+# -*- mode: shellscript -*-
+set -euxo pipefail
+[ -v LITELLM_PROXY_API_KEY ]
+source "$HOME/doc/it/apei-nycklar/source-env-vars.sh"
+gpg_socket="$(echo $GPG_AGENT_INFO | cut -d: -f1)"
+podrun \
+    -e TERM \
+    -e OPENROUTER_API_KEY \
+    -e GPG_AGENT_INFO \
+    -e SSH_AUTH_SOCK \
+    -e LITELLM_PROXY_API_KEY \
+    -e LITELLM_PROXY_API_BASE \
+    -v "$HOME/.gnupg":"/root/.gnupg" \
+    -v "$HOME/.ssh":"/root/.ssh" \
+    -v "$HOME/doc/3d3s":"/root/doc/3d3s" \
+    -v "$HOME/dotfiles":/opt-3/bjodah-dotfiles \
+    -v $gpg_socket:$gpg_socket \
+    -v "$SSH_AUTH_SOCK":"$SSH_AUTH_SOCK" \
+    --image bjodah/triceratops-7:7 \
+    -- "\
+source /opt-3/cpython-v3.12-apt-deb/bin/activate; \
+ulimit -v 32000000; \
+${@}"

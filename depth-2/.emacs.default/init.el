@@ -284,7 +284,6 @@
   ;; users to perform context-sensitive actions on selected items
   ;; directly from the completion interface.
   :ensure t
-  :defer t
   :commands (embark-act
              embark-dwim
              embark-export

@@ -4,7 +4,7 @@
 # The curly braces on the line below allows us to edit this file without worrying
 # if doing so while the script is running.
 {
-    IMAGE=bjodah/triceratops-6   # the default image
+    IMAGE=bjodah/triceratops-7:7   # the default image
     CONTAINER_FOLDER=""
     MOUNT_HOME=0
     MOUNT_GPG_SOCKET=0
