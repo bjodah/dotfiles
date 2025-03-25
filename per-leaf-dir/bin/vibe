@@ -30,20 +30,20 @@
 
     declare -a potential_env_vars_to_export
     potential_env_vars_to_export=(ALEPHALPHA_API_KEY ALEPH_ALPHA_API_KEY ANTHROPIC_API_KEY ANYSCALE_API_KEY AZURE_AI_API_KEY AZURE_API_KEY AZURE_OPENAI_API_KEY BASETEN_API_KEY CEREBRAS_API_KEY CLARIFAI_API_KEY CLOUDFLARE_API_KEY CODESTRAL_API_KEY COHERE_API_KEY CO_API_KEY DATABRICKS_API_KEY DEEPINFRA_API_KEY DEEPSEEK_API_KEY FIREWORKSAI_API_KEY FIREWORKS_AI_API_KEY FIREWORKS_API_KEY GEMINI_API_KEY GROQ_API_KEY HUGGINGFACE_API_KEY MARITALK_API_KEY MISTRAL_API_KEY NLP_CLOUD_API_KEY NVIDIA_NIM_API_KEY OLLAMA_API_KEY OPENAI_API_KEY OPENAI_LIKE_API_KEY OPENROUTER_API_KEY OR_API_KEY PALM_API_KEY PERPLEXITYAI_API_KEY PREDIBASE_API_KEY PROVIDER_API_KEY REPLICATE_API_KEY TOGETHERAI_API_KEY VOLCENGINE_API_KEY VOYAGE_API_KEY WATSONX_API_KEY WX_API_KEY XAI_API_KEY XINFERENCE_API_KEY)
+    
+    potential_env_vars_to_export+=(GPG_TTY TERM GPG_AGENT_INFO SSH_AUTH_SOCK LITELLM_PROXY_API_KEY LITELLM_PROXY_API_BASE)
     for env_var_name in "${potential_env_vars_to_export[@]}"; do
         if [[ -v "$env_var_name" ]]; then
             PODRUN_ARGS+=(-e $env_var_name)
         fi
     done
-    set -x
+    ( set -x;
     podrun \
         --cont-img-dir ~/dotfiles/containers/vibe-env \
+        --device nvidia.com/gpu=all \
+        --security-opt=label=disable \
+        --ipc=host \
         ${PODRUN_ARGS[@]} \
-        -e TERM \
-        -e GPG_AGENT_INFO \
-        -e SSH_AUTH_SOCK \
-        -e LITELLM_PROXY_API_KEY \
-        -e LITELLM_PROXY_API_BASE \
         -v "$HOME/.gnupg":"/root/.gnupg" \
         -v "$HOME/.ssh":"/root/.ssh" \
         -v "$HOME/doc/3d3s":"/root/doc/3d3s" \
@@ -58,6 +58,7 @@ ln -s /opt-3/bjodah-dotfiles /root/dotfiles; \
 source ~/venv/bin/activate; \
 ulimit -v 32000000; \
 ${@}"
+    )
     echo "end of vibe..."
 }
 

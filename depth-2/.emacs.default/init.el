@@ -443,10 +443,12 @@
   :custom
   ; See the Configuration section below
   (aidermacs-use-architect-mode t)
-  ;; (aidermacs-default-model "openrouter/deepseek/deepseek-chat")
   ;; (aidermacs-architect-model "openrouter/deepseek/deepseek-r1")
-  (aidermacs-default-model "litellm_proxy/local-exllamav2-qwq-32b")
-  (aidermacs-architect-model "litellm_proxy/local-exllamav2-qwen25-coder-32b")
+  ;; (aidermacs-default-model "openrouter/deepseek/deepseek-chat")
+  (aidermacs-architect-model "litellm_proxy/local-qwq-32b")
+  (aidermacs-default-model "litellm_proxy/local-qwen25-coder-32b")
+  ;; (aidermacs-architect-model "litellm_proxy/local-exllamav2-qwen25-coder-32b")
+  ;; (aidermacs-default-model "litellm_proxy/local-exllamav2-qwq-32b")
 )
 
 (use-package rust-mode
@@ -867,6 +869,7 @@
 (global-set-key (kbd "ESC <f2>") 'split-window-below)
 (global-set-key (kbd "ESC <f3>") 'split-window-right)
 (global-set-key (kbd "ESC <f4>") 'delete-window)
+(global-set-key (kbd "ESC <f5>") 'vterm)
 (global-set-key (kbd "C-c C-<left>") 'previous-buffer)
 (global-set-key (kbd "C-c C-<right>") 'next-buffer)
 (global-set-key (kbd "C-c M-~") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))
