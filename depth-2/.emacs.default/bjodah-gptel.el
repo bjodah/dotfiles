@@ -1,5 +1,9 @@
 (use-package gptel
-  :vc (:url "https://github.com/karthink/gptel")
+  :vc (
+       :url "https://github.com/karthink/gptel"
+            :rev :newest
+            :branch "master"
+            )
   :ensure t
   :config
   (setq
