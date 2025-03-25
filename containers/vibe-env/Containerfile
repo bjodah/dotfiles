@@ -9,6 +9,9 @@ RUN cd /opt-3/bjodah-dotfiles \
     (package-initialize) \
     (package-refresh-contents) \
     (load-file \"/opt-3/emacs-d-30/init.el\") \
-    ) "
+    )" \
+    && cd /opt-3/emacs-d-30/elpa/gptel \
+    && git pull origin master  # don't know why :vc (... :rev :newest) isn't working...
 
 # (package-upgrade 'gptel)
+    # && git clone https://github.com/karthink/gptel /opt-3/emacs-d-30/elpa/gptel \
