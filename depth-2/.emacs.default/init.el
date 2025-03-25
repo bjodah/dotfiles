@@ -443,8 +443,10 @@
   :custom
   ; See the Configuration section below
   (aidermacs-use-architect-mode t)
-  (aidermacs-default-model "openrouter/deepseek/deepseek-chat")
-  (aidermacs-architect-model "openrouter/deepseek/deepseek-r1")
+  ;; (aidermacs-default-model "openrouter/deepseek/deepseek-chat")
+  ;; (aidermacs-architect-model "openrouter/deepseek/deepseek-r1")
+  (aidermacs-default-model "litellm_proxy/local-exllamav2-qwq-32b")
+  (aidermacs-architect-model "litellm_proxy/local-exllamav2-qwen25-coder-32b")
 )
 
 (use-package rust-mode
@@ -631,6 +633,13 @@
           "https://depth-first.com/articles.atom" ;; Richard L. Apodaca (chemoinformatics)
           ))
   )
+
+
+(use-package dired
+    :config
+  (with-eval-after-load 'dired
+    (define-key dired-mode-map (kbd "F") #'dired-create-empty-file)
+  ))
 
 ;(package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode"))
 
@@ -860,7 +869,7 @@
 (global-set-key (kbd "ESC <f4>") 'delete-window)
 (global-set-key (kbd "C-c C-<left>") 'previous-buffer)
 (global-set-key (kbd "C-c C-<right>") 'next-buffer)
-
+(global-set-key (kbd "C-c M-~") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))
 
 
 (defun insert-buffer-name () (interactive)

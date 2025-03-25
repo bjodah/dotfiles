@@ -1,0 +1,11 @@
+FROM bjodah/triceratops-7:7
+
+RUN cd /opt-3/bjodah-dotfiles \
+    && git pull \
+    && /opt-3/emacs-30-lucid/bin/emacs --batch --eval "(progn \
+    (require 'package) \
+    (add-to-list 'package-archives '(\"melpa\" . \"https://melpa.org/packages/\") t) \
+    (package-initialize) \
+    (package-refresh-contents) \
+    (load-file \"/opt-3/emacs-d-30/init.el\") \
+    (package-upgrade 'gptel))"

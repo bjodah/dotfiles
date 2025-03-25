@@ -90,7 +90,7 @@
  '(vc-git-grep-template
    "git --no-pager grep --recurse-submodules -n <C> -e <R> -- <F>")
  '(vterm-always-compile-module t)
- '(vterm-shell "/usr/bin/fish")
+ '(vterm-shell "/bin/bash") ; "/usr/bin/fish"
  '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

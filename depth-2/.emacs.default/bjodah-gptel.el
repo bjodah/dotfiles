@@ -1,15 +1,16 @@
 (use-package gptel
+  :vc (:url "https://github.com/karthink/gptel")
   :ensure t
   :config
   (setq
-   gptel-model 'gemini-2.0-flash-exp
+   gptel-model 'gemini-2.0-flash
    gptel-backend (gptel-make-gemini "Gemini"
-                                    :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/g-gmni.* | tail -c+19 | head -c 39"))
-                                    :stream t))
+                   :key "GEMINI_API_KEY" ;(lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/g-gmni.* | tail -c+19 | head -c 39"))
+                   :stream t))
   (setq gptel-temperature 0.2)
   :bind (("C-c ." . 'gptel-send)
          ("C-c /" . 'gptel-rewrite)
-         ("C-c >" . (lambda ()
+         ("C-c M->" . (lambda ()
                       (interactive)
                       (let ((buffer (get-buffer "*gptel*")))
                         (if buffer
@@ -28,8 +29,9 @@
 (use-package gptel-quick
   :vc (:url "https://github.com/karthink/gptel-quick")
   :ensure t
+  :after embark
   :config
-  (keymap-set embark-general-map "?" #'gptel-quick)
+  (keymap-set embark-region-map "?" #'gptel-quick)
   ;;:bind (("C-c ?" . gptel-quick)) ; C-. ?
 )
 
@@ -39,7 +41,7 @@
   :host "api.groq.com"
   :endpoint "/openai/v1/chat/completions"
   :stream t
-  :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/grq-min-nyckel-16feb.txt | tail -c+19 | head -c -6"))
+  :key "GROQ_API_KEY" ;(lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/grq-min-nyckel-16feb.txt | tail -c+19 | head -c -6"))
 
   :models '(;deepseek-r1-distill-llama-70b-specdec <-- use browser: https://inference.cerebras.ai/
             llama-3.3-70b-specdec
@@ -55,7 +57,7 @@
 ;; xAI offers an OpenAI compatible API
 (gptel-make-openai "xAI"           ;Any name you want
   :host "api.x.ai"
-  :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/xai-2025-feb.*"))
+  :key "XAI_API_KEY" ;(lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/xai-2025-feb.*"))
   :endpoint "/v1/chat/completions"
   :stream t
   :models '(;; xAI now only offers `grok-beta` as of the time of this writing
@@ -65,7 +67,7 @@
   :host "api.deepseek.com"
   :endpoint "/chat/completions"
   :stream t
-  :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/dpsk-2025-feb.*"))
+  :key "DEEPSEEK_API_KEY" ; (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/dpsk-2025-feb.*"))
   :models '(deepseek-chat ; v3
             deepseek-reasoner ; r1
             ))
