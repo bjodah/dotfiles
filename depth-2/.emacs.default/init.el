@@ -878,6 +878,9 @@
 (defun insert-buffer-name () (interactive)
   (insert (buffer-name))
 )
+(defun copy-buffer-name () (interactive)
+       ;; complete this function
+       )
 ; Let F3 insert current file name when in minibuffer
 (define-key minibuffer-local-map [f3]
   (lambda() (interactive) (insert (buffer-file-name (nth 1 (buffer-list))))))
