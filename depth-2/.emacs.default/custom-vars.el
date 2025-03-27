@@ -82,7 +82,8 @@
                treemacs-magit typescript-mode use-package validate vertico vterm which-key yaml-mode
                yasnippet-snippets))
  '(package-vc-selected-packages
-   '((gptel-quick :url "https://github.com/karthink/gptel-quick")))
+   '((gptel :url "https://github.com/karthink/gptel" :branch "master")
+     (gptel-quick :url "https://github.com/karthink/gptel-quick")))
  '(preview-image-type 'dvipng)
  '(preview-scale-function 2)
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
@@ -90,11 +91,11 @@
  '(vc-git-grep-template
    "git --no-pager grep --recurse-submodules -n <C> -e <R> -- <F>")
  '(vterm-always-compile-module t)
- '(vterm-shell "/bin/bash") ; "/usr/bin/fish"
+ '(vterm-shell "/bin/bash")
  '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 110 :width normal)))))

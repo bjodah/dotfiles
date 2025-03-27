@@ -6,7 +6,7 @@
         echo "  $(basename $0) -v /path/to/file:/mnt/in_container -- emacs"
     }
     set -euo pipefail
-    [ -v LITELLM_PROXY_API_KEY ]
+    #[ -v LITELLM_PROXY_API_KEY ]
     source "$HOME/doc/it/apei-nycklar/source-env-vars.sh"
     gpg_socket="$(echo $GPG_AGENT_INFO | cut -d: -f1)"
     declare -a PODRUN_ARGS

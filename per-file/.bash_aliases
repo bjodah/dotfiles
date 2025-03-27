@@ -12,6 +12,7 @@ alias g='git'
 alias ll='ls -laFrth --color=auto'
 alias la='ls -A --color=auto'
 alias l='ls -CF --color=auto'
+alias aider-local="env OPENAI_API_KEY=placeholder OPENAI_API_BASE=http://localhost:8686/v1 contaider --architect --model openai/llamacpp-QwQ-32B --editor-model openai/llamacpp-Qwen2.5-Coder-32B-Instruct"
 alias aider-local-coder="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --model litellm_proxy/local-qwen25-coder-32b"
 alias aider-local-qwq32="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --architect --model litellm_proxy/local-qwq-32b --editor-model litellm_proxy/local-qwen25-coder-32b"
 alias aider-local-fuse01="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --model litellm_local-fuseo1"
@@ -19,7 +20,7 @@ alias aider-local-tabby="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablem
 alias aider-local-exllamav2="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --architect --model litellm_proxy/local-exllamav2-qwq-32b --editor-model litellm_proxy/local-exllamav2-qwen25-coder-32b"
 alias ccat="batcat -pp"
 alias eem="emacs -l ~/.emacs-evil"
-alias emacs-fg-daemon-tmux='( set -x; ulimit -v 16000000; source ~/venv/bin/activate; emacs --fg-daemon=$(tmux display-message -p "#S") )'
+alias emacs-fg-daemon-tmux='( source ~/venv/bin/activate; source ~/doc/it/apei-nycklar/source-env-vars.sh; set -x; ulimit -v 16000000; emacs --fg-daemon=$(tmux display-message -p "#S") )'
 alias ec="emacsclient"
 alias ect='emacsclient -a "" -t'
 alias ect-tmux='emacsclient -t --socket-name=$(tmux display-message -p "#S")'

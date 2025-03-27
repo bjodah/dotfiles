@@ -1,20 +1,22 @@
 {
-    "litellm_proxy/local-qwq-32b": {
+    "openai/llamacpp-QwQ-32B": {
         "max_tokens": 32768,
         "max_input_tokens": 16000,
         "max_output_tokens": 32000,
         "input_cost_per_token": 0.00000003,
         "output_cost_per_token": 0.0000003,
-        // "litellm_provider": "litellm_proxy",
-        "mode": "chat"
+        "mode": "chat",
+        "api_base": "http://localhost:8686/v1",
+        "api_key": "placeholder"
     },
-    "litellm_proxy/local-qwen25-coder-32b": {
+    "openai/llamacpp-Qwen2.5-Coder-32B-Instruct": {
         "max_tokens": 32768,
         "max_input_tokens": 32000,
         "max_output_tokens": 32000,
         "input_cost_per_token": 0.00000003,
         "output_cost_per_token": 0.0000003,
-        // "litellm_provider": "litellm_proxy",
-        "mode": "chat"
+        "mode": "chat",
+        "api_base": "http://localhost:8686/v1",
+        "api_key": "placeholder"
     }
 }

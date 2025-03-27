@@ -292,6 +292,7 @@
              embark-prefix-help-command)
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-c M-c" . embark-act)
    ("C-;" . embark-dwim)        ;; good alternative: M-.
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
@@ -849,8 +850,9 @@
 (global-set-key (kbd "C-x v e") 'vc-git-grep)
 (global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
 ;(global-set-key (kbd "C-c C-l") 'compile)
-(global-set-key "\C-cb" 'insert-buffer-name)
-(global-set-key (kbd "C-c m") 'recompile)
+(global-set-key (kbd "C-c M-b") 'bjodah/insert-buffer-name)
+(global-set-key (kbd "C-c M-n") 'bjodah/copy-buffer-name)
+(global-set-key (kbd "C-c M-m") 'recompile)
 (global-set-key (kbd "C-x f") 'find-file-at-point)
 (global-set-key (kbd "C-c M-f") 'set-fill-column)
 (global-set-key (kbd "C-c C-l") 'hl-line-mode)
@@ -875,12 +877,11 @@
 (global-set-key (kbd "C-c M-~") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))
 
 
-(defun insert-buffer-name () (interactive)
+(defun bjodah/insert-buffer-name () (interactive)
   (insert (buffer-name))
 )
-(defun copy-buffer-name () (interactive)
-       ;; complete this function
-       )
+(defun bjodah/copy-buffer-name () (interactive)
+(kill-new (buffer-name)))
 ; Let F3 insert current file name when in minibuffer
 (define-key minibuffer-local-map [f3]
   (lambda() (interactive) (insert (buffer-file-name (nth 1 (buffer-list))))))
