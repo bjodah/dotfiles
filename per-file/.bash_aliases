@@ -27,7 +27,7 @@ alias ect-tmux='emacsclient -t --socket-name=$(tmux display-message -p "#S")'
 alias ecc='emacsclient -a "" -c'
 alias enw="emacs -nw"
 alias enwq="emacs -nw -q"
-alias fd="fdfind"
+alias fd="fdfind -H"
 alias uuid='python -c "import uuid; import base64; print(\"_\" + base64.b32encode(uuid.uuid4().bytes).decode().strip(\"=\"))"'
 alias tmx='export MPLBACKEND=Agg; tmux'
 alias dmesg-less='sudo dmesg --color=always | less -R'
