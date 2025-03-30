@@ -20,6 +20,7 @@ RUN sed -i 's/^Components: main$/Components: main contrib non-free/g' /etc/apt/s
 source /opt-3/cpython-v3.12-apt-deb/bin/activate && \
 pip install pycuda"
 
+RUN /root/.local/share/uv/tools/aider-chat/bin/python -m pip install --upgrade --upgrade-strategy only-if-needed aider-chat
 
 # (package-upgrade 'gptel)
     # && git clone https://github.com/karthink/gptel /opt-3/emacs-d-30/elpa/gptel \

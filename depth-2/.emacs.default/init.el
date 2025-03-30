@@ -85,6 +85,17 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
+(use-package emacs
+  :ensure nil
+  :custom
+  (kill-do-not-save-duplicates t)
+  )
+
+(use-package autorevert
+  :ensure nil
+  :config
+  (setq global-auto-revert-non-file-buffers t))
+
 ;http://www.emacswiki.org/emacs/LoadPath
 (add-to-list 'load-path
                                         ;"~/.emacs.d/lisp/"
@@ -99,13 +110,14 @@
 (use-package whisper
   ;:load-path (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
   ;:ensure
-  :bind ("C-c ," . whisper-run)
+  :bind (("C-c ," . whisper-run)
+         ("<f4>" . whisper-run))
   :config
   (setq whisper-install-whispercpp nil ;'manual
         ;whisper-install-directory "/opt/"
         whisper-server-mode 'custom
         whisper-server-host "127.0.0.1"
-        whisper-server-port 8007 ;8642
+        whisper-server-port 8007 ;8642  ; see "host-speeches-ai-8007.sh"
         whisper-model "large-v3-turbo"
         whisper-language "en" ;; "sv"
         whisper-translate nil
@@ -142,12 +154,13 @@
         (dap-auto-configure-mode t                           "Automatically configure dap.")
         (dap-auto-configure-features
          '(sessions locals breakpoints expressions tooltip)  "Remove the button panel in the top.")
-        :bind (("<f5>" . dap-step-in)
-               ("<f6>" . dap-next)
-               ("<f7>" . dap-step-out)
-               ("<f8>" . dap-continue)
-               ("<f9>" . dap-breakpoint-toggle))
-
+        :bind(:map dap-mode-map
+                   ("<f5>" . dap-step-in)
+                   ("<f6>" . dap-next)
+                   ("<f7>" . dap-step-out)
+                   ("<f8>" . dap-continue)
+                   ("<f9>" . dap-breakpoint-toggle))
+        ;;:bind
         :config
         (require 'dap-lldb)
         (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode-11"))
@@ -871,7 +884,7 @@
 (global-set-key (kbd "ESC <f5>") 'vterm)
 (global-set-key (kbd "C-c C-<left>") 'previous-buffer)
 (global-set-key (kbd "C-c C-<right>") 'next-buffer)
-(global-set-key (kbd "C-c M-~") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))
+(global-set-key (kbd "C-c M-1") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))
 
 
 (defun bjodah/insert-buffer-name () (interactive)
