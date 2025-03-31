@@ -104,7 +104,7 @@
   (if (process-live-p strisper--rec-proc)
       (when (yes-or-no-p "Already recording, kill old process?")
         (kill-process strisper--rec-proc))
-    (strisper--process-arecord #'strisper-at-point-inserter)))
+    (strisper--process-arecord (lambda (&rest args) (strisper-at-point-inserter)))))
 
 
 ;;;###autoload
