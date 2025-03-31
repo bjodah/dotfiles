@@ -58,7 +58,7 @@
      "8b58ef2d23b6d164988a607ee153fd2fa35ee33efc394281b1028c2797ddeebb" default))
  '(dired-vc-rename-file t)
  '(doc-view-resolution 200)
- '(ein:output-area-inlined-images t t)
+ '(ein:output-area-inlined-images t)
  '(fill-column 100)
  '(flycheck-c/c++-gcc-executable "gcc-12")
  '(ignored-local-variable-values
@@ -73,17 +73,10 @@
  '(org-format-latex-options
    '(:foreground default :background default :scale 1.25 :html-foreground "Black" :html-background
                  "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
- '(package-selected-packages
-   '(aidermacs all-the-icons auctex cape cmake-mode company corfu cython-mode dired-preview
-               dockerfile-mode doom-themes ein elfeed embark-consult flycheck flymake-shellcheck
-               forge god-mode gptel gptel-quick julia-mode jupyter lsp-java lsp-pyright lsp-ui
-               marginalia minuet mmm-mode modus-themes monokai-theme nerd-icons nginx-mode orderless
-               org-roam pdf-tools realgud rg rmsbolt rust-mode sqlite3 tangotango-theme
-               treemacs-magit typescript-mode use-package validate vertico vterm which-key yaml-mode
-               yasnippet-snippets))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
-   '((gptel :url "https://github.com/karthink/gptel" :branch "master")
-     (gptel-quick :url "https://github.com/karthink/gptel-quick")))
+   '((gptel-quick :url "https://github.com/karthink/gptel-quick")
+     (gptel :url "https://github.com/karthink/gptel" :branch "master")))
  '(preview-image-type 'dvipng)
  '(preview-scale-function 2)
  '(safe-local-variable-values '((eval read-only) (org-confirm-babel-evaluate)))
