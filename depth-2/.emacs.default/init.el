@@ -2,12 +2,13 @@
 (global-unset-key (kbd "<f3>")) ; unbind kmacro-start-macro-or-insert-counter from F3
 (global-unset-key (kbd "<f4>")) ; unbind kmacro-end-or-call-macro from F4
 
-(if (and (getenv "DISPLAY") (string-match-p "dark" (shell-command-to-string
-                             "gsettings get org.gnome.desktop.interface gtk-theme")))
-                                        ;(set-background-color "black")
-    (load-theme 'tango-dark)
-    )
-;(set-background-color "black")
+;; (if (and (> (length (getenv "DISPLAY")) 0)
+;;          (string= "dark" (shell-command-to-string
+;;                           "gsettings get org.gnome.desktop.interface gtk-theme")))
+;;     (load-theme 'tango-dark)
+;;   ;(set-background-color "black")
+;;   )
+
 (setq custom-file (concat user-emacs-directory "custom-vars.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
@@ -736,6 +737,7 @@
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   (load-theme 'doom-monokai-ristretto t)
+  (set-background-color "black")
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -1156,13 +1158,29 @@
 
 (show-paren-mode 1)
 
-
-
-;; (fset 'mark-to-space
-;;    (kmacro-lambda-form [?\C-  ?\C-s ?  ?\C-b] 0 "%d"))
-(fset 'mark-to-space
-   (kmacro-lambda-form [?\C-  ?\M-x ?i ?s ?e tab ?- ?f ?o ?r tab ?- ?r ?e ?g tab return ?\\ ?s ?- ?\M-x ?i ?s tab ?r backspace ?e tab ?- ?b ?a ?c tab ?- ?r ?e tab return ?\\ ?w ?\C-f] 0 "%d"))
-(global-set-key (kbd "C-c SPC") 'mark-to-space)
+(defun mark-to-char-before-literal ()
+  "Mark the region from point up to (but not including) the next occurrence of a character.
+Prompts for a character to search for.  Uses literal matching (no regex)."
+  (interactive)
+  (let ((char (read-char "Mark to character (before, literal): ")))
+    (if (equal (char-to-string char) (substring (buffer-string) (point) (+ (point) 1)))
+        ;; Character is at point, so no region to mark.  Move forward one,
+        ;; but only if not at the end of the buffer.
+        (if (< (point) (point-max))
+            (forward-char)
+          (message "Already at character and at end of buffer."))
+      (progn
+        (push-mark (point) t t)
+        (let ((found (search-forward (char-to-string char) nil t)))
+          (if found
+              (progn
+                (goto-char found)
+                (backward-char) ; Back up one character
+                (message "Marked to just before '%c'" char))
+            (progn
+              (pop-mark)
+              (message "Character '%c' not found" char))))))))
+(global-set-key (kbd "M-Z") 'mark-to-char-before-literal)
 
 
 ;; (fset 'comment-c-word
