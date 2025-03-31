@@ -42,12 +42,13 @@ Inserts parsed text directly into strisper--target-buffer if set."
                        (when (and match
                                   strisper--target-buffer
                                   (buffer-live-p strisper--target-buffer))
-                         (set-buffer strisper--target-buffer) ; Switch to target
-                         (save-excursion ; Save point/marker in target buffer
-                           (insert third-group-in-match-TODO-fix)
-                           (insert " "))
-                           )))
-           )) ; End make-process
+                         (with-current-buffer strisper--target-buffer
+                          (insert (string-replace "  " " " (match-string 3 string)))
+                          (insert " ")
+                          )))
+                     (with-current-buffer (process-buffer process)
+                       (insert string)))
+           ))) ; End make-process
     strisper--rec-proc)
 
 ;; --- Calling functions remain the same ---
