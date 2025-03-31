@@ -104,6 +104,7 @@
              ;(format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
              )
 ;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
+(require 'strisper)
 (require 'whisper)
 (require 'my-text-to-speech)
 
