@@ -1,4 +1,4 @@
-;; I prefer C-x (, C-x ), C-x e for macro related functions
+;; Unset some default key-bindings. I prefer C-x (, C-x ), C-x e for macro related functions
 (global-unset-key (kbd "<f3>")) ; unbind kmacro-start-macro-or-insert-counter from F3
 (global-unset-key (kbd "<f4>")) ; unbind kmacro-end-or-call-macro from F4
 
@@ -90,6 +90,11 @@
   :ensure nil
   :custom
   (kill-do-not-save-duplicates t)
+  (require-theme 'modus-themes)
+  (setq modus-themes-common-palette-overrides
+        modus-themes-preset-overrides-intense)
+  (load-theme 'modus-operandi-tinted)
+  (define-key global-map (kbd "ESC <f11>") #'modus-themes-toggle)
   )
 
 (use-package autorevert
@@ -103,6 +108,9 @@
              (format "%s%s" (file-name-directory load-file-name) "lisp/")
              ;(format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
              )
+;(require 'source-bash-script)
+;(source-bash-script "~/doc/it/apei-nycklar/source-env-vars.sh")
+
 ;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
 (require 'whisper)
 (require 'my-text-to-speech)
@@ -737,7 +745,6 @@
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   (load-theme 'doom-monokai-ristretto t)
-  (set-background-color "black")
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -747,7 +754,8 @@
   (setq doom-themes-treemacs-theme "doom-colors") ; use "doom-colors" for less minimal icon theme
   (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+  (doom-themes-org-config)
+  (set-background-color "black"))
 
 (use-package monokai-theme
   :ensure t
@@ -1144,6 +1152,7 @@
 ;; https://stackoverflow.com/a/13408008/790973
 (require 'ansi-color)
 (defun colorize-compilation-buffer ()
+  "Give colors to the compilation buffer."
   (toggle-read-only)
   (ansi-color-apply-on-region compilation-filter-start (point))
   (toggle-read-only))
@@ -1159,8 +1168,8 @@
 (show-paren-mode 1)
 
 (defun mark-to-char-before-literal ()
-  "Mark the region from point up to (but not including) the next occurrence of a character.
-Prompts for a character to search for.  Uses literal matching (no regex)."
+  "Mark region from point up to (but not incl.) next occurrence of a character.
+Prompts for a character, uses literal matching (no regex)."
   (interactive)
   (let ((char (read-char "Mark to character (before, literal): ")))
     (if (equal (char-to-string char) (substring (buffer-string) (point) (+ (point) 1)))

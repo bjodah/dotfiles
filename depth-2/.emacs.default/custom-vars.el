@@ -69,6 +69,7 @@
        "/[ \11]*DEFVAR_[A-Z_ \11(]+\"[^\"]+\",[ \11]\\([A-Za-z0-9_]+\\)/\\1/"))
      (diff-add-log-use-relative-names . t) (vc-git-annotate-switches . "-w")))
  '(inhibit-startup-screen t)
+ '(modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(org-format-latex-options
    '(:foreground default :background default :scale 1.25 :html-foreground "Black" :html-background
