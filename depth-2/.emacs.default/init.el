@@ -545,11 +545,21 @@
 
 (use-package jupyter
   :ensure t)
-(use-package tex
-  :defer t
-  ;:ensure auctex
+(use-package auctex
+  :ensure t
   :config
-  (setq TeX-auto-save t))
+  (load "preview.el" nil t t)
+  (setq TeX-auto-save t)
+  ;; (add-hook 'LaTeX-mode-hook (flyspell-mode 1))
+  ;; (add-hook 'LaTeX-mode-hook (auto-fill-mode -1))
+  ;; (add-hook 'LaTeX-mode-hook (visual-line-mode 1))
+  ;; (add-hook 'TeX-mode-hook (flyspell-mode 1))
+  ;; (add-hook 'TeX-mode-hook (auto-fill-mode -1))
+  ;; (add-hook 'TeX-mode-hook (visual-line-mode 1))
+  ;; (add-hook 'latex-mode-hook (flyspell-mode 1))
+  ;; (add-hook 'latex-mode-hook (auto-fill-mode -1))
+  ;; (add-hook 'latex-mode-hook (visual-line-mode 1))
+  )
 (use-package pdf-tools
   :ensure t
   :config
