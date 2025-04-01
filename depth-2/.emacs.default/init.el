@@ -112,6 +112,7 @@
 ;(source-bash-script "~/doc/it/apei-nycklar/source-env-vars.sh")
 
 ;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
+(require 'strisper)
 (require 'whisper)
 (require 'my-text-to-speech)
 
