@@ -8,6 +8,8 @@
     ;(minuet-set-optional-options minuet-openai-compatible-options :provider '(:sort "throughput"))
     (minuet-set-optional-options minuet-openai-compatible-options :max_tokens 256)
     (minuet-set-optional-options minuet-openai-compatible-options :top_p 0.9)
+    (setq minuet-n-completions 2)
+    (setq minuet-context-window 16000) ;; 16k chars ~= 4000 tokens
     (setq minuet-provider 'openai-compatible)
     )
 
@@ -21,63 +23,66 @@
     :template (:prompt minuet--default-fim-prompt-function
                :suffix minuet--default-fim-suffix-function)
     :optional nil)) 
+  (setq minuet-n-completions 2)
+  (setq minuet-context-window 8000) ;; 8k chars ~= 2000 tokens
   (setq minuet-provider 'openai-fim-compatible)
   )
 
 (defun bjodah/minuet-use-gemini ()
   "Switch minuet provider to Gemini"
   (interactive)
-    (setq minuet-provider 'gemini)
-    (defvar mg-minuet-gemini-prompt
-        "You are the backend of an AI-powered code completion engine. Your task is to
+  (setq minuet-n-completions 2)
+  (setq minuet-context-window 16000) ;; 16k chars ~= 4000 tokens
+  (setq minuet-provider 'gemini)
+  (defvar mg-minuet-gemini-prompt
+    "You are the backend of an AI-powered code completion engine. Your task is to
 provide code suggestions based on the user's input. The user's code will be
 enclosed in markers:
 - `<contextAfterCursor>`: Code context after the cursor
 - `<cursorPosition>`: Current cursor location
 - `<contextBeforeCursor>`: Code context before the cursor
 ")
-    (defvar mg-minuet-gemini-chat-input-template
-        "{{{:language-and-tab}}}
+  (defvar mg-minuet-gemini-chat-input-template
+    "{{{:language-and-tab}}}
 <contextBeforeCursor>
 {{{:context-before-cursor}}}<cursorPosition>
 <contextAfterCursor>
 {{{:context-after-cursor}}}")
-    (defvar mg-minuet-gemini-fewshots
-        `((:role "user"
-           :content "# language: python
+  (defvar mg-minuet-gemini-fewshots
+    `((:role "user"
+             :content "# language: python
 <contextBeforeCursor>
 def fibonacci(n):
     <cursorPosition>
 <contextAfterCursor>
 fib(5)")
-          ,(cadr minuet-default-fewshots)))
-    (minuet-set-optional-options minuet-gemini-options
-                                 :prompt 'mg-minuet-gemini-prompt
-                                 :system)
-    (minuet-set-optional-options minuet-gemini-options
-                                 :template 'mg-minuet-gemini-chat-input-template
-                                 :chat-input)
-    (plist-put minuet-gemini-options :fewshots 'mg-minuet-gemini-fewshots)
-    (minuet-set-optional-options minuet-gemini-options
-                                 :generationConfig
-                                 '(:maxOutputTokens 256
-                                   :topP 0.9))
-    (minuet-set-optional-options minuet-gemini-options
-                                 :safetySettings
-                                 [(:category "HARM_CATEGORY_DANGEROUS_CONTENT"
-                                   :threshold "BLOCK_NONE")
-                                  (:category "HARM_CATEGORY_HATE_SPEECH"
-                                   :threshold "BLOCK_NONE")
-                                  (:category "HARM_CATEGORY_HARASSMENT"
-                                   :threshold "BLOCK_NONE")
-                                  (:category "HARM_CATEGORY_SEXUALLY_EXPLICIT"
-                                   :threshold "BLOCK_NONE")])
-    )
+      ,(cadr minuet-default-fewshots)))
+  (minuet-set-optional-options minuet-gemini-options
+                               :prompt 'mg-minuet-gemini-prompt
+                               :system)
+  (minuet-set-optional-options minuet-gemini-options
+                               :template 'mg-minuet-gemini-chat-input-template
+                               :chat-input)
+  (plist-put minuet-gemini-options :fewshots 'mg-minuet-gemini-fewshots)
+  (minuet-set-optional-options minuet-gemini-options
+                               :generationConfig
+                               '(:maxOutputTokens 256
+                                                  :topP 0.9))
+  (minuet-set-optional-options minuet-gemini-options
+                               :safetySettings
+                               [(:category "HARM_CATEGORY_DANGEROUS_CONTENT"
+                                           :threshold "BLOCK_NONE")
+                                (:category "HARM_CATEGORY_HATE_SPEECH"
+                                           :threshold "BLOCK_NONE")
+                                (:category "HARM_CATEGORY_HARASSMENT"
+                                           :threshold "BLOCK_NONE")
+                                (:category "HARM_CATEGORY_SEXUALLY_EXPLICIT"
+                                           :threshold "BLOCK_NONE")])
+  )
+
 (defun bjodah/minuet-use-groq-coder ()
   "Switch minuet provider to qwen2.5-Coder-32B via GROQ."
   (interactive)
-  (setq minuet-n-completions 2)
-  (setq minuet-context-window 2048)
   (plist-put minuet-openai-fim-compatible-options :end-point "https://api.groq.com/openai/v1/completions") ;; <--- GROQ only supports /chat/completions endpoint :/ (2025-03-31)
   (plist-put minuet-openai-fim-compatible-options :name "GROQ/Qwen/Qwen2.5-Coder-32B")
   (plist-put minuet-openai-fim-compatible-options :api-key (lambda () (getenv "GROQ_API_KEY")))
@@ -92,6 +97,8 @@ fib(5)")
              (plist-get ctx :before-cursor)
              (plist-get ctx :after-cursor)))
    :template)
+  (setq minuet-n-completions 2)
+  (setq minuet-context-window 16000) ;; 16k chars ~= 4000 tokens
   (setq minuet-provider 'openai-fim-compatible)
   )
 
@@ -125,25 +132,46 @@ fib(5)")
                  (plist-get ctx :after-cursor)))
      :template)
     (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256) ; or 56 for local llm?
+    (setq minuet-n-completions 2)
+    (setq minuet-context-window 4000) ;; 4k chars ~= 1000 tokens
     (setq minuet-provider 'openai-fim-compatible)
   )
 
 
-(defun bjodah/minuet-use-smollm2 ()
-    ;; GROQ for speed:
-    (plist-put minuet-openai-compatible-options :end-point "http://localhost:8001/v1/chat/completions")
-    (plist-put minuet-openai-compatible-options :api-key (defun my-tabby-api-key () "duck123"))
-    ;(plist-put minuet-openai-compatible-options :model "HuggingFaceTB/SmolLM2-1.7B-Instruct")
-    (plist-put minuet-openai-compatible-options :model "/my-llms/smollm2-1.7B-awq")
+(defun bjodah/minuet-use-llama-swap-ling ()
+  "Switch to Ling-Coder-lite on localhost (llama-swap container on port :8686"
+  (interactive)
+  (plist-put minuet-openai-compatible-options :end-point "http://localhost:8686/v1/chat/completions")
+  (plist-put minuet-openai-compatible-options :api-key (defun my-llama-swap-key () "sk-empty"))
+                                        ;(plist-put minuet-openai-compatible-options :model "HuggingFaceTB/SmolLM2-1.7B-Instruct")
+  (plist-put minuet-openai-compatible-options :model "llamacpp-Ling-Coder-lite")
 
-    ;; Prioritize throughput for faster completion
-    (minuet-set-optional-options minuet-openai-compatible-options :max_tokens 128)
-    (minuet-set-optional-options minuet-openai-compatible-options :top_p 0.9)
-    (setq minuet-context-window 200) ;; TODO: we need to reset this to 16000 somewhere
-    ;; TODO: customize the prompts, this is not a great model for coding, more conversational style.
-    )
+  ;; Prioritize throughput for faster completion
+  (minuet-set-optional-options minuet-openai-compatible-options :max_tokens 128)
+  (minuet-set-optional-options minuet-openai-compatible-options :top_p 0.9)
+  (setq minuet-n-completions 2)
+  (setq minuet-context-window 2000) ;; 2000 chars ~= 500 tokens
+  (setq minuet-provider 'openai-compatible)
+  )
+
+(defun bjodah/minuet-use-llama-swap-qwen-coder-14B ()
+  "Switch to Qwen/Qwen2.5-Coder-Instruct-14B on localhost (llama-swap container on port :8686"
+  (interactive)
+  (bjodah/minuet-use-localhost-fim) ;; we need to override port 8000, and model name.
+  (setq minuet-n-completions 4)
+  (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:8686/v1/completions")
+  (plist-put minuet-openai-fim-compatible-options :name "llama-swap-qwen-coder")
+  (plist-put minuet-openai-fim-compatible-options :api-key (defun my-llama-swap-key () "sk-empty"))
+  (plist-put minuet-openai-fim-compatible-options :model "exllamav2-Qwen2.5-Coder-14B-Instruct")  
+  )
+
 
 (use-package minuet
+  :vc (
+       :url "https://github.com/milanglacier/minuet-ai.el"
+            :rev :newest
+            :branch "main"
+            )
   :ensure t
   :bind
  (("M-o" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion

@@ -85,7 +85,8 @@
                pdf-tools realgud rg rmsbolt rust-mode sqlite3 treemacs-magit typescript-mode
                validate vertico vterm yaml-mode yasnippet-snippets))
  '(package-vc-selected-packages
-   '((gptel-quick :url "https://github.com/karthink/gptel-quick")
+   '((minuet :url "https://github.com/milanglacier/minuet-ai.el" :branch "main")
+     (gptel-quick :url "https://github.com/karthink/gptel-quick")
      (gptel :url "https://github.com/karthink/gptel" :branch "master")))
  '(preview-image-type 'dvipng)
  '(preview-scale-function 2)
