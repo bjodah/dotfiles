@@ -86,3 +86,13 @@
   ;:models '(stelterlab/phi-4-AWQ)
   :models '(TabbyAPI-QwenCoder14B)
 )
+
+(gptel-make-openai "llama-swap-gemma3"
+  :stream t
+  :protocol "http"
+  :host "localhost:8686"
+  :key "sk-empty"
+  ;:models '(Qwen/Qwen2.5-Coder-32B-Instruct-AWQ)
+  ;:models '(stelterlab/phi-4-AWQ)
+  :models '(llamacpp-gemma-3-27b-it)
+)

@@ -8,7 +8,7 @@ alias cd..="cd .."
 # commands
 
 alias ..="cd .."
-alias g='git'
+alias g='GPG_TTY=$(tty) git'
 alias ll='ls -laFrth --color=auto'
 alias la='ls -A --color=auto'
 alias l='ls -CF --color=auto'
