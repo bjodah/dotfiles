@@ -94,8 +94,14 @@
   (setq modus-themes-common-palette-overrides
         modus-themes-preset-overrides-intense)
   (load-theme 'modus-operandi-tinted)
-  (define-key global-map (kbd "ESC <f11>") #'modus-themes-toggle)
-  )
+  :bind
+  (:map global-map
+        ("C-x t 1" . modus-themes-toggle)
+        ("M-F"     . fill-region)
+        ("M-K" . (lambda ()
+                  (interactive)
+                  (kill-buffer (current-buffer))))
+        ))
 
 (use-package autorevert
   :ensure nil
@@ -459,6 +465,7 @@
 (load (expand-file-name (concat user-emacs-directory "bjodah-gptel")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-minuet")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-lsp")))
+(load (expand-file-name (concat user-emacs-directory "bjodah-tools")))
 (use-package aidermacs
   :ensure t
   :bind (("C-c a" . aidermacs-transient-menu))
@@ -561,7 +568,15 @@
   ;; (add-hook 'latex-mode-hook (flyspell-mode 1))
   ;; (add-hook 'latex-mode-hook (auto-fill-mode -1))
   ;; (add-hook 'latex-mode-hook (visual-line-mode 1))
+  (add-hook 'LaTeX-mode-hook (defun dont-remap-next-error
+                                 ((local-set-key [remap next-error] nil))))
+  ;(define-key LaTeX-mode-map (kbd "M-g M-n") nil)
+  (when (string= (system-name) "SE-BDAHLGREN2")
+    (set-default 'preview-default-document-pt 12)
+    (set-default 'preview-scale-function 1.5)
+    )
   )
+
 (use-package pdf-tools
   :ensure t
   :config
@@ -1093,7 +1108,7 @@
 (add-hook 'markdown-mode-hook
     (function (lambda ()
         (flyspell-mode)
-        (auto-fill-mode)
+        ;(auto-fill-mode)
         )))
 
 (add-to-list 'auto-mode-alist '("\\.tex$" . LaTeX-mode))
