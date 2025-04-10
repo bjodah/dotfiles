@@ -40,18 +40,23 @@
                            '((vertical-scroll-bars . nil)
                              (horizontal-scroll-bars . nil)))
   )
-
 (defun bjodah/customize-window ()
   (cond
-   ((string= (system-name) "argus") (set-face-attribute 'default nil :height 140))
-   (t (set-face-attribute 'default nil :height 105))
-   )
+   ((string= (system-name) "argus")
+    (set-face-attribute 'default nil :height 140))
+   (t
+    (set-face-attribute 'default nil :height 105)))
   (scroll-bar-mode 0)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       (set-frame-font "Fira Code"))
-
-(add-hook 'after-init-hook 'bjodah/customize-window)
 (add-hook 'after-load-theme-hook 'bjodah/customize-window)
+
+(defun bjodah/startup-theme ()
+  (cond
+   ((string= (system-name) "SE-BDAHLGREN2") (load-theme 'modus-operandi-tinted))
+   (t (load-theme 'doom-monokai-ristretto t))))
+(add-hook 'after-init-hook 'bjodah/startup-theme)
+
 (if (daemonp)
     (add-hook 'server-after-make-frame-hook
               (lambda ()
@@ -93,10 +98,12 @@
   (require-theme 'modus-themes)
   (setq modus-themes-common-palette-overrides
         modus-themes-preset-overrides-intense)
-  (load-theme 'modus-operandi-tinted)
   :bind
   (:map global-map
         ("C-x t 1" . modus-themes-toggle)
+        ("C-c M-T" . customize-themes)
+        ("C-c M-V" . visual-line-mode)
+        ("C-c M-F" . auto-fill-mode)
         ("M-F"     . fill-region)
         ("M-K" . (lambda ()
                   (interactive)
@@ -772,7 +779,6 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-monokai-ristretto t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -788,7 +794,6 @@
 (use-package monokai-theme
   :ensure t
 )
-
 
 (use-package flymake-shellcheck
   :ensure t
