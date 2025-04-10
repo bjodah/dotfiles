@@ -568,7 +568,7 @@
   ;; (add-hook 'latex-mode-hook (flyspell-mode 1))
   ;; (add-hook 'latex-mode-hook (auto-fill-mode -1))
   ;; (add-hook 'latex-mode-hook (visual-line-mode 1))
-  (add-hook 'LaTeX-mode-hook (defun dont-remap-next-error
+  (add-hook 'LaTeX-mode-hook (defun dont-remap-next-error ()
                                  ((local-set-key [remap next-error] nil))))
   ;(define-key LaTeX-mode-map (kbd "M-g M-n") nil)
   (when (string= (system-name) "SE-BDAHLGREN2")
