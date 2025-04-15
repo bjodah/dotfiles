@@ -1,0 +1,7 @@
+#!/bin/bash
+env PYTHONPATH=~/vc/quad-braille-unicode-progress \
+    ~/venv/bin/python \
+        -m fourbraillebars \
+            cpu-ram-gpu-vram
+
+        # -m cProfile \

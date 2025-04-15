@@ -53,9 +53,9 @@ CMAKE_ARGS="\
  -DBUILD_BENCHMARKS=ON \
  -DHAVE_GCC_ABI_DEMANGLE=no"
 
-
+LLVM_ROOT="/opt-2/llvm-19"
 export EMACS_COMMANDS="\
-(lsp-workspace-folders-add \"/usr/include/llvm-16/\") \
+(lsp-workspace-folders-add \"$LLVM_ROOT\") \
 (split-window-below) \
 (other-window 1) \
 (find-file \"symengine/basic.h\")\
@@ -63,14 +63,16 @@ export EMACS_COMMANDS="\
 
 export CXXFLAGS="-ffunction-sections -fdata-sections ${CXXFLAGS:-''}"
 export LDFLAGS="${LDFLAGS:-''}"
-EXTRA_ENV="-e CXXFLAGS -e LDFLAGS"
+export CC=clang CXX=clang++
+EXTRA_ENV="-e CXXFLAGS -e LDFLAGS -e CC -e CXX"
 
 if [[ $USE_LLVM == 1 ]]; then
     CMAKE_ARGS="-DWITH_LLVM:BOOL=ON $CMAKE_ARGS"
 else
+    LIBCXX_ASAN_ROOT="/opt-2/libcxx19-asan"
     CMAKE_ARGS="-DWITH_LLVM:BOOL=OFF $CMAKE_ARGS"
-    export CXXFLAGS="-std=c++17 -fsanitize=address -stdlib=libc++ -nostdinc++ -I/opt-2/libcxx16-debug/include -I/opt-2/libcxx16-debug/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb $CXXFLAGS"
-    export LDFLAGS="-fsanitize=address -Wl,-rpath,/opt-2/libcxx16-debug/lib -L/opt-2/libcxx16-debug/lib -lc++abi $LDFLAGS"
+    export CXXFLAGS="-std=c++17 -fsanitize=address,undefined -nostdinc++ -I$LIBCXX_ASAN_ROOT/include -I$LIBCXX_ASAN_ROOT/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb $CXXFLAGS"  # -stdlib=libc++
+    export LDFLAGS="-fsanitize=address,undefined -nostdlib++ -Wl,-rpath,/opt-2/libcxx17-asan/lib -L/opt-2/libcxx17-asan/lib -lc++ -lc++abi $LDFLAGS"
 fi
 
 if [[ $USE_BOOST == 1 ]]; then
@@ -84,7 +86,7 @@ else
  -DWITH_MPFR=ON \
  -DWITH_MPC=ON \
  -DINTEGER_CLASS=flint"
-    EXTRA_ENV="-e FLINT_ROOT=/opt-2/flint2-2.9.0-release $EXTRA_ENV"
+    #EXTRA_ENV="-e FLINT_ROOT=/opt-3/flint-3.0.1-release $EXTRA_ENV"
     export THIS_BUILD=${PWD}/build-flint-gccemacs-doom
 fi
 

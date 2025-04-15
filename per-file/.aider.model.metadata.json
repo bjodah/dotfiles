@@ -1,0 +1,22 @@
+{
+    "openai/llamacpp-QwQ-32B": {
+        "max_tokens": 32768,
+        "max_input_tokens": 16000,
+        "max_output_tokens": 32000,
+        "input_cost_per_token": 0.00000003,
+        "output_cost_per_token": 0.0000003,
+        "mode": "chat",
+        "api_base": "http://localhost:8686/v1",
+        "api_key": "placeholder"
+    },
+    "openai/llamacpp-Qwen2.5-Coder-32B-Instruct": {
+        "max_tokens": 32768,
+        "max_input_tokens": 32000,
+        "max_output_tokens": 32000,
+        "input_cost_per_token": 0.00000003,
+        "output_cost_per_token": 0.0000003,
+        "mode": "chat",
+        "api_base": "http://localhost:8686/v1",
+        "api_key": "placeholder"
+    }
+}

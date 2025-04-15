@@ -1,6 +1,9 @@
 #!/bin/bash
 if [[ "$DISPLAY" == localhost* ]] || [[ "$DISPLAY" == "" ]]; then
     if [ -z "$GPG_TTY" ] ; then
-       export GPG_TTY=$(tty)
+        # as per: https://superuser.com/a/1381147/381598
+        # sudo apt install pinentry-tty
+        # sudo update-alternatives --config pinentry
+        export GPG_TTY=$(tty)
     fi
 fi

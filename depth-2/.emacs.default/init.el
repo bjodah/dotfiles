@@ -1,9 +1,14 @@
-(if (and (getenv "DISPLAY") (string-match-p "dark" (shell-command-to-string
-                             "gsettings get org.gnome.desktop.interface gtk-theme")))
-                                        ;(set-background-color "black")
-    (load-theme 'tango-dark)
-    )
-;(set-background-color "black")
+;; Unset some default key-bindings. I prefer C-x (, C-x ), C-x e for macro related functions
+(global-unset-key (kbd "<f3>")) ; unbind kmacro-start-macro-or-insert-counter from F3
+(global-unset-key (kbd "<f4>")) ; unbind kmacro-end-or-call-macro from F4
+
+;; (if (and (> (length (getenv "DISPLAY")) 0)
+;;          (string= "dark" (shell-command-to-string
+;;                           "gsettings get org.gnome.desktop.interface gtk-theme")))
+;;     (load-theme 'tango-dark)
+;;   ;(set-background-color "black")
+;;   )
+
 (setq custom-file (concat user-emacs-directory "custom-vars.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
@@ -23,13 +28,10 @@
      ;; If you edit it by hand, you could mess it up, so be careful.
      ;; Your init file should contain only one such instance.
      ;; If there is more than one, they won't work right.
-     '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 100 :width normal)))))
+     '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 110 :width normal)))))
   (message "on MS Windows?")
   )
 
-;; https://emacs-lsp.github.io/lsp-mode/page/performance/ ----------------------------------------
-(setq gc-cons-threshold (* 128 1024 1024))
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; -----------------------------------------------------------------------------------------------
 
@@ -38,17 +40,23 @@
                            '((vertical-scroll-bars . nil)
                              (horizontal-scroll-bars . nil)))
   )
-
 (defun bjodah/customize-window ()
   (cond
-   ((string= system-name "argus") (set-face-attribute 'default nil :height 140))
-   (t (set-face-attribute 'default nil :height 100))
-   )
+   ((string= (system-name) "argus")
+    (set-face-attribute 'default nil :height 140))
+   (t
+    (set-face-attribute 'default nil :height 105)))
   (scroll-bar-mode 0)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       (set-frame-font "Fira Code"))
+(add-hook 'after-load-theme-hook 'bjodah/customize-window)
 
-(add-hook 'after-init-hook 'bjodah/customize-window)
+(defun bjodah/startup-theme ()
+  (cond
+   ((string= (system-name) "SE-BDAHLGREN2") (load-theme 'modus-operandi-tinted))
+   (t (load-theme 'doom-monokai-ristretto t))))
+(add-hook 'after-init-hook 'bjodah/startup-theme)
+
 (if (daemonp)
     (add-hook 'server-after-make-frame-hook
               (lambda ()
@@ -66,6 +74,10 @@
 (savehist-mode 1)
 (setq savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
 
+(require 'recentf)
+(recentf-mode 1)
+
+
 (require 'package)
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
@@ -79,18 +91,63 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
+(use-package emacs
+  :ensure nil
+  :custom
+  (kill-do-not-save-duplicates t)
+  (require-theme 'modus-themes)
+  (setq modus-themes-common-palette-overrides
+        modus-themes-preset-overrides-intense)
+  :bind
+  (:map global-map
+        ("C-x t 1" . modus-themes-toggle)
+        ("C-c M-T" . customize-themes)
+        ("C-c M-V" . visual-line-mode)
+        ("C-c M-F" . auto-fill-mode)
+        ("M-F"     . fill-region)
+        ("M-K" . (lambda ()
+                  (interactive)
+                  (kill-buffer (current-buffer))))
+        ))
 
-(use-package gptel
-  :ensure t
+(use-package autorevert
+  :ensure nil
   :config
+  (setq global-auto-revert-non-file-buffers t))
 
-  (setq
-   gptel-model 'gemini-pro
-   gptel-backend (gptel-make-gemini "Gemini"
-                                    :key (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/g-gmni.* | tail -c+19 | head -c 39"))
-                                    :stream t))
-                                        ;(setq gptel-api-key "your key")
-  )
+;http://www.emacswiki.org/emacs/LoadPath
+(add-to-list 'load-path
+                                        ;"~/.emacs.d/lisp/"
+             (format "%s%s" (file-name-directory load-file-name) "lisp/")
+             ;(format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
+             )
+;(require 'source-bash-script)
+;(source-bash-script "~/doc/it/apei-nycklar/source-env-vars.sh")
+
+;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
+(require 'strisper)
+(global-set-key (kbd "C-c M-R") 'strisper-record-at-point)
+
+(require 'whisper)
+(require 'my-text-to-speech)
+
+;; whisper for Speech-To-Text (STT)
+(use-package whisper
+  ;:load-path (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
+  ;:ensure
+  :bind (("C-c ," . whisper-run)
+         ("<f4>" . whisper-run))
+  :config
+  (setq whisper-install-whispercpp nil ;'manual
+        ;whisper-install-directory "/opt/"
+        whisper-server-mode 'custom
+        whisper-server-host "127.0.0.1"
+        whisper-server-port 8007 ;8642  ; see "host-speeches-ai-8007.sh"
+        whisper-model "large-v3-turbo"
+        whisper-language "en" ;; "sv"
+        whisper-translate nil
+        ;whisper-use-threads (/ (num-processors) 2)
+        ))
 
 ;; Reduce load time
 (eval-when-compile (require 'use-package))
@@ -122,6 +179,13 @@
         (dap-auto-configure-mode t                           "Automatically configure dap.")
         (dap-auto-configure-features
          '(sessions locals breakpoints expressions tooltip)  "Remove the button panel in the top.")
+        :bind(:map dap-mode-map
+                   ("<f5>" . dap-step-in)
+                   ("<f6>" . dap-next)
+                   ("<f7>" . dap-step-out)
+                   ("<f8>" . dap-continue)
+                   ("<f9>" . dap-breakpoint-toggle))
+        ;;:bind
         :config
         (require 'dap-lldb)
         (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode-11"))
@@ -174,16 +238,16 @@
 (use-package flycheck
   :ensure t
   :hook (prog-mode . flycheck-mode))
-(use-package company
-  :ensure t
-  :hook (prog-mode . company-mode)
-  :config
-  (add-to-list 'company-backends 'company-capf)
-  (add-to-list 'company-backends 'company-files)
-  (setq company-tooltip-align-annotations t)
-  (setq company-minimum-prefix-length 1)
-  :bind ("C-," . 'company-files)
-  )
+;; (use-package company
+;;   :ensure t
+;;   :hook (prog-mode . company-mode)
+;;   :config
+;;   (add-to-list 'company-backends 'company-capf)
+;;   (add-to-list 'company-backends 'company-files)
+;;   (setq company-tooltip-align-annotations t)
+;;   (setq company-minimum-prefix-length 1)
+;;   :bind ("C-," . 'company-files)
+;;   )
 
 ;; treemacs
 (use-package treemacs
@@ -219,6 +283,181 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
+;; parts from jamescherti/minimal-emacs.d below:
+(use-package vertico ;; e.g. M-x now shows multiple choices
+  :ensure t
+  :defer t
+  :commands vertico-mode
+  :hook (after-init . vertico-mode))
+
+(use-package orderless
+  ;; Vertico leverages Orderless' flexible matching capabilities, allowing users
+  ;; to input multiple patterns separated by spaces, which Orderless then
+  ;; matches in any order against the candidates.
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package marginalia  ;; helpful text to the right of vertico options
+  ;; Marginalia allows Embark to offer you preconfigured actions in more contexts.
+  ;; In addition to that, Marginalia also enhances Vertico by adding rich
+  ;; annotations to the completion candidates displayed in Vertico's interface.
+  :ensure t
+  :defer t
+  :commands (marginalia-mode marginalia-cycle)
+  :hook (after-init . marginalia-mode))
+
+(use-package embark-consult
+  :ensure t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package embark
+  ;; Embark is an Emacs package that acts like a context menu, allowing
+  ;; users to perform context-sensitive actions on selected items
+  ;; directly from the completion interface.
+  :ensure t
+  :commands (embark-act
+             embark-dwim
+             embark-export
+             embark-collect
+             embark-bindings
+             embark-prefix-help-command)
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-c M-c" . embark-act)
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+(use-package consult
+  :ensure t
+  :bind (;; C-c bindings in `mode-specific-map'
+         ("C-c M-x" . consult-mode-command)
+         ("C-c h" . consult-history)
+         ("C-c k" . consult-kmacro)
+         ("C-c m" . consult-man)
+         ("C-c i" . consult-info)
+         ([remap Info-search] . consult-info)
+         ;; C-x bindings in `ctl-x-map'
+         ("C-x M-:" . consult-complex-command)
+         ("C-x b" . consult-buffer)
+         ("<f3>" . consult-buffer)
+         ("C-x 4 b" . consult-buffer-other-window)
+         ("C-x 5 b" . consult-buffer-other-frame)
+         ("C-x t b" . consult-buffer-other-tab)
+         ("C-x r b" . consult-bookmark)
+         ("C-x P b" . consult-project-buffer)
+         ;; Custom M-# bindings for fast register access
+         ("M-#" . consult-register-load)
+         ("M-'" . consult-register-store)
+         ("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)
+         ;; M-g bindings in `goto-map'
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flymake)
+         ("M-g g" . consult-goto-line)
+         ("M-g M-g" . consult-goto-line)
+         ("M-g o" . consult-outline)
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings in `search-map'
+         ("M-s d" . consult-find)
+         ("M-s c" . consult-locate)
+         ("M-s g" . consult-grep)
+         ("M-s G" . consult-git-grep)
+         ("M-s r" . consult-ripgrep)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ("M-s k" . consult-keep-lines)
+         ("M-s u" . consult-focus-lines)
+         ;; Isearch integration
+         ("M-s e" . consult-isearch-history)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)
+         ("M-s e" . consult-isearch-history)
+         ("M-s l" . consult-line)
+         ("M-s L" . consult-line-multi)
+         ;; Minibuffer history
+         :map minibuffer-local-map
+         ("M-s" . consult-history)
+         ("M-r" . consult-history))
+
+  ;; Enable automatic preview at point in the *Completions* buffer.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  :init
+  ;; Optionally configure the register formatting. This improves the register
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  :config
+  (consult-customize
+   consult-theme :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-file-register
+   consult--source-recent-file consult--source-project-recent-file
+   ;; :preview-key "M-."
+   :preview-key '(:debounce 0.4 any))
+  (setq consult-narrow-key "<"))
+
+(use-package corfu
+  :ensure t
+  :defer t
+  :commands (corfu-mode global-corfu-mode)
+
+  :hook ((prog-mode . corfu-mode)
+         (shell-mode . corfu-mode)
+         (eshell-mode . corfu-mode))
+
+  :custom
+  ;; Hide commands in M-x which do not apply to the current mode.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; Disable Ispell completion function. As an alternative try `cape-dict'.
+  (text-mode-ispell-word-completion nil)
+  (tab-always-indent 'complete)
+
+  ;; Enable Corfu
+  :config
+  (global-corfu-mode))
+
+(use-package cape
+  :ensure t
+  :defer t
+  :commands (cape-dabbrev cape-file cape-elisp-block)
+  :bind ("C-c p" . cape-prefix-map)
+  :init
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block))
+
+(use-package dired-preview
+  :ensure t)
+
 (use-package sqlite3
   :ensure t)
 (use-package magit
@@ -230,101 +469,24 @@
   :ensure t
   :after treemacs magit)
 
-;; lsp
-(use-package lsp-mode
+(load (expand-file-name (concat user-emacs-directory "bjodah-gptel")))
+(load (expand-file-name (concat user-emacs-directory "bjodah-minuet")))
+(load (expand-file-name (concat user-emacs-directory "bjodah-lsp")))
+(load (expand-file-name (concat user-emacs-directory "bjodah-tools")))
+(use-package aidermacs
   :ensure t
-  :commands lsp
-  :init
-  (setq lsp-keymap-prefix "C-c l")
+  :bind (("C-c a" . aidermacs-transient-menu))
+  :config
   :custom
-  (lsp-file-watch-threshold 4000)
-  ;; (lsp-rust-server 'rls)
-  ;; (lsp-rust-rls-server-command "/opt/cargo/bin/rls")
-  :hook (
-         (c-mode . lsp)
-         (c++-mode . lsp)
-         (rust-mode . lsp)
-         ;; (sh-mode . lsp)  ;; bash-ls is such a joke...
-         (typescript-mode . lsp)
-         (python-mode . lsp)
-         (java-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
+  ; See the Configuration section below
+  (aidermacs-use-architect-mode t)
+  ;; (aidermacs-architect-model "openrouter/deepseek/deepseek-r1")
+  ;; (aidermacs-default-model "openrouter/deepseek/deepseek-chat")
+  (aidermacs-architect-model "litellm_proxy/local-qwq-32b")
+  (aidermacs-default-model "litellm_proxy/local-qwen25-coder-32b")
+  ;; (aidermacs-architect-model "litellm_proxy/local-exllamav2-qwen25-coder-32b")
+  ;; (aidermacs-default-model "litellm_proxy/local-exllamav2-qwq-32b")
 )
-
-
-
-;; (use-package ccls ;; I'm using clangd for now, might be interesting for parallel emacs conf.
-;;   :ensure t
-;;   :hook ((c-mode c++-mode) .
-;;          (lambda () (require 'ccls) (lsp)))
-;;   :config
-;;   (with-eval-after-load "lsp-mode"
-;;     (add-to-list 'lsp-enabled-clients 'ccls))
-;; )
-(use-package lsp-ui
-  :ensure t
-  :after lsp-mode
-  :commands lsp-ui-mode
-  :config
-  (with-eval-after-load "lsp-mode"
-    (setq lsp-ui-doc-show-with-cursor nil) ;; keep on-mouse-over docs
-    (setq lsp-ui-sideline-enable nil) ;; e.g. "Extract expression into function...."
-    (setq lsp-lens-enable nil) ;; bullet 3: https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
-    )
-  :bind
-  ("C-<down>" . lsp-ui-find-next-reference)
-  ("C-<up>" . lsp-ui-find-prev-reference)
-  )
-
-(use-package lsp-pyright
-  :ensure t
-  :init (setq lsp-pyright-auto-install-server t)
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
-
-(use-package lsp-java
-  :ensure t
-  ;; :after lsp
-  :config
-  ;; (with-eval-after-load "lsp-mode"
-  ;;   (add-to-list 'lsp-enabled-clients 'jdtls))
-  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
-        lsp-java-format-settings-profile "GoogleStyle"
-        lsp-java-save-actions-organize-imports t
-        lsp-java-references-code-lens-enabled t
-        lsp-java-implementations-code-lens-enabled t
-        lsp-file-watch-ignored
-        '(".idea" ".ensime_cache" ".eunit" "node_modules"
-          ".git" ".hg" ".fslckout" "_FOSSIL_"
-          ".bzr" "_darcs" ".tox" ".svn" ".stack-work"
-          "build"))
-)
-
-;; (use-package company-lsp <--- deprecated apparently company-capf is used instead
-;;   :ensure t
-;;   :commands company-lsp)
-
-;; (use-package lsp-jedi <--- I found jedi to be somewhat buggy, going to try ms instead
-;;   :ensure t
-;;   :config
-;;   (with-eval-after-load "lsp-mode"
-;;     (add-to-list 'lsp-disabled-clients 'pyls)
-;;     ;; (add-to-list 'lsp-enabled-clients 'jedi)
-;;     ))
-
-;; (use-package jedi
-;;   :ensure t
-;;   :bind ("C-<tab>" . jedi:complete)
-;;   :init
-;;   (add-hook 'python-mode-hook 'jedi:setup)
-;;   (setq jedi:complete-on-dot t))
-
-;; (setq jedi:setup-keys t) ;; <--- Lets Jedi set keys
-
-
-;; (setq lsp-json-schemas `[(:fileMatch ["tsconfig.json"] :url "http://json.schemastore.org/tsconfig")])
-
 
 (use-package rust-mode
   :ensure t
@@ -380,7 +542,7 @@
   :ensure t
   :bind
   ("C-<escape>" . #'god-local-mode)
-  ("ESC M-SPC" . #'god-local-mode)
+  ("ESC M-SPC" . #'god-local-mode) ; ESC ESC space
   :config
   (defun my-god-mode-update-cursor-type ()
     (if god-local-mode
@@ -399,11 +561,29 @@
 
 (use-package jupyter
   :ensure t)
-(use-package tex
-  :defer t
-  ;:ensure auctex
+(use-package auctex
+  :ensure t
   :config
-  (setq TeX-auto-save t))
+  (load "preview.el" nil t t)
+  (setq TeX-auto-save t)
+  ;; (add-hook 'LaTeX-mode-hook (flyspell-mode 1))
+  ;; (add-hook 'LaTeX-mode-hook (auto-fill-mode -1))
+  ;; (add-hook 'LaTeX-mode-hook (visual-line-mode 1))
+  ;; (add-hook 'TeX-mode-hook (flyspell-mode 1))
+  ;; (add-hook 'TeX-mode-hook (auto-fill-mode -1))
+  ;; (add-hook 'TeX-mode-hook (visual-line-mode 1))
+  ;; (add-hook 'latex-mode-hook (flyspell-mode 1))
+  ;; (add-hook 'latex-mode-hook (auto-fill-mode -1))
+  ;; (add-hook 'latex-mode-hook (visual-line-mode 1))
+  (add-hook 'LaTeX-mode-hook (defun dont-remap-next-error ()
+                                 ((local-set-key [remap next-error] nil))))
+  ;(define-key LaTeX-mode-map (kbd "M-g M-n") nil)
+  (when (string= (system-name) "SE-BDAHLGREN2")
+    (set-default 'preview-default-document-pt 12)
+    (set-default 'preview-scale-function 1.5)
+    )
+  )
+
 (use-package pdf-tools
   :ensure t
   :config
@@ -417,11 +597,7 @@
   :ensure t)
 ;; mmm-mako
 
-;http://www.emacswiki.org/emacs/LoadPath
-(add-to-list 'load-path
-                                        ;"~/.emacs.d/lisp/"
-             (format "%s%s" (file-name-directory load-file-name) "lisp/")
-             )
+
 (message (format "%s%s" (file-name-directory load-file-name) "lisp/"))
 (require 'sln-mode)
 (require 'cuda-mode)
@@ -499,7 +675,7 @@
   :config
   (global-set-key (kbd "C-x w") 'elfeed)
   (setq elfeed-feeds
-        '("https://www.phoronix.com/rss.php"
+        '(;;"https://www.phoronix.com/rss.php"
           "https://fa.bianp.net/blog/feed/"
           "https://lemire.me/blog/feed/"
           "https://hbfs.wordpress.com/feed/"
@@ -518,8 +694,22 @@
           ))
   )
 
+
+(use-package dired
+    :config
+  (with-eval-after-load 'dired
+    (define-key dired-mode-map (kbd "F") #'dired-create-empty-file)
+  ))
+
+;(package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode"))
+
 (use-package org
-  :ensure t
+  ;:ensure t // built-in I believe
+
+  ;; :defer ;; https://abode.karthinks.com/org-latex-preview/
+  ;; :ensure `(org :repo "https://code.tecosaur.net/tec/org-mode.git/"
+  ;;               :branch "dev")
+
   :config
   (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
   (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
@@ -576,61 +766,37 @@
   :ensure t
   )
 
-(use-package modus-themes
+(use-package all-the-icons
   :ensure t
-  :init
-  ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-italic-constructs t
-	modus-themes-bold-constructs t ;nil
-	modus-themes-region '(accented)
-	modus-themes-paren-match '(bold intense)
-	modus-themes-headings '((1 . (rainbow overline background 1.4))
-				(2 . (rainbow background 1.3))
-				(3 . (rainbow bold 1.2))
-				(t . (semilight 1.1)))
-	modus-themes-scale-headings t
-	modus-themes-org-blocks 'tinted-background
-	)
+  ; :commands all-the-icons-install-fonts
+  )
 
-  ;; Load the theme files before enabling a theme
-  ;; (modus-themes-load-themes)
+(use-package nerd-icons
+  :ensure t
+  ; :commands nerd-icons-install-fonts
+  )
+
+(use-package doom-themes
+  :ensure t
   :config
-  ;; Load the theme of your choice:
-  (modus-themes-load-theme 'modus-vivendi) ;; or modus-operandi
-  ;; https://protesilaos.com/emacs/modus-themes#h:4589acdc-2505-41fc-9f5e-699cfc45ab00
-  (defun my-modus-themes-saturate (percent)
-    "Saturate current Modus theme palette overrides by PERCENT."
-    (interactive
-     (list (read-number "Saturation by percent: ")))
-    (let* ((theme (modus-themes--current-theme))
-           (palette (pcase theme
-                      ('modus-operandi modus-themes-operandi-colors)
-                      ('modus-vivendi modus-themes-vivendi-colors)
-                      (_ (error "No Modus theme is active"))))
-           (overrides (pcase theme
-                        ('modus-operandi 'modus-themes-operandi-color-overrides)
-                        ('modus-vivendi 'modus-themes-vivendi-color-overrides)
-                        (_ (error "No Modus theme is active")))))
-      (let (name cons colors)
-        (dolist (cons palette)
-          (setq name (color-saturate-name (cdr cons) percent))
-          (setq name (format "%s" name))
-          (setq cons `(,(car cons) . ,name))
-          (push cons colors))
-        (set overrides colors))
-      (pcase theme
-        ('modus-operandi (modus-themes-load-operandi))
-        ('modus-vivendi (modus-themes-load-vivendi)))))
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-  ;; sample Elisp calls (or call `my-modus-themes-saturate' interactively)
-  (my-modus-themes-saturate 25)
-
-  :bind ("ESC <f5>" . modus-themes-toggle))
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (nerd-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-colors") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config)
+  (set-background-color "black"))
 
 (use-package monokai-theme
   :ensure t
 )
-
 
 (use-package flymake-shellcheck
   :ensure t
@@ -649,12 +815,12 @@
 
 
 (if (>= emacs-major-version 28)
-    (add-hook 'after-init-hook (lambda () (load-theme
-                                        ;'tangotango
-                                        ;'pitchkai
-                                        ;'modus-vivendi
-                                           'monokai
-                                           )))
+    ;; (add-hook 'after-init-hook (lambda () (load-theme
+    ;;                                     ;'tangotango
+    ;;                                     ;'pitchkai
+    ;;                                     ;'modus-vivendi
+    ;;                                        'monokai
+    ;;                                        )))
   (if (functionp 'tool-bar-mode)
     (tool-bar-mode 0))
 )
@@ -740,8 +906,9 @@
 (global-set-key (kbd "C-x v e") 'vc-git-grep)
 (global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
 ;(global-set-key (kbd "C-c C-l") 'compile)
-(global-set-key "\C-cb" 'insert-buffer-name)
-(global-set-key (kbd "C-c m") 'recompile)
+(global-set-key (kbd "C-c M-b") 'bjodah/insert-buffer-name)
+(global-set-key (kbd "C-c M-n") 'bjodah/copy-buffer-name)
+(global-set-key (kbd "C-c M-m") 'recompile)
 (global-set-key (kbd "C-x f") 'find-file-at-point)
 (global-set-key (kbd "C-c M-f") 'set-fill-column)
 (global-set-key (kbd "C-c C-l") 'hl-line-mode)
@@ -760,14 +927,17 @@
 (global-set-key (kbd "ESC <f2>") 'split-window-below)
 (global-set-key (kbd "ESC <f3>") 'split-window-right)
 (global-set-key (kbd "ESC <f4>") 'delete-window)
-(global-set-key (kbd "M-<left>") 'previous-buffer)
-(global-set-key (kbd "M-<right>") 'next-buffer)
+(global-set-key (kbd "ESC <f5>") 'vterm)
+(global-set-key (kbd "C-c C-<left>") 'previous-buffer)
+(global-set-key (kbd "C-c C-<right>") 'next-buffer)
+(global-set-key (kbd "C-c M-1") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))
 
 
-
-(defun insert-buffer-name () (interactive)
+(defun bjodah/insert-buffer-name () (interactive)
   (insert (buffer-name))
 )
+(defun bjodah/copy-buffer-name () (interactive)
+(kill-new (buffer-name)))
 ; Let F3 insert current file name when in minibuffer
 (define-key minibuffer-local-map [f3]
   (lambda() (interactive) (insert (buffer-file-name (nth 1 (buffer-list))))))
@@ -925,7 +1095,7 @@
 		     (delete-trailing-whitespace)
                      ;(pep8)
                      )))
-       (local-set-key (kbd "C-c C-c") 'py-execute-buffer-python3)
+       ;(local-set-key (kbd "C-c C-c") 'py-execute-buffer-python3)
        (local-set-key (kbd "C-c o") 'pep8)
        (local-set-key (kbd "C-c p") (lambda () (interactive) (occur "\\bdef \\|\\bclass \\|=[ ]?lambda")))
        ;; (jedi:setup)
@@ -938,10 +1108,15 @@
     (interactive)
     (term "ipython")) ;; note: C-x becomes C-c in term
 
+(defun isympy ()
+    (interactive)
+    (term "isympy")) ;; note: C-x becomes C-c in term
+
+
 (add-hook 'markdown-mode-hook
     (function (lambda ()
         (flyspell-mode)
-        (auto-fill-mode)
+        ;(auto-fill-mode)
         )))
 
 (add-to-list 'auto-mode-alist '("\\.tex$" . LaTeX-mode))
@@ -1013,6 +1188,7 @@
 ;; https://stackoverflow.com/a/13408008/790973
 (require 'ansi-color)
 (defun colorize-compilation-buffer ()
+  "Give colors to the compilation buffer."
   (toggle-read-only)
   (ansi-color-apply-on-region compilation-filter-start (point))
   (toggle-read-only))
@@ -1027,13 +1203,29 @@
 
 (show-paren-mode 1)
 
-
-
-;; (fset 'mark-to-space
-;;    (kmacro-lambda-form [?\C-  ?\C-s ?  ?\C-b] 0 "%d"))
-(fset 'mark-to-space
-   (kmacro-lambda-form [?\C-  ?\M-x ?i ?s ?e tab ?- ?f ?o ?r tab ?- ?r ?e ?g tab return ?\\ ?s ?- ?\M-x ?i ?s tab ?r backspace ?e tab ?- ?b ?a ?c tab ?- ?r ?e tab return ?\\ ?w ?\C-f] 0 "%d"))
-(global-set-key (kbd "C-c SPC") 'mark-to-space)
+(defun mark-to-char-before-literal ()
+  "Mark region from point up to (but not incl.) next occurrence of a character.
+Prompts for a character, uses literal matching (no regex)."
+  (interactive)
+  (let ((char (read-char "Mark to character (before, literal): ")))
+    (if (equal (char-to-string char) (substring (buffer-string) (point) (+ (point) 1)))
+        ;; Character is at point, so no region to mark.  Move forward one,
+        ;; but only if not at the end of the buffer.
+        (if (< (point) (point-max))
+            (forward-char)
+          (message "Already at character and at end of buffer."))
+      (progn
+        (push-mark (point) t t)
+        (let ((found (search-forward (char-to-string char) nil t)))
+          (if found
+              (progn
+                (goto-char found)
+                (backward-char) ; Back up one character
+                (message "Marked to just before '%c'" char))
+            (progn
+              (pop-mark)
+              (message "Character '%c' not found" char))))))))
+(global-set-key (kbd "M-Z") 'mark-to-char-before-literal)
 
 
 ;; (fset 'comment-c-word

@@ -47,13 +47,13 @@ if [[ ! -d ${THIS_RUNDIR:-""} ]]; then
     THIS_RUNDIR="$(mktemp -d)"
     # trap "rm -r \"${THIS_RUNDIR}\"" EXIT INT TERM
 fi
-CONTAINER_FOLDER=gccemacs-doom/env
+#CONTAINER_FOLDER=gccemacs-doom/env
 # THIS_FOLDER=$(dirname $(realpath $BASH_SOURCE))
 # THIS_FNAME=$(basename $(realpath $BASH_SOURCE))
 if [[ ! -e CMakeLists.txt ]]; then
     >&2 echo "Not in a CMake-based source folder?"
 fi
-THIS_BUILD="${THIS_BUILD:-${PWD}/build-$CONTAINER_FOLDER%/env}"
+THIS_BUILD="${THIS_BUILD:-${PWD}/build-emacs-doom}"
 if [[ -e compile_commands.json ]]; then
     if [[ -L compile_commands.json && $(realpath "$(readlink compile_commands.json)") == $THIS_BUILD/compile_commands.json ]]; then
         :
@@ -89,23 +89,35 @@ if [[ $HOST_TTYD != "" ]]; then
 fi
 
 
-cat <<EOF>$THIS_RUNDIR/launch-emacs.sh
+EMACS_SOCKET=emacs-doom-$(basename $PWD)
+
+cat <<EOF>$THIS_RUNDIR/launch-emacs-daemon.sh
 #!/bin/bash
 set -euxo pipefail
 if [[ $NO_EVIL == 1 ]]; then
    # https://github.com/hlissner/doom-emacs/blob/develop/modules/editor/evil/README.org#removing-evil-mode
    sed -i '/\(evil[a-z+]*\)/d' ~/.doom.d/init.el
-   ~/.emacs.d/bin/doom sync
+   ~/.emacs.doom/bin/doom sync
 fi
 while ! test -e $(pwd)/compile_commands.json; do sleep 1; done
-emacsclient -a "" $EMACS_FLAGS --eval '(load "/opt/my-rundir/launch-emacs.el")' -c
+emacs --fg-daemon=$EMACS_SOCKET $EMACS_FLAGS --init-directory=/root/.emacs.doom
 EOF
-chmod +x $THIS_RUNDIR/launch-emacs.sh
+chmod +x $THIS_RUNDIR/launch-emacs-daemon.sh
+
+cat <<EOF>$THIS_RUNDIR/launch-emacs-client.sh
+while ! test -e $(pwd)/compile_commands.json; do sleep 1; done
+while ! emacsclient --socket-name=$EMACS_SOCKET -c --eval '(load "/opt/my-rundir/launch-emacs.el")'; do echo -n '.'; sleep 1; done
+EOF
+chmod +x $THIS_RUNDIR/launch-emacs-client.sh
+
 cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
 #!/bin/bash
+source /etc/profile
+export FLINT_ROOT=/opt-3/flint-3.1.3-p1-release
 set -euxo pipefail
+#export PATH="\$(compgen -G "/opt-?/llvm-??/bin/"):\$(compgen -G "/opt-?/emacs-3*/bin/"):\$PATH"
 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
-     new -s ${CONTAINER_FOLDER%/env}-$(basename $(dirname $(realpath $BASH_SOURCE))) \
+     new -s tmx-$(basename $PWD) \
      "set -x \\
      ; cmake \\
              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \\
@@ -115,7 +127,8 @@ tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
              -S $(pwd) \\
       && ln -fs $THIS_BUILD/compile_commands.json . \\
       && cmake --build $THIS_BUILD" \; \
-     new-window "/opt/my-rundir/launch-emacs.sh"
+     new-window "/opt/my-rundir/launch-emacs-daemon.sh" \; \
+     new-window "/opt/my-rundir/launch-emacs-client.sh" 
 EOF
 
 if [[ $HOST_TTYD != "" ]]; then
@@ -149,7 +162,7 @@ fi
 
 {  # this scope saves us from surprises if editing this file during podman executiong below
     podrun \
-        --cont-img-dir $CONTAINER_FOLDER \
+        --image bjodah/triceratops-6:17 \
         --name host-dev-env-gccemacs-doom-cmake \
         --volume $THIS_CCACHE:/root/.ccache \
         --volume $THIS_CLANGD_CACHE:/root/.cache/clangd \

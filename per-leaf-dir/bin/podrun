@@ -26,7 +26,7 @@
         echo "--cont-img-basename  basename if basename of img-dir is not suitable"
         echo "--image              name of image (overrides --cont-img-dir), e.g. ubuntu:jammy"
         echo "--name               name of container, default is basename of image"
-        echo "--gui                set DISPLAY, mount X11 socket folder."
+        echo "--gui                set DISPLAY, mount X11 socket folder. Note, for X11 this automatically adds: --net=host"
         echo "--gpu                mount /dev/dri, for OpenGL, test with e.g. glxgears from mesa-utils"
         echo "--no-mount-cwd       disable default mounting of current working directory"
         echo ""
@@ -34,6 +34,8 @@
         echo ' $ podrun -v ~/.ssh:/root/.ssh -v ~/.gnupg:/root/.gnupg --image alpine:latest'
         echo ' $ podrun --gui --image docker.io/silex/emacs:master-alpine -- emacs ~/.bashrc '
         echo ' $ podrun --gui --cont-img-dir ~/dotfiles/containers/gccemacs-doom/env -- ~/.emacs.d/bin/doom sync; emacs ~/.bashrc '
+        echo ''
+        echo 'Note that you can override both --image and --cont-img-dir with the environment variable PODRUN_IMAGE_OVERRIDE.'
     }
     declare -a PODMAN_RUN_ARGS
     while [ $# -gt 0 ]; do
@@ -104,6 +106,8 @@
             PRE_CMD="ln -s /mnt/wslg/.X11-unix /tmp/.X11-unix;${PRE_CMD:-}"
         fi
         # if [[ ${XDG_SESSION_TYPE:-x11} == wayland ]]; then
+        PODMAN_RUN_ARGS+=("--net host")
+
         if [[ ${WAYLAND_DISPLAY:-""} == wayland* ]]; then
             #PODMAN_RUN_ARGS+=("--volume "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY":/tmp/$WAYLAND_DISPLAY --device /dev/dri --volume $XDG_RUNTIME_DIR/bus:/tmp/bus")
             #PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY=/tmp/$WAYLAND_DISPLAY")
@@ -111,6 +115,7 @@
             PODMAN_RUN_ARGS+=("-e WAYLAND_DISPLAY")
             PODMAN_RUN_ARGS+=("--volume $XDG_RUNTIME_DIR:$XDG_RUNTIME_DIR:rw")
             PODMAN_RUN_ARGS+=("-e XDG_RUNTIME_DIR")
+            #PODMAN_RUN_ARGS+=("-e XDG_SESSTION_TYPE")
         fi
         PODMAN_RUN_ARGS+=("-e DISPLAY=$(echo $DISPLAY | sed 's/localhost/127.0.0.1/g')")
         if [[ -z $XAUTHORITY ]]; then
@@ -123,7 +128,6 @@
             PODMAN_RUN_ARGS+=("-v $XAUTHORITY:$XAUTHORITY:rw")
             PODMAN_RUN_ARGS+=("-e XAUTHORITY")
         fi
-        #PODMAN_RUN_ARGS+=("--net host")
     fi
 	# # https://github.com/containers/podman/discussions/13040#discussioncomment-2071464
 	# PODMAN_RUN_ARGS+=("--uidmap $(id -u):0:1")

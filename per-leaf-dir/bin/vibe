@@ -1,0 +1,65 @@
+#!/bin/bash
+# -*- mode: shellscript -*-
+{
+    show_help() {
+        echo "Usage:"
+        echo "  $(basename $0) -v /path/to/file:/mnt/in_container -- emacs"
+    }
+    set -euo pipefail
+    #[ -v LITELLM_PROXY_API_KEY ]
+    source "$HOME/doc/it/apei-nycklar/source-env-vars.sh"
+    gpg_socket="$(echo $GPG_AGENT_INFO | cut -d: -f1)"
+    declare -a PODRUN_ARGS
+    while [ $# -gt 0 ]; do
+        case $1 in
+            -h|--help|\?)
+                show_help
+                exit 0
+                ;;
+            --)
+                shift
+                break
+                ;;
+            
+            *)
+                PODRUN_ARGS+=("$1")
+                shift
+                ;;
+        esac
+    done
+
+    declare -a potential_env_vars_to_export
+    potential_env_vars_to_export=(ALEPHALPHA_API_KEY ALEPH_ALPHA_API_KEY ANTHROPIC_API_KEY ANYSCALE_API_KEY AZURE_AI_API_KEY AZURE_API_KEY AZURE_OPENAI_API_KEY BASETEN_API_KEY CEREBRAS_API_KEY CLARIFAI_API_KEY CLOUDFLARE_API_KEY CODESTRAL_API_KEY COHERE_API_KEY CO_API_KEY DATABRICKS_API_KEY DEEPINFRA_API_KEY DEEPSEEK_API_KEY FIREWORKSAI_API_KEY FIREWORKS_AI_API_KEY FIREWORKS_API_KEY GEMINI_API_KEY GROQ_API_KEY HUGGINGFACE_API_KEY MARITALK_API_KEY MISTRAL_API_KEY NLP_CLOUD_API_KEY NVIDIA_NIM_API_KEY OLLAMA_API_KEY OPENAI_API_KEY OPENAI_LIKE_API_KEY OPENROUTER_API_KEY OR_API_KEY PALM_API_KEY PERPLEXITYAI_API_KEY PREDIBASE_API_KEY PROVIDER_API_KEY REPLICATE_API_KEY TOGETHERAI_API_KEY VOLCENGINE_API_KEY VOYAGE_API_KEY WATSONX_API_KEY WX_API_KEY XAI_API_KEY XINFERENCE_API_KEY)
+    
+    potential_env_vars_to_export+=(GPG_TTY TERM GPG_AGENT_INFO SSH_AUTH_SOCK LITELLM_PROXY_API_KEY LITELLM_PROXY_API_BASE)
+    for env_var_name in "${potential_env_vars_to_export[@]}"; do
+        if [[ -v "$env_var_name" ]]; then
+            PODRUN_ARGS+=(-e $env_var_name)
+        fi
+    done
+    ( set -x;
+    podrun \
+        --cont-img-dir ~/dotfiles/containers/vibe-env \
+        --device nvidia.com/gpu=all \
+        --security-opt=label=disable \
+        --ipc=host \
+        ${PODRUN_ARGS[@]} \
+        -v "$HOME/.gnupg":"/root/.gnupg" \
+        -v "$HOME/.ssh":"/root/.ssh" \
+        -v "$HOME/doc/3d3s":"/root/doc/3d3s" \
+        -v "$HOME/dotfiles":/opt-3/bjodah-dotfiles \
+        -v $gpg_socket:$gpg_socket \
+        -v "$SSH_AUTH_SOCK":"$SSH_AUTH_SOCK" \
+        --net=host \
+        -- "\
+ln -s /opt-3/cpython-v3.12-apt-deb /root/venv; \
+ln -s $HOME/vc /root/vc; \
+ln -s /opt-3/bjodah-dotfiles /root/dotfiles; \
+source ~/venv/bin/activate; \
+ulimit -v 32000000; \
+${@}"
+    )
+    echo "end of vibe..."
+}
+
+#        --image bjodah/triceratops-7:7 \
