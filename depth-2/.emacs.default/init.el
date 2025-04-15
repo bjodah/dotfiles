@@ -424,6 +424,9 @@
              )
 (message (format "%s%s" (file-name-directory load-file-name) "lisp/"))
 (require 'sln-mode)
+(require 'cuda-mode)
+(add-to-list 'auto-mode-alist '("\\.cu$" . cuda-mode))
+
 (require 'mmm-mako)
 ;; (require 'mmm-mode)
 ;; (load-file "~/.emacs.d/lisp/mmm-mako.el")
