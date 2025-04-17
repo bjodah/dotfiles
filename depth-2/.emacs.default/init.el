@@ -38,19 +38,23 @@
                            '((vertical-scroll-bars . nil)
                              (horizontal-scroll-bars . nil)))
   )
-
-
 (defun bjodah/customize-window ()
   (cond
-   ((string= (system-name) "argus") (set-face-attribute 'default nil :height 140))
-   (t (set-face-attribute 'default nil :height 105))
-   )
+   ((string= (system-name) "argus")
+    (set-face-attribute 'default nil :height 140))
+   (t
+    (set-face-attribute 'default nil :height 105)))
   (scroll-bar-mode 0)
       (global-unset-key (kbd "C-z"))     ;; (suspend-frame)
       (set-frame-font "Fira Code"))
-
-(add-hook 'after-init-hook 'bjodah/customize-window)
 (add-hook 'after-load-theme-hook 'bjodah/customize-window)
+
+(defun bjodah/startup-theme ()
+  (cond
+   ((string= (system-name) "SE-BDAHLGREN2") (load-theme 'modus-operandi-tinted))
+   (t (load-theme 'doom-monokai-ristretto t))))
+(add-hook 'after-init-hook 'bjodah/startup-theme)
+
 (if (daemonp)
     (add-hook 'server-after-make-frame-hook
               (lambda ()
@@ -111,6 +115,9 @@
   :bind
   (:map global-map
         ("C-x t 1" . modus-themes-toggle)
+        ("C-c M-T" . customize-themes)
+        ("C-c M-V" . visual-line-mode)
+        ("C-c M-F" . auto-fill-mode)
         ("M-F"     . fill-region)
         ("M-K" . (lambda ()
                   (interactive)
@@ -613,6 +620,9 @@
 
 (message (format "%s%s" (file-name-directory load-file-name) "lisp/"))
 (require 'sln-mode)
+(require 'cuda-mode)
+(add-to-list 'auto-mode-alist '("\\.cu$" . cuda-mode))
+
 (require 'mmm-mako)
 ;; (require 'mmm-mode)
 ;; (load-file "~/.emacs.d/lisp/mmm-mako.el")
@@ -808,7 +818,6 @@
 (use-package monokai-theme
   :ensure t
 )
-
 
 (use-package flymake-shellcheck
   :ensure t
