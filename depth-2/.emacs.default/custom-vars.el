@@ -82,16 +82,18 @@
                dockerfile-mode doom-themes ein elfeed embark-consult flycheck flymake-shellcheck
                forge god-mode gptel-quick julia-mode jupyter lsp-java lsp-pyright lsp-ui marginalia
                minuet mmm-mode modus-themes monokai-theme nerd-icons nginx-mode orderless org-roam
-               pdf-tools realgud rg rmsbolt rust-mode sqlite3 treemacs-magit typescript-mode
+               pdf-tools realgud rg rmsbolt rust-mode semext sqlite3 treemacs-magit typescript-mode
                validate vertico vterm yaml-mode yasnippet-snippets))
  '(package-vc-selected-packages
-   '((minuet :url "https://github.com/milanglacier/minuet-ai.el" :branch "main")
+   '((semext :url "https://github.com/ahyatt/semext" :branch "main")
+     (minuet :url "https://github.com/milanglacier/minuet-ai.el" :branch "main")
      (gptel-quick :url "https://github.com/karthink/gptel-quick")
      (gptel :url "https://github.com/karthink/gptel" :branch "master")))
  '(preview-image-type 'dvipng)
  '(preview-scale-function 2)
  '(safe-local-variable-values
-   '((TeX-master . "../kappa/main") (eval read-only) (org-confirm-babel-evaluate)))
+   '((package-lint-main-file . "llm.el") (TeX-master . "../kappa/main") (eval read-only)
+     (org-confirm-babel-evaluate)))
  '(vc-follow-symlinks t)
  '(vc-git-grep-template
    "git --no-pager grep --recurse-submodules -n <C> -e <R> -- <F>")

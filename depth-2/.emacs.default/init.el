@@ -1,13 +1,11 @@
-;; Unset some default key-bindings. I prefer C-x (, C-x ), C-x e for macro related functions
+;;; init.el --- Initialization file for Emacs  -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; Emacs Startup File --- initialization for Emacs
+
+;; Unset some default key-bindings.  I prefer C-x (, C-x ), C-x e for macro related functions
 (global-unset-key (kbd "<f3>")) ; unbind kmacro-start-macro-or-insert-counter from F3
 (global-unset-key (kbd "<f4>")) ; unbind kmacro-end-or-call-macro from F4
-
-;; (if (and (> (length (getenv "DISPLAY")) 0)
-;;          (string= "dark" (shell-command-to-string
-;;                           "gsettings get org.gnome.desktop.interface gtk-theme")))
-;;     (load-theme 'tango-dark)
-;;   ;(set-background-color "black")
-;;   )
 
 (setq custom-file (concat user-emacs-directory "custom-vars.el"))
 (when (file-exists-p custom-file)
@@ -41,6 +39,7 @@
                              (horizontal-scroll-bars . nil)))
   )
 
+
 (defun bjodah/customize-window ()
   (cond
    ((string= (system-name) "argus") (set-face-attribute 'default nil :height 140))
@@ -63,7 +62,23 @@
   (global-set-key (kbd "<mouse-5>") (lambda () (interactive) (scroll-up-line 4)))
   (xterm-mouse-mode))
 
-(bjodah/customize-window)
+(defun bjodah/select-theme ()
+  (if (> (length (getenv "DISPLAY")) 0)
+      (if (string= "prefer-dark" (shell-command-to-string
+                                  "gsettings get org.gnome.desktop.interface color-scheme"))
+          (load-theme 'doom-monokai-ristretto t)
+        (load-theme 'modus-operandi-tinted))
+    (load-theme 'doom-monokai-ristretto t)))
+;; (if (and (> (length (getenv "DISPLAY")) 0)
+;;          (string= "dark" (shell-command-to-string
+;;                           "gsettings get org.gnome.desktop.interface gtk-theme")))
+;;     (load-theme 'tango-dark)
+;;   ;(set-background-color "black")
+;;   )
+(add-hook 'after-init-hook 'bjodah/select-theme)
+
+
+;(bjodah/customize-window)
 
 (require 'savehist)
 (savehist-mode 1)
@@ -93,7 +108,6 @@
   (require-theme 'modus-themes)
   (setq modus-themes-common-palette-overrides
         modus-themes-preset-overrides-intense)
-  (load-theme 'modus-operandi-tinted)
   :bind
   (:map global-map
         ("C-x t 1" . modus-themes-toggle)
@@ -102,6 +116,11 @@
                   (interactive)
                   (kill-buffer (current-buffer))))
         ))
+
+(use-package treesit
+  :ensure nil ;; C-h v system-configuration-options, look for --with-tree-sitter)
+  :config
+  (setq treesit-font-lock-level 4))
 
 (use-package autorevert
   :ensure nil
@@ -464,6 +483,7 @@
 
 (load (expand-file-name (concat user-emacs-directory "bjodah-gptel")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-minuet")))
+(load (expand-file-name (concat user-emacs-directory "bjodah-ahyatt-llm")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-lsp")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-tools")))
 (use-package aidermacs
@@ -772,7 +792,7 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-monokai-ristretto t)
+  ;(load-theme 'doom-monokai-ristretto t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
