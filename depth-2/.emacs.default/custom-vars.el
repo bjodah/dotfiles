@@ -76,14 +76,14 @@
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(org-format-latex-options
    '(:foreground default :background default :scale 1.25 :html-foreground "Black" :html-background
-                 "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+		 "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
    '(aidermacs all-the-icons auctex cape ccls cmake-mode company corfu cython-mode dired-preview
-               dockerfile-mode doom-themes ein elfeed embark-consult flycheck flymake-shellcheck
-               forge god-mode gptel-quick julia-mode jupyter lsp-java lsp-pyright lsp-ui marginalia
-               minuet mmm-mode modus-themes monokai-theme nerd-icons nginx-mode orderless org-roam
-               pdf-tools realgud rg rmsbolt rust-mode semext sqlite3 treemacs-magit typescript-mode
-               validate vertico vterm yaml-mode yasnippet-snippets))
+	       dockerfile-mode doom-themes ein elfeed embark-consult flycheck flymake-shellcheck
+	       forge god-mode gptel-quick julia-mode jupyter lsp-java lsp-pyright lsp-ui marginalia
+	       minuet mmm-mode modus-themes monokai-theme nerd-icons nginx-mode orderless org-roam
+	       pdf-tools realgud rg rmsbolt rust-mode semext sqlite3 treemacs-magit typescript-mode
+	       validate vertico vterm yaml-mode yasnippet-snippets))
  '(package-vc-selected-packages
    '((semext :url "https://github.com/ahyatt/semext" :branch "main")
      (minuet :url "https://github.com/milanglacier/minuet-ai.el" :branch "main")

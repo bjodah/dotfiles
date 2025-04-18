@@ -5,7 +5,7 @@
   :ensure t
   :config
   (setq
-   gptel-model 'gemini-2.0-flash ; gemini-2.5-flash-preview-04-09
+   gptel-model 'gemini-2.0-flash ; gemini-2.5-flash-preview-04-17
    gptel-backend (gptel-make-gemini "Gemini"
                    :key (lambda () (getenv "GEMINI_API_KEY"))
                    :stream t))
@@ -62,9 +62,9 @@
   :endpoint "/v1/chat/completions"
   :stream t
   ;; https://console.x.ai/ ;;
-  :models '(grok-3-beta
-            grok-3-fast-beta
-            grok-3-mini-beta))
+  :models '(grok-3-mini-beta
+            grok-3-beta
+            grok-3-fast-beta))
 
 (gptel-make-openai "DeepSeek"       ;Any name you want
   :host "api.deepseek.com"
