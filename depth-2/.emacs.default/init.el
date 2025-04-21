@@ -49,11 +49,11 @@
       (set-frame-font "Fira Code"))
 (add-hook 'after-load-theme-hook 'bjodah/customize-window)
 
-(defun bjodah/startup-theme ()
-  (cond
-   ((string= (system-name) "SE-BDAHLGREN2") (load-theme 'modus-operandi-tinted))
-   (t (load-theme 'doom-monokai-ristretto t))))
-(add-hook 'after-init-hook 'bjodah/startup-theme)
+;; (defun bjodah/startup-theme ()
+;;   (cond
+;;    ((string= (system-name) "SE-BDAHLGREN2") (load-theme 'modus-operandi-tinted))
+;;    (t (load-theme 'doom-monokai-ristretto t))))
+;; (add-hook 'after-init-hook 'bjodah/startup-theme)
 
 (if (daemonp)
     (add-hook 'server-after-make-frame-hook
@@ -67,18 +67,12 @@
   (xterm-mouse-mode))
 
 (defun bjodah/select-theme ()
-  (if (> (length (getenv "DISPLAY")) 0)
-      (if (string= "prefer-dark" (shell-command-to-string
-                                  "gsettings get org.gnome.desktop.interface color-scheme"))
-          (load-theme 'doom-monokai-ristretto t)
-        (load-theme 'modus-operandi-tinted))
-    (load-theme 'doom-monokai-ristretto t)))
-;; (if (and (> (length (getenv "DISPLAY")) 0)
-;;          (string= "dark" (shell-command-to-string
-;;                           "gsettings get org.gnome.desktop.interface gtk-theme")))
-;;     (load-theme 'tango-dark)
-;;   ;(set-background-color "black")
-;;   )
+  (cond
+   ((string= (system-name) "SE-BDAHLGREN2") (load-theme 'modus-operandi-tinted))
+   ((and (> (length (getenv "DISPLAY")) 0) (not (string= "prefer-dark" (shell-command-to-string
+                                  "gsettings get org.gnome.desktop.interface color-scheme")))) (load-theme 'modus-operandi-tinted))
+   (t (load-theme 'doom-monokai-ristretto t))))
+
 (add-hook 'after-init-hook 'bjodah/select-theme)
 
 
@@ -493,6 +487,12 @@
 (load (expand-file-name (concat user-emacs-directory "bjodah-ahyatt-llm")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-lsp")))
 (load (expand-file-name (concat user-emacs-directory "bjodah-tools")))
+(load (expand-file-name (concat user-emacs-directory "bjodah-latex")))
+
+(global-set-key (kbd "M-Z") 'bjodah/mark-to-char-before-literal)
+(global-set-key (kbd "C-c Z") 'bjodah/vterm-execute-region-or-current-line)
+
+
 (use-package aidermacs
   :ensure t
   :bind (("C-c a" . aidermacs-transient-menu))
@@ -532,17 +532,16 @@
   :ensure t
   :config
   (which-key-mode))
-(setq ccls-executable "/usr/local/bin/ccls")
 
 
-(use-package cython-mode :ensure t)
-(add-hook 'cython-mode-hook (lambda () (which-function-mode -1))) ;; https://github.com/bbatsov/prelude/issues/940#issuecomment-210505475
+
+(use-package cython-mode
+  :ensure t
+  :config
+  (add-hook 'cython-mode-hook (lambda () (which-function-mode -1))) ;; https://github.com/bbatsov/prelude/issues/940#issuecomment-210505475
+  )
 (use-package dockerfile-mode :ensure t)
 (use-package realgud :ensure t)
-
-;; (use-package quelpa-use-package
-;;   :init (setq quelpa-update-melpa-p nil)
-;;   :config (quelpa-use-package-activate-advice))
 
 
 (use-package ein
@@ -581,33 +580,6 @@
 
 (use-package jupyter
   :ensure t)
-(use-package auctex
-  :ensure t
-  :config
-  (load "preview.el" nil t t)
-  (setq TeX-auto-save t)
-  ;; (add-hook 'LaTeX-mode-hook (flyspell-mode 1))
-  ;; (add-hook 'LaTeX-mode-hook (auto-fill-mode -1))
-  ;; (add-hook 'LaTeX-mode-hook (visual-line-mode 1))
-  ;; (add-hook 'TeX-mode-hook (flyspell-mode 1))
-  ;; (add-hook 'TeX-mode-hook (auto-fill-mode -1))
-  ;; (add-hook 'TeX-mode-hook (visual-line-mode 1))
-  ;; (add-hook 'latex-mode-hook (flyspell-mode 1))
-  ;; (add-hook 'latex-mode-hook (auto-fill-mode -1))
-  ;; (add-hook 'latex-mode-hook (visual-line-mode 1))
-  (add-hook 'LaTeX-mode-hook (defun dont-remap-next-error ()
-                                 ((local-set-key [remap next-error] nil))))
-  ;(define-key LaTeX-mode-map (kbd "M-g M-n") nil)
-  (when (string= (system-name) "SE-BDAHLGREN2")
-    (set-default 'preview-default-document-pt 12)
-    (set-default 'preview-scale-function 1.5)
-    )
-  )
-
-(use-package pdf-tools
-  :ensure t
-  :config
-  (pdf-tools-install t))
 
 (use-package cmake-mode
   :ensure t)
@@ -913,24 +885,15 @@
 ;; (elpy-use-ipython)
 
 
-;; newline-withoug-break-of-line ;; http://stackoverflow.com/questions/5898448
-(defun newline-without-break-of-line ()
-"1. move to end of the line.
- 2. insert indented newline"
-
-  (interactive)
-  (let ((oldpos (point)))
-    (end-of-line)
-    (newline-and-indent)))
-
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x v e") 'vc-git-grep)
-(global-set-key (kbd "<C-return>") 'newline-without-break-of-line)
+(global-set-key (kbd "<C-return>") 'bjodah/newline-without-break-of-line)
 ;(global-set-key (kbd "C-c C-l") 'compile)
 (global-set-key (kbd "C-c M-b") 'bjodah/insert-buffer-name)
 (global-set-key (kbd "C-c M-n") 'bjodah/copy-buffer-name)
 (global-set-key (kbd "C-c M-m") 'recompile)
 (global-set-key (kbd "C-x f") 'find-file-at-point)
+(global-set-key (kbd "C-c M-SPC") 'bjodah/just-one-space-in-region)
 (global-set-key (kbd "C-c M-f") 'set-fill-column)
 (global-set-key (kbd "C-c C-l") 'hl-line-mode)
 (global-set-key (kbd "<f2>") 'other-window)
@@ -954,61 +917,11 @@
 (global-set-key (kbd "C-c M-1") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))
 
 
-(defun bjodah/insert-buffer-name () (interactive)
-  (insert (buffer-name))
-)
-(defun bjodah/copy-buffer-name () (interactive)
-(kill-new (buffer-name)))
-; Let F3 insert current file name when in minibuffer
-(define-key minibuffer-local-map [f3]
-  (lambda() (interactive) (insert (buffer-file-name (nth 1 (buffer-list))))))
-
-
 ;; auto-complete (init after yasnippet)
 ;(add-to-list 'ac-dictionary-directories "~/.emacs.d/dict")
 ;;(require 'auto-complete-config)
 ;(setq ac-auto-start 4) ;; need 4 characters before suggesting auto-completion
 
-;; http://stackoverflow.com/questions/8674912/how-to-collapse-whitespaces-in-a-region
-(defun just-one-space-in-region (beg end)
-  "replace all whitespace in the region with single spaces"
-  (interactive "r")
-  (save-excursion
-    (save-restriction
-      (narrow-to-region beg end)
-      (goto-char (point-min))
-      (while (re-search-forward "\\s-+" nil t)
-        (replace-match " ")))))
-
-
-(defun my/vterm-execute-region-or-current-line ()
-  "Insert text of current line in vterm and execute."
-  (interactive)
-  (require 'vterm)
-  (eval-when-compile (require 'subr-x))
-  (let ((command (if (region-active-p)
-                     (string-trim (buffer-substring
-                                   (save-excursion (region-beginning))
-                                   (save-excursion (region-end))))
-                   (string-trim (buffer-substring (save-excursion
-                                                    (beginning-of-line)
-                                                    (point))
-                                                  (save-excursion
-                                                    (end-of-line)
-                                                    (point)))))))
-    (let ((buf (current-buffer)))
-      (unless (get-buffer vterm-buffer-name)
-        (vterm))
-      (display-buffer vterm-buffer-name t)
-      (switch-to-buffer-other-window vterm-buffer-name)
-      (vterm--goto-line -1)
-      (message command)
-      (vterm-send-string command)
-      (vterm-send-return)
-      (switch-to-buffer-other-window buf)
-      )))
-
-(global-set-key (kbd "C-c z") 'my/vterm-execute-region-or-current-line)
 
 ;; 4 spaces indentation level for C/C++
 (setq-default c-default-style "bsd")
@@ -1025,32 +938,6 @@
 		     (delete-trailing-whitespace)
                      )))
        )))
-
-
-;; BEGIN LATEX
-(add-hook 'LaTeX-mode-hook
-    (function (lambda ()
-       (reftex-mode)
-       (flyspell-mode)
-       (auto-fill-mode)
-       (define-key LaTeX-mode-map "\C-c\C-t\C-x" 'TeX-toggle-escape)
-       (setq fill-column 199))))
-
-
-;; BEGIN AUCTEX MINTED FIX
-; http://old.nabble.com/shell-escape-td1076639.html
-(defun TeX-toggle-escape nil (interactive)
-  (setq LaTeX-command
-        (if (string= LaTeX-command "latex") "latex -shell-escape" "latex")))
-
-; source: http://stackoverflow.com/questions/3300497/using-minted-source-code-latex-package-with-emacs-auctex?lq=1
-;; (eval-after-load "tex"
-;;   '(setcdr (assoc "LaTeX" TeX-command-list)
-;;           '("%`%l%(mode) -shell-escape%' %t"
-;;           TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")
-;;     )
-;;   )
-;; END AUCTEX MINTED FIX
 
 
 ;; === Spelling (grammar) ===
@@ -1140,7 +1027,6 @@
         ;(auto-fill-mode)
         )))
 
-(add-to-list 'auto-mode-alist '("\\.tex$" . LaTeX-mode))
 (add-to-list 'auto-mode-alist '("\\.ipp$" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
@@ -1164,46 +1050,7 @@
 
 
 (put 'upcase-region 'disabled nil)
-
-;; (require 'package)
-;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-
-;; (require 'ycmd)
-;; (add-hook 'c++-mode-hook 'ycmd-mode)
-
-;; (require 'company-ycmd)
-;; (company-ycmd-setup)
-
-;; (set-variable 'ycmd-server-command '("python" "/home/bjorn/rovc/ycmd/ycmd"))
-
 (put 'downcase-region 'disabled nil)
-
-
-;; (require 'use-package)
-;; (use-package company-rtags
-;;   :after company)
-
-;; (use-package rtags
-;;   :commands rtags-mode
-;;   :bind (("C-. r D" . rtags-dependency-tree)
-;;          ("C-. r F" . rtags-fixit)
-;;          ("C-. r R" . rtags-rename-symbol)
-;;          ("C-. r T" . rtags-tagslist)
-;;          ("C-. r d" . rtags-create-doxygen-comment)
-;;          ("C-. r c" . rtags-display-summary)
-;;          ("C-. r e" . rtags-print-enum-value-at-point)
-;;          ("C-. r f" . rtags-find-file)
-;;          ("C-. r i" . rtags-include-file)
-;;          ("C-. r i" . rtags-symbol-info)
-;;          ("C-. r m" . rtags-imenu)
-;;          ("C-. r n" . rtags-next-match)
-;;          ("C-. r p" . rtags-previous-match)
-;;          ("C-. r r" . rtags-find-references)
-;;          ("C-. r s" . rtags-find-symbol)
-;;          ("C-. r v" . rtags-find-virtuals-at-point))
-;;   :bind (:map c-mode-base-map
-;;               ("M-." . rtags-find-symbol-at-point)))
-
 
 
 ;; https://stackoverflow.com/a/13408008/790973
@@ -1224,34 +1071,6 @@
 
 (show-paren-mode 1)
 
-(defun mark-to-char-before-literal ()
-  "Mark region from point up to (but not incl.) next occurrence of a character.
-Prompts for a character, uses literal matching (no regex)."
-  (interactive)
-  (let ((char (read-char "Mark to character (before, literal): ")))
-    (if (equal (char-to-string char) (substring (buffer-string) (point) (+ (point) 1)))
-        ;; Character is at point, so no region to mark.  Move forward one,
-        ;; but only if not at the end of the buffer.
-        (if (< (point) (point-max))
-            (forward-char)
-          (message "Already at character and at end of buffer."))
-      (progn
-        (push-mark (point) t t)
-        (let ((found (search-forward (char-to-string char) nil t)))
-          (if found
-              (progn
-                (goto-char found)
-                (backward-char) ; Back up one character
-                (message "Marked to just before '%c'" char))
-            (progn
-              (pop-mark)
-              (message "Character '%c' not found" char))))))))
-(global-set-key (kbd "M-Z") 'mark-to-char-before-literal)
-
-
-;; (fset 'comment-c-word
-;;    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([47 kp-multiply 32 134217848 134217840 134217840 return 91 44 41 93 return 2 32 42 47] 0 "%d")) arg)))
-;; (global-set-key (kbd "C-c c") 'comment-c-word)
 
 (let ((local-settings (concat user-emacs-directory "local-settings.el")))
  (when (file-exists-p local-settings)
