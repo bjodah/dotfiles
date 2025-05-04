@@ -6,6 +6,7 @@
 ;; Unset some default key-bindings.  I prefer C-x (, C-x ), C-x e for macro related functions
 (global-unset-key (kbd "<f3>")) ; unbind kmacro-start-macro-or-insert-counter from F3
 (global-unset-key (kbd "<f4>")) ; unbind kmacro-end-or-call-macro from F4
+(global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
 
 (setq custom-file (concat user-emacs-directory "custom-vars.el"))
 (when (file-exists-p custom-file)
@@ -106,10 +107,12 @@
   (require-theme 'modus-themes)
   (setq modus-themes-common-palette-overrides
         modus-themes-preset-overrides-intense)
+  (add-hook 'modus-themes-after-load-theme-hook 'bjodah/customize-window)
+  (enable-recursive-minibuffers t "Allow minibuffer commands in the minibuffer") ;see mb-depth
   :bind
   (:map global-map
-        ("C-x t 1" . modus-themes-toggle)
-        ("C-c M-T" . customize-themes)
+        ("C-c M-! 1" . modus-themes-toggle)
+        ("C-c M-T t" . customize-themes)
         ("C-c M-V" . visual-line-mode)
         ("C-c M-F" . auto-fill-mode)
         ("M-F"     . fill-region)
@@ -117,6 +120,10 @@
                   (interactive)
                   (kill-buffer (current-buffer))))
         ))
+
+(use-package mb-depth
+  :config
+  (minibuffer-depth-indicate-mode 1))
 
 (use-package treesit
   :ensure nil ;; C-h v system-configuration-options, look for --with-tree-sitter)
@@ -469,7 +476,9 @@
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
 
 (use-package dired-preview
-  :ensure t)
+  :ensure t
+  :config
+  (setq dired-preview-delay 0.025))
 
 (use-package sqlite3
   :ensure t)
@@ -540,7 +549,10 @@
   :config
   (add-hook 'cython-mode-hook (lambda () (which-function-mode -1))) ;; https://github.com/bbatsov/prelude/issues/940#issuecomment-210505475
   )
-(use-package dockerfile-mode :ensure t)
+(use-package dockerfile-mode
+  :ensure t
+  :init
+  (add-to-list 'auto-mode-alist '("Containerfile" . dockerfile-mode)))
 (use-package realgud :ensure t)
 
 
@@ -582,7 +594,12 @@
   :ensure t)
 
 (use-package cmake-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'cmake-mode-hook
+            (function (lambda ()
+                        (setq cmake-tab-width 4)
+                        ))))
 (use-package yaml-mode
   :ensure t)
 (use-package mmm-mode
@@ -592,36 +609,48 @@
 
 (message (format "%s%s" (file-name-directory load-file-name) "lisp/"))
 (require 'sln-mode)
-(require 'cuda-mode)
-(add-to-list 'auto-mode-alist '("\\.cu$" . cuda-mode))
+(use-package cuda-mode  ;; was (require 'cuda-mode)
+  :init
+  (add-to-list 'auto-mode-alist '("\\.cu$" . cuda-mode)))
 
 (require 'mmm-mako)
+(use-package mmm-mako
+  :after mmm-mode
+  :init
+  (add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . makefile-gmake-mode))
+  (add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . mmm-mode))
+  (mmm-add-mode-ext-class 'makefile-gmake-mode "\\.mk.mako\\'" 'mako)
+  ;; - C++
+  (add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . mmm-mode))
+  (mmm-add-mode-ext-class 'c++-mode "\\.cpp.mako\\'" 'mako)
+
+  (add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . mmm-mode))
+  (mmm-add-mode-ext-class 'c++-mode "\\.hpp.mako\\'" 'mako)
+
+  (add-to-list 'auto-mode-alist '("\\.ipp.mako\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("\\.ipp.mako\\'" . mmm-mode))
+  (mmm-add-mode-ext-class 'c++-mode "\\.ipp.mako\\'" 'mako)
+  ;; - C
+  (add-to-list 'auto-mode-alist '("\\.c.mako\\'" . c-mode))
+  (add-to-list 'auto-mode-alist '("\\.c.mako\\'" . mmm-mode))
+  (mmm-add-mode-ext-class 'c-mode "\\.c.mako\\'" 'mako)
+
+  (add-to-list 'auto-mode-alist '("\\.h.mako\\'" . c-mode))
+  (add-to-list 'auto-mode-alist '("\\.h.mako\\'" . mmm-mode))
+  (mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
+
+  ;; - YAML
+  (add-to-list 'auto-mode-alist '("\\.yaml.mako\\'" . yaml-mode))
+  (add-to-list 'auto-mode-alist '("\\.yaml.mako\\'" . mmm-mode))
+  (mmm-add-mode-ext-class 'yaml-mode "\\.yaml.mako\\'" 'mako)
+  
+  )
 ;; (require 'mmm-mode)
 ;; (load-file "~/.emacs.d/lisp/mmm-mako.el")
 ;; - Makefile
-(add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . makefile-gmake-mode))
-(add-to-list 'auto-mode-alist '("\\.mk.mako\\'" . mmm-mode))
-(mmm-add-mode-ext-class 'makefile-gmake-mode "\\.mk.mako\\'" 'mako)
-;; - C++
-(add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.cpp.mako\\'" . mmm-mode))
-(mmm-add-mode-ext-class 'c++-mode "\\.cpp.mako\\'" 'mako)
 
-(add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.hpp.mako\\'" . mmm-mode))
-(mmm-add-mode-ext-class 'c++-mode "\\.hpp.mako\\'" 'mako)
-
-(add-to-list 'auto-mode-alist '("\\.ipp.mako\\'" . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.ipp.mako\\'" . mmm-mode))
-(mmm-add-mode-ext-class 'c++-mode "\\.ipp.mako\\'" 'mako)
-;; - C
-(add-to-list 'auto-mode-alist '("\\.c.mako\\'" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.c.mako\\'" . mmm-mode))
-(mmm-add-mode-ext-class 'c-mode "\\.c.mako\\'" 'mako)
-
-(add-to-list 'auto-mode-alist '("\\.h.mako\\'" . c-mode))
-(add-to-list 'auto-mode-alist '("\\.h.mako\\'" . mmm-mode))
-(mmm-add-mode-ext-class 'c-mode "\\.h.mako\\'" 'mako)
 
 ;(use-package monokai-theme :ensure t)
 ;(use-package tangotango-theme :ensure t)
@@ -688,10 +717,23 @@
 
 
 (use-package dired
-    :config
+  :ensure nil
+  :hook
+  (dired-mode . auto-revert-mode)
+  :config
+  (setq dired-listing-switches "-alt") ; "-altr"
   (with-eval-after-load 'dired
-    (define-key dired-mode-map (kbd "F") #'dired-create-empty-file)
-  ))
+    (define-key dired-mode-map (kbd "F") #'dired-create-empty-file)))
+
+(use-package winner
+  :ensure nil
+  :init
+  (winner-mode 1)
+  :after dired-preview
+  :config
+  (add-to-list 'winner-boring-buffers dired-preview-buffer-name)
+  (setq winner-ring-size 20) ; I'm not scrolling further back than 5...
+)
 
 ;(package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode"))
 
@@ -803,17 +845,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Global hooks and keymaps
-(global-unset-key (kbd "C-x C-z")) ;; (suspend-frame)
 
 
 
 (if (>= emacs-major-version 28)
-    ;; (add-hook 'after-init-hook (lambda () (load-theme
-    ;;                                     ;'tangotango
-    ;;                                     ;'pitchkai
-    ;;                                     ;'modus-vivendi
-    ;;                                        'monokai
-    ;;                                        )))
   (if (functionp 'tool-bar-mode)
     (tool-bar-mode 0))
 )
@@ -860,10 +895,6 @@
         )))
 
 
-(add-hook 'cmake-mode-hook
-    (function (lambda ()
-        (setq cmake-tab-width 4)
-        )))
 
 (make-variable-buffer-local 'compile-command)
 
@@ -915,6 +946,11 @@
 (global-set-key (kbd "C-c C-<left>") 'previous-buffer)
 (global-set-key (kbd "C-c C-<right>") 'next-buffer)
 (global-set-key (kbd "C-c M-1") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))
+(global-set-key (kbd "C-c M-2") (lambda () (interactive) (find-file (custom-file))))
+(global-set-key (kbd "C-c M-3") (lambda () (interactive) (switch-to-buffer "*scratch*")))
+(global-set-key (kbd "C-c M-4") (lambda () (interactive) (display-buffer "*scratch*")))
+(global-set-key (kbd "C-c M-G") 'exit-minibuffer)
+
 
 
 ;; auto-complete (init after yasnippet)
@@ -1030,7 +1066,7 @@
 (add-to-list 'auto-mode-alist '("\\.ipp$" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.pyx$" . cython-mode))
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
-(add-to-list 'auto-mode-alist '("Containerfile" . dockerfile-mode))
+
 
 ; pylint pep8
 ;; (require 'tramp)
@@ -1066,8 +1102,6 @@
 ;; (add-hook 'c-mode-common-hook 
 ;;           (lambda () (define-key c-mode-base-map (kbd "C-c C-l") 'compile)))
 
-;; https://www.emacswiki.org/emacs/WinnerMode
-(winner-mode 1)
 
 (show-paren-mode 1)
 
@@ -1083,5 +1117,14 @@
   ;; (open-main-org)
 )
 
+
+
+;; from http://trey-jackson.blogspot.com/2010/04/emacs-tip-36-abort-minibuffer-when.html
+(defun stop-using-minibuffer ()
+  "kill the minibuffer"
+  (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
+    (abort-recursive-edit)))
+
+(add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 ;;; init.el ends here

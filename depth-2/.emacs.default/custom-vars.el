@@ -5,7 +5,8 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
-   '("4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
+   '("937401a2e532f2c8c881b6b3f20d9d4b6b9405bccf72ea6289c9d3f4507eb1ab"
+     "4594d6b9753691142f02e67b8eb0fda7d12f6cc9f1299a49b819312d6addad1d"
      "4b6cc3b60871e2f4f9a026a5c86df27905fb1b0e96277ff18a76a39ca53b82e1"
      "a75aff58f0d5bbf230e5d1a02169ac2fbf45c930f816f3a21563304d5140d245"
      "e1f4f0158cd5a01a9d96f1f7cdcca8d6724d7d33267623cc433fe1c196848554"
@@ -76,14 +77,15 @@
  '(org-agenda-files '("~/doc/org/agendas.org"))
  '(org-format-latex-options
    '(:foreground default :background default :scale 1.25 :html-foreground "Black" :html-background
-		 "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+                 "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
    '(aidermacs all-the-icons auctex cape ccls cmake-mode company corfu cython-mode dired-preview
-	       dockerfile-mode doom-themes ein elfeed embark-consult flycheck flymake-shellcheck
-	       forge god-mode gptel-quick julia-mode jupyter lsp-java lsp-pyright lsp-ui marginalia
-	       minuet mmm-mode modus-themes monokai-theme nerd-icons nginx-mode orderless org-roam
-	       pdf-tools realgud rg rmsbolt rust-mode semext sqlite3 treemacs-magit typescript-mode
-	       validate vertico vterm yaml-mode yasnippet-snippets))
+               dockerfile-mode doom-themes ein elfeed embark-consult flycheck flymake-shellcheck
+               forge go-mode god-mode gptel gptel-quick julia-mode jupyter lsp-java lsp-pyright
+               lsp-ui marginalia minuet mmm-mode modus-themes monokai-theme nerd-icons nginx-mode
+               orderless org-roam pdf-tools realgud rg rmsbolt rust-mode semext sqlite3
+               treemacs-magit typescript-mode undo-tree validate vertico vterm yaml-mode
+               yasnippet-snippets))
  '(package-vc-selected-packages
    '((semext :url "https://github.com/ahyatt/semext" :branch "main")
      (minuet :url "https://github.com/milanglacier/minuet-ai.el" :branch "main")
@@ -94,6 +96,7 @@
  '(safe-local-variable-values
    '((package-lint-main-file . "llm.el") (TeX-master . "../kappa/main") (eval read-only)
      (org-confirm-babel-evaluate)))
+ '(scroll-conservatively 20)
  '(vc-follow-symlinks t)
  '(vc-git-grep-template
    "git --no-pager grep --recurse-submodules -n <C> -e <R> -- <F>")

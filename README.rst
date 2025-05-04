@@ -7,6 +7,14 @@ Custom keyboard shortcuts:
 
 https://github.com/sezanzeb/input-remapper
 
+TODO
+====
+- .bashrc
+  - HISTCONTROL=ignoreboth
+  - HISTSIZE=987000
+  - HISTFILESIZE=9876000
+
+
 Stale customizations
 ====================
 - xonsh: Ctrl+Alt+R

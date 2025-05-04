@@ -4,6 +4,8 @@
   :commands lsp
   :init
   (setq lsp-keymap-prefix "C-c l")
+  :config
+  (setq lsp-copilot-enabled nil) ;; https://github.com/emacs-lsp/lsp-mode/issues/4679#issuecomment-2700882443
   :custom
   (lsp-file-watch-threshold 4000)
   ;; (lsp-rust-server 'rls)
