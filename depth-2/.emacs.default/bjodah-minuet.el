@@ -132,6 +132,7 @@ fib(5)")
                  (plist-get ctx :after-cursor)))
      :template)
     (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256) ; or 56 for local llm?
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :temperature 0.07)
     (setq minuet-n-completions 2)
     (setq minuet-context-window 4000) ;; 4k chars ~= 1000 tokens
     (setq minuet-provider 'openai-fim-compatible)
@@ -141,7 +142,9 @@ fib(5)")
 (defun bjodah/minuet-use-llama-swap-ling ()
   "Switch to Ling-Coder-lite on localhost (llama-swap container on port :8686"
   (interactive)
-  (plist-put minuet-openai-compatible-options :end-point "http://localhost:8686/v1/chat/completions")
+  (plist-put minuet-openai-compatible-options :end-point
+             (concat (if (string= (getenv "container") "podman") "http://host.docker.internal" "http://localhost")
+                     ":8686/v1/completions"))
   (plist-put minuet-openai-compatible-options :api-key (defun my-llama-swap-key () "sk-empty"))
                                         ;(plist-put minuet-openai-compatible-options :model "HuggingFaceTB/SmolLM2-1.7B-Instruct")
   (plist-put minuet-openai-compatible-options :model "llamacpp-Ling-Coder-lite")
@@ -154,15 +157,29 @@ fib(5)")
   (setq minuet-provider 'openai-compatible)
   )
 
+(defun bjodah--minuet-use-llama-swap (model-name)
+  "Swtich to a llama-swap model"
+  (bjodah/minuet-use-localhost-fim) ;; we need to override port 8000, and model name.
+  (setq minuet-n-completions 4)
+  (plist-put minuet-openai-fim-compatible-options :end-point
+             (concat (if (string= (getenv "container") "podman") "http://host.docker.internal" "http://localhost")
+                     ":8686/v1/completions"))
+  (plist-put minuet-openai-fim-compatible-options :name "llama-swap-qwen-coder")
+  (plist-put minuet-openai-fim-compatible-options :api-key (defun my-llama-swap-key () "sk-empty"))
+  (plist-put minuet-openai-fim-compatible-options :model model-name)
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :temperature 0.123)
+  )
+
 (defun bjodah/minuet-use-llama-swap-qwen-coder-14B ()
   "Switch to Qwen/Qwen2.5-Coder-Instruct-14B on localhost (llama-swap container on port :8686"
   (interactive)
-  (bjodah/minuet-use-localhost-fim) ;; we need to override port 8000, and model name.
-  (setq minuet-n-completions 4)
-  (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:8686/v1/completions")
-  (plist-put minuet-openai-fim-compatible-options :name "llama-swap-qwen-coder")
-  (plist-put minuet-openai-fim-compatible-options :api-key (defun my-llama-swap-key () "sk-empty"))
-  (plist-put minuet-openai-fim-compatible-options :model "exllamav2-Qwen2.5-Coder-14B-Instruct")  
+  (bjodah--minuet-use-llama-swap "exllamav2-Qwen2.5-Coder-14B-Instruct")
+  )
+
+(defun bjodah/minuet-use-llama-swap-qwen-coder-7B ()
+  "Switch to Qwen/Qwen2.5-Coder-Instruct-14B on localhost (llama-swap container on port :8686"
+  (interactive)
+  (bjodah--minuet-use-llama-swap "llamacpp-Qwen2.5-Coder-7B-Instruct")
   )
 
 
@@ -194,7 +211,8 @@ fib(5)")
     ;(add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
 
     :config
-    (bjodah/minuet-use-localhost-fim) ; or bjodah/minuet-use-smollm2
+    ;(bjodah/minuet-use-localhost-fim) ; or bjodah/minuet-use-smollm2
+    (bjodah/minuet-use-llama-swap-qwen-coder-7B)
     (setq minuet-auto-suggestion-throttle-delay 0.5)
     (setq minuet-auto-suggestion-debounce-delay 0.3)
 

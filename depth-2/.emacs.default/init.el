@@ -104,6 +104,7 @@
   :ensure nil
   :custom
   (kill-do-not-save-duplicates t)
+  (add-hook 'text-mode-hook 'visual-line-mode)
   (require-theme 'modus-themes)
   (setq modus-themes-common-palette-overrides
         modus-themes-preset-overrides-intense)
