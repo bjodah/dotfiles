@@ -70,8 +70,8 @@
 (defun bjodah/select-theme ()
   (cond
    ((string= (system-name) "SE-BDAHLGREN2") (load-theme 'modus-operandi-tinted))
-   ((and (> (length (getenv "DISPLAY")) 0) (not (string= "prefer-dark" (shell-command-to-string
-                                  "gsettings get org.gnome.desktop.interface color-scheme")))) (load-theme 'modus-operandi-tinted))
+   ((and (> (length (getenv "DISPLAY")) 0) (not (string= "'prefer-dark'" (string-trim (shell-command-to-string
+                                  "gsettings get org.gnome.desktop.interface color-scheme"))))) (load-theme 'modus-operandi-tinted))
    (t (load-theme 'doom-monokai-ristretto t))))
 
 (add-hook 'after-init-hook 'bjodah/select-theme)
@@ -100,6 +100,11 @@
     (package-refresh-contents)
     (package-install 'use-package)))
 
+(add-to-list 'load-path ;http://www.emacswiki.org/emacs/LoadPath
+             (format "%s%s" (file-name-directory load-file-name) "lisp/")
+            ;(format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
+             )
+
 (use-package emacs
   :ensure nil
   :custom
@@ -109,7 +114,7 @@
   (setq modus-themes-common-palette-overrides
         modus-themes-preset-overrides-intense)
   (add-hook 'modus-themes-after-load-theme-hook 'bjodah/customize-window)
-  (enable-recursive-minibuffers t "Allow minibuffer commands in the minibuffer") ;see mb-depth
+  ;(enable-recursive-minibuffers t "Allow minibuffer commands in the minibuffer") ;see mb-depth
   :bind
   (:map global-map
         ("C-c M-! 1" . modus-themes-toggle)
@@ -122,9 +127,9 @@
                   (kill-buffer (current-buffer))))
         ))
 
-(use-package mb-depth
-  :config
-  (minibuffer-depth-indicate-mode 1))
+;; (use-package mb-depth
+;;   :config
+;;   (minibuffer-depth-indicate-mode 1))
 
 (use-package treesit
   :ensure nil ;; C-h v system-configuration-options, look for --with-tree-sitter)
@@ -136,14 +141,6 @@
   :config
   (setq global-auto-revert-non-file-buffers t))
 
-;http://www.emacswiki.org/emacs/LoadPath
-(add-to-list 'load-path
-                                        ;"~/.emacs.d/lisp/"
-             (format "%s%s" (file-name-directory load-file-name) "lisp/")
-             ;(format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
-             )
-;(require 'source-bash-script)
-;(source-bash-script "~/doc/it/apei-nycklar/source-env-vars.sh")
 
 ;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
 (require 'strisper)
@@ -501,6 +498,7 @@
 
 (global-set-key (kbd "M-Z") 'bjodah/mark-to-char-before-literal)
 (global-set-key (kbd "C-c Z") 'bjodah/vterm-execute-region-or-current-line)
+(global-set-key (kbd "C-c T") 'bjodah/transpose1)
 
 
 (use-package aidermacs
