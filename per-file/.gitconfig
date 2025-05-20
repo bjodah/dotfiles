@@ -8,16 +8,16 @@
     defaultBranch = master
 [commit]
     gpgsign = true
+[gpg]
+    program = gpg2
+[github]
+    user = bjodah
 [push]
     default = simple
 [pull]
     rebase = false
-[gpg]
-    program = gpg2
 [color]
     ui = true # always
-[github]
-    user = bjodah
 [alias]
     a = add
     ap = add -p
