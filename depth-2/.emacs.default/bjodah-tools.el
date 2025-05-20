@@ -103,3 +103,11 @@ Prompts for a character, uses literal matching (no regex)."
 ; Let F3 insert current file name when in minibuffer
 (define-key minibuffer-local-map [f3]
   (lambda() (interactive) (insert (buffer-file-name (nth 1 (buffer-list))))))
+
+(defun bjodah/transpose1 () (interactive)
+       "Interchange characters around (but excluding) point."
+       (transpose-chars 1)
+       (transpose-chars 1)
+       (backward-char)
+       (backward-char)
+       (transpose-chars 1))
