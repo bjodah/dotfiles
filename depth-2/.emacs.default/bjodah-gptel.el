@@ -82,6 +82,7 @@
   :key (lambda () (getenv "CEREBRAS_API_KEY")) ;can be a function that returns the key
   :models '(llama3.3-70b
             llama3.1-8b
+            qwen-3-32b
             llama-4-scout-17b-16e-instruct))
 
 
