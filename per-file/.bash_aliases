@@ -18,6 +18,10 @@ alias aider-local="env OPENAI_API_KEY=placeholder OPENAI_API_BASE=http://host.do
 # alias aider-local-fuse01="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --model litellm_local-fuseo1"
 # alias aider-local-tabby="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --architect --model litellm_proxy/local-tabby-qwq-32b-architect --editor-model litellm_proxy/local-tabby-qwq-32b-editor"
 # alias aider-local-exllamav2="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --architect --model litellm_proxy/local-exllamav2-qwq-32b --editor-model litellm_proxy/local-exllamav2-qwen25-coder-32b"
+alias qc="~/venv/bin/python -m llmmbc query --model llamacpp-Qwen2.5-Coder-7B -t"
+qask() {
+    ~/venv/bin/python -m llmmbc stream --model llamacpp-Qwen3-30B-A3B -t "$@" # | glow --stream
+}
 alias ccat="batcat -pp"
 alias eem="emacs -l ~/.emacs-evil"
 alias emacs-fg-daemon-tmux='( source ~/venv/bin/activate; source ~/doc/it/apei-nycklar/source-env-vars.sh; set -x; ulimit -v 16000000; emacs --fg-daemon=$(tmux display-message -p "#S") )'
