@@ -5,6 +5,7 @@
   :ensure t
   :config
   (setq
+   gptel-api-key (lambda () (getenv "OPENAI_API_KEY"))
    gptel-model 'gemini-2.5-flash-preview-04-17
    gptel-backend (gptel-make-gemini "Gemini"
                    :key (lambda () (getenv "GEMINI_API_KEY"))
@@ -38,7 +39,6 @@
 )
 
 
-
 (gptel-make-openai "Groq"
   :host "api.groq.com"
   :endpoint "/openai/v1/chat/completions"
@@ -47,12 +47,15 @@
   ;; https://console.groq.com/docs/models
   ;; https://console.groq.com/docs/deprecations
   ;; https://console.groq.com/dashboard/limits
-  :models '(llama-3.1-8b-instant ; 128k, 8.192
-            meta-llama/llama-4-scout-17b-16e-instruct ; 131 072, 8192
+  :models '(
             meta-llama/llama-4-maverick-17b-128e-instruct ; 131 072, 8192
+            meta-llama/llama-4-scout-17b-16e-instruct ; 131 072, 8192
+            llama-3.3-70b-versatile ; 128k, 32768
+            llama-3.1-8b-instant ; 128k, 8192
             qwen-qwq-32b ; 128l, -
             deepseek-r1-distill-qwen-32b ; 128k, 16384
             deepseek-r1-distill-llama-70b ; 128k, -
+            compound-beta; 128k, 8192  (searches web, ...)
             ))
 
 ;; xAI offers an OpenAI compatible API
@@ -64,7 +67,8 @@
   ;; https://console.x.ai/ ;;
   :models '(grok-3-mini-beta
             grok-3-beta
-            grok-3-fast-beta))
+            ;grok-3-fast-beta
+            ))
 
 (gptel-make-openai "DeepSeek"       ;Any name you want
   :host "api.deepseek.com"
@@ -85,6 +89,14 @@
             qwen-3-32b
             llama-4-scout-17b-16e-instruct))
 
+(gptel-make-openai "OpenRouter"               ;Any name you want
+  :host "openrouter.ai"
+  :endpoint "/api/v1/chat/completions"
+  :stream t
+  :key (lambda () (getenv "OPENROUTER_API_KEY"))
+  :models '(qwen/qwen3-235b-a22b
+            qwen/qwen2.5-coder-7b-instruct
+            anthropic/claude-3.7-sonnet))
 
 ;; (gptel-make-openai "localhost-8000"
 ;;   :stream t
