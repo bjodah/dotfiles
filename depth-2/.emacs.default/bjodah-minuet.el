@@ -171,15 +171,15 @@ fib(5)")
   )
 
 (defun bjodah/minuet-use-llama-swap-qwen-coder-14B ()
-  "Switch to Qwen/Qwen2.5-Coder-Instruct-14B on localhost (llama-swap container on port :8686"
+  "Switch to Qwen/Qwen2.5-Coder-14B on localhost (llama-swap container on port :8686"
   (interactive)
-  (bjodah--minuet-use-llama-swap "exllamav2-Qwen2.5-Coder-14B-Instruct")
+  (bjodah--minuet-use-llama-swap "exllamav2-Qwen2.5-Coder-14B")
   )
 
 (defun bjodah/minuet-use-llama-swap-qwen-coder-7B ()
-  "Switch to Qwen/Qwen2.5-Coder-Instruct-14B on localhost (llama-swap container on port :8686"
+  "Switch to Qwen/Qwen2.5-Coder-14B on localhost (llama-swap container on port :8686"
   (interactive)
-  (bjodah--minuet-use-llama-swap "llamacpp-Qwen2.5-Coder-7B-Instruct")
+  (bjodah--minuet-use-llama-swap "llamacpp-Qwen2.5-Coder-7B")
   )
 
 

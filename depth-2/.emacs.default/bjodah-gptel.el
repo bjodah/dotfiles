@@ -5,7 +5,7 @@
   :ensure t
   :config
   (setq
-   gptel-model 'gemini-2.5-flash-preview-04-17
+   gptel-model 'gemini-2.5-flash-preview-05-20
    gptel-backend (gptel-make-gemini "Gemini"
                    :key (lambda () (getenv "GEMINI_API_KEY"))
                    :stream t))
