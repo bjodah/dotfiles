@@ -141,6 +141,28 @@
   :config
   (setq global-auto-revert-non-file-buffers t))
 
+(use-package ispell
+  :ensure nil
+  :init
+  (if (executable-find "hunspell")
+      (setq ispell-program-name "hunspell"))
+        
+  :config
+  (when (string= ispell-program-name "hunspell")
+    (defun ispell-get-coding-system () 'utf-8)
+    (setq ispell-dictionary "en_GB,bjodah")
+    (ispell-set-spellchecker-params)
+    (ispell-hunspell-add-multi-dic "en_GB,bjodah")))
+
+
+;; (ispell-change-dictionary "en_GB" t)
+
+;; (setq ispell-local-dictionary-alist nil)
+;; (add-to-list 'ispell-local-dictionary-alist 
+;; 	     '("en_US" "[A-Za-z]" "[^A-Za-z]" "[']" nil ("-d" "en_US") nil utf-8)
+;;  	     )
+)
+
 
 ;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
 (require 'strisper)
@@ -973,25 +995,6 @@
 		     (delete-trailing-whitespace)
                      )))
        )))
-
-
-;; === Spelling (grammar) ===
-;; * TODO - start using wcheck mode instead of flyspell-mode
-;; * Use hunspell (sudo apt-get install hunspell) for spell-checking
-;; * http://stackoverflow.com/questions/3961119/working-setup-for-hunspell-in-emacs
-(setq ispell-dictionary-alist
-  '((nil "[A-Za-z]" "[^A-Za-z]" "[']" t ("-d" "en_US") nil utf-8)))
-
-(if (file-exists-p "/usr/bin/hunspell")                                         
-    (progn
-      (setq ispell-program-name "hunspell")
-      (eval-after-load "ispell"
-        '(progn (defun ispell-get-coding-system () 'utf-8)))))
-
-;; (setq ispell-local-dictionary-alist nil)
-;; (add-to-list 'ispell-local-dictionary-alist 
-;; 	     '("en_US" "[A-Za-z]" "[^A-Za-z]" "[']" nil ("-d" "en_US") nil utf-8)
-;;  	     )
 
 
 ;; (define-abbrev-table 'global-abbrev-table '(
