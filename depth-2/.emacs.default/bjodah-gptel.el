@@ -1,7 +1,11 @@
 (use-package gptel
-  :vc (:url "https://github.com/karthink/gptel"
+  ;; :vc (:url "https://github.com/karthink/gptel"
+  ;;           :rev :newest
+  ;;           :branch "master")
+  :vc (:url "https://github.com/bjodah/gptel"
             :rev :newest
-            :branch "master")
+            :branch "gemini-2.5-flash-preview-05-20")
+  ;;
   :ensure t
   :config
   (setq

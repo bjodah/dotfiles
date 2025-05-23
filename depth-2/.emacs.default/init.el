@@ -161,7 +161,7 @@
 ;; (add-to-list 'ispell-local-dictionary-alist 
 ;; 	     '("en_US" "[A-Za-z]" "[^A-Za-z]" "[']" nil ("-d" "en_US") nil utf-8)
 ;;  	     )
-)
+;)
 
 
 ;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
