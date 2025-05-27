@@ -153,13 +153,13 @@
         PODMAN_CMD=podman
     fi
 
-    if [ "${PODMAN_CMD}" = podman ]; then
-        PODMAN_RUN_ARGS+=(--user $(id -u):$(id -g))
-        PODMAN_RUN_ARGS+=(--userns keep-id)
-#          --user $UID:$GID \
-#	   -e LOGNAME \
-#          --cap-add=SYS_PTRACE \
-    fi
+#     if [ "${PODMAN_CMD}" = podman ]; then
+#         PODMAN_RUN_ARGS+=(--user $(id -u):$(id -g))
+#         PODMAN_RUN_ARGS+=(--userns keep-id)
+# #          --user $UID:$GID \
+# #	   -e LOGNAME \
+# #          --cap-add=SYS_PTRACE \
+#     fi
 
     TMPFILE=$(mktemp)
     cleanup() {

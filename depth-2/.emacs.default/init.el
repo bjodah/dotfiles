@@ -500,6 +500,10 @@
   :config
   (setq dired-preview-delay 0.025))
 
+(use-package dired-filter
+  :ensure t
+  :bind(:map dired-mode-map ("/" . dired-filter-map)))
+
 (use-package sqlite3
   :ensure t)
 (use-package magit
@@ -740,7 +744,7 @@
 (use-package dired
   :ensure nil
   :hook
-  (dired-mode . auto-revert-mode)
+  ;(dired-mode . auto-revert-mode)  <--- this is too slow, emacs freezes.
   :config
   (setq dired-listing-switches "-alt") ; "-altr"
   (with-eval-after-load 'dired
