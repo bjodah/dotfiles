@@ -78,7 +78,7 @@
   :host "api.deepseek.com"
   :endpoint "/chat/completions"
   :stream t
-  :key (lambda () (getenv "DEEPSEEK_API_KEY")) ; (lambda () (shell-command-to-string "cat ~/doc/it/*nycklar*/dpsk-2025-feb.*"))
+  :key (lambda () (getenv "DEEPSEEK_API_KEY"))
   :models '(deepseek-chat ; v3
             deepseek-reasoner ; r1
             ))
@@ -100,7 +100,10 @@
   :key (lambda () (getenv "OPENROUTER_API_KEY"))
   :models '(qwen/qwen3-235b-a22b
             qwen/qwen3-235b-a22b:free
-            qwen/qwen2.5-coder-7b-instruct
+            qwen/qwen2.5-coder-7b-instruct ; 33k, 33k, $0.01/$0.03 ~160tps (nebius)
+            mistralai/mistral-medium-3
+            ;anthropic/claude-opus-4 ; 200k, 32k, $15/$75, ~30tps
+            anthropic/claude-sonnet-4 ; 200k, 64k, $3/$15, ~60tps
             anthropic/claude-3.7-sonnet))
 
 ;; (gptel-make-openai "localhost-8000"
