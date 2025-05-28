@@ -99,6 +99,7 @@
   :stream t
   :key (lambda () (getenv "OPENROUTER_API_KEY"))
   :models '(qwen/qwen3-235b-a22b
+            qwen/qwen3-235b-a22b:free
             qwen/qwen2.5-coder-7b-instruct
             anthropic/claude-3.7-sonnet))
 
