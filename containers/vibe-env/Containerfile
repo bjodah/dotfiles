@@ -2,6 +2,7 @@ FROM bjodah/triceratops-7:7
 
 RUN cd /opt-3/bjodah-dotfiles \
     && git pull \
+    && ./install_defaults.sh \
     && rm -r /opt-3/emacs-d-30/elpa/gptel* \
     && /opt-3/emacs-30-lucid/bin/emacs --batch --eval "(progn \
     (require 'package) \
@@ -9,13 +10,14 @@ RUN cd /opt-3/bjodah-dotfiles \
     (package-initialize) \
     (package-refresh-contents) \
     (load-file \"/opt-3/emacs-d-30/init.el\") \
+    (package-upgrade-all) \
     )" \
     && cd /opt-3/emacs-d-30/elpa/gptel \
     && git pull origin master  # don't know why :vc (... :rev :newest) isn't working...
 
 RUN sed -i 's/^Components: main$/Components: main contrib non-free/g' /etc/apt/sources.list.d/debian.sources \
     && apt-get update --quiet \
-    && apt-get install --assume-yes nvidia-cuda-toolkit \
+    && apt-get install --assume-yes nvidia-cuda-toolkit hunspell-sv hunspell-en-us hunspell-en-gb \
     && bash -c "\
 source /opt-3/cpython-v3.12-apt-deb/bin/activate && \
 pip install pycuda"

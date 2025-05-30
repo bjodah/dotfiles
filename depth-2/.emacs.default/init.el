@@ -498,11 +498,14 @@
 (use-package dired-preview
   :ensure t
   :config
-  (setq dired-preview-delay 0.025))
+  (setq dired-preview-delay 0.025)
+  (setq dired-kill-when-opening-new-dired-buffer t)
+)
 
 (use-package dired-filter
   :ensure t
-  :bind(:map dired-mode-map ("/" . dired-filter-map)))
+                                        ;:bind(:map dired-mode-map ("/" . dired-filter-map))
+  )
 
 (use-package sqlite3
   :ensure t)
