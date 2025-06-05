@@ -746,7 +746,7 @@
 
 (use-package dired
   :ensure nil
-  :hook
+  ;:hook
   ;(dired-mode . auto-revert-mode)  <--- this is too slow, emacs freezes.
   :config
   (setq dired-listing-switches "-alt") ; "-altr"
@@ -858,8 +858,18 @@
   (set-background-color "black"))
 
 (use-package monokai-theme
+  :ensure t)
+
+(use-package go-mode
   :ensure t
-)
+  :hook
+  (go-mode . (lambda () (setq tab-width 4))))
+
+(use-package auto-dim-other-buffers
+  :ensure t
+  :hook
+  (after-init . (lambda () (when (fboundp 'auto-dim-other-buffers-mode)
+                             (auto-dim-other-buffers-mode t)))))
 
 (use-package flymake-shellcheck
   :ensure t

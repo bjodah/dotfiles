@@ -140,7 +140,7 @@ fib(5)")
 
 
 (defun bjodah/minuet-use-llama-swap-ling ()
-  "Switch to Ling-Coder-lite on localhost (llama-swap container on port :8686"
+  "Switch to Ling-Coder-lite on localhost (llama-swap container on port :8686)"
   (interactive)
   (plist-put minuet-openai-compatible-options :end-point
              (concat (if (string= (getenv "container") "podman") "http://host.docker.internal" "http://localhost")
@@ -163,7 +163,7 @@ fib(5)")
   (setq minuet-n-completions 4)
   (plist-put minuet-openai-fim-compatible-options :end-point
              (concat (if (string= (getenv "container") "podman") "http://host.docker.internal" "http://localhost")
-                     ":8686/v1/completions"))
+                     ":8687/v1/completions"))
   (plist-put minuet-openai-fim-compatible-options :name "llama-swap-qwen-coder")
   (plist-put minuet-openai-fim-compatible-options :api-key (defun my-llama-swap-key () "sk-empty"))
   (plist-put minuet-openai-fim-compatible-options :model model-name)

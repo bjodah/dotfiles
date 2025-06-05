@@ -10,7 +10,7 @@
   ;; Replace provider with whatever you want, see https://github.com/ahyatt/llm
   (setopt semext-provider (make-llm-openai-compatible
                            :url (concat (if (string= (getenv "container") "podman") "http://host.docker.internal" "http://localhost") ":8686/v1/")
-                           :chat-model "llamacpp-gemma-3-1b"
+                           :chat-model "llamacpp-gemma-3-4b"
                            :key "sk-empty"
                            ))
   (cl-defmethod llm-capabilities ((provider llm-openai-compatible))

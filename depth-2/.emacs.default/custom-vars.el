@@ -5,7 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
-   '("77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a"
+   '("e4d4cc443964b8a64defc06de3edb2363f7cb1b3c3ae2272b2c1487f626e4318"
+     "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
+     "c5975101a4597094704ee78f89fb9ad872f965a84fb52d3e01b9102168e8dc40"
+     "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a"
      "6bf350570e023cd6e5b4337a6571c0325cec3f575963ac7de6832803df4d210a"
      "0adcffc4894e2dd21283672da7c3d1025b5586bcef770fdc3e2616bdb2a771cd"
      "a9028cd93db14a5d6cdadba789563cb90a97899c4da7df6f51d58bb390e54031"
@@ -83,13 +86,13 @@
    '(:foreground default :background default :scale 1.25 :html-foreground "Black" :html-background
                  "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
-   '(aidermacs all-the-icons auctex cape cmake-mode company corfu cython-mode dired-filter
-               dired-preview dockerfile-mode doom-themes ein elfeed embark-consult flycheck
-               flymake-shellcheck forge go-mode god-mode gptel-quick highlight-thing julia-mode
-               jupyter lsp-java lsp-pyright lsp-ui marginalia minuet mmm-mode modus-themes
-               monokai-theme nerd-icons nginx-mode orderless org-roam pdf-tools realgud rg rmsbolt
-               rust-mode semext sqlite3 tangotango-theme treemacs-magit typescript-mode undo-tree
-               use-package validate vertico vterm which-key yaml-mode yasnippet-snippets))
+   '(aidermacs all-the-icons auctex auto-dim-other-buffers cape cmake-mode company corfu cython-mode
+               dired-filter dired-preview dockerfile-mode doom-themes ein elfeed embark-consult
+               flycheck flymake-shellcheck forge go-mode god-mode gptel-quick highlight-thing
+               julia-mode jupyter lsp-java lsp-pyright lsp-ui marginalia minuet mmm-mode
+               modus-themes monokai-theme nerd-icons nginx-mode orderless org-roam pdf-tools realgud
+               rg rmsbolt rust-mode semext sqlite3 tangotango-theme treemacs-magit typescript-mode
+               undo-tree use-package validate vertico vterm which-key yaml-mode yasnippet-snippets))
  '(package-vc-selected-packages
    '((semext :url "https://github.com/ahyatt/semext" :branch "main")
      (minuet :url "https://github.com/milanglacier/minuet-ai.el" :branch "main")

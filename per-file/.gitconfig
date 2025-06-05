@@ -95,6 +95,7 @@
 	directory = /tyr/wcc
 	directory = /tyr/wvc
 	directory = /tyr/wvc/scripts
+	directory = /work
 
 [filter "lfs"]
 	required = true
