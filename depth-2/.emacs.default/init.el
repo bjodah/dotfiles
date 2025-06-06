@@ -170,6 +170,7 @@
 
 (require 'whisper)
 (require 'my-text-to-speech)
+(global-set-key (kbd "M-P") 'my-text-to-speech)
 
 ;; whisper for Speech-To-Text (STT)
 (use-package whisper
