@@ -75,8 +75,10 @@
  '(fill-column 100)
  '(flycheck-c/c++-gcc-executable "gcc-12")
  '(ignored-local-variable-values
-   '((editorconfig-lisp-use-default-indent . t) (vc-default-patch-addressee . "bug-gnu-emacs@gnu.org")
-     (vc-prepare-patches-separately) (etags-regen-ignores "test/manual/etags/")
+   '((eval and (fboundp 'toc-org-mode) (toc-org-mode 1)) (toc-org-max-depth . 4)
+     (editorconfig-lisp-use-default-indent . t)
+     (vc-default-patch-addressee . "bug-gnu-emacs@gnu.org") (vc-prepare-patches-separately)
+     (etags-regen-ignores "test/manual/etags/")
      (etags-regen-regexp-alist
       (("c" "objc") "/[ \11]*DEFVAR_[A-Z_ \11(]+\"\\([^\"]+\\)\"/\\1/"
        "/[ \11]*DEFVAR_[A-Z_ \11(]+\"[^\"]+\",[ \11]\\([A-Za-z0-9_]+\\)/\\1/"))
