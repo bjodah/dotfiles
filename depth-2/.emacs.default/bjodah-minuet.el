@@ -109,7 +109,6 @@ fib(5)")
     ;; of 512, serves as an good starting point to estimate your computing
     ;; power. Once you have a reliable estimate of your local computing power,
     ;; you should adjust the context window to a larger value.
-    (setq minuet-context-window 2048) ;; 512
     (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:8000/v1/completions")
     ;; an arbitrary non-null environment variable as placeholder
     (plist-put minuet-openai-fim-compatible-options :name "Tabby-localhost-8000")
@@ -133,8 +132,9 @@ fib(5)")
      :template)
     (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256) ; or 56 for local llm?
     (minuet-set-optional-options minuet-openai-fim-compatible-options :temperature 0.07)
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :seed 42) ; deterministic
     (setq minuet-n-completions 2)
-    (setq minuet-context-window 4000) ;; 4k chars ~= 1000 tokens
+    (setq minuet-context-window 3072) ;; 4k chars ~= 1000 tokens
     (setq minuet-provider 'openai-fim-compatible)
   )
 
@@ -177,7 +177,7 @@ fib(5)")
   )
 
 (defun bjodah/minuet-use-llama-swap-qwen-coder-7B ()
-  "Switch to Qwen/Qwen2.5-Coder-14B on localhost (llama-swap container on port :8686"
+  "Switch to Qwen/Qwen2.5-Coder-7B on localhost (llama-swap container on port :8686"
   (interactive)
   (bjodah--minuet-use-llama-swap "llamacpp-Qwen2.5-Coder-7B")
   )
@@ -212,9 +212,9 @@ fib(5)")
 
     :config
     ;(bjodah/minuet-use-localhost-fim) ; or bjodah/minuet-use-smollm2
-    (bjodah/minuet-use-llama-swap-qwen-coder-7B)
+    (bjodah/minuet-use-llama-swap-qwen-coder-14B)
     (setq minuet-auto-suggestion-throttle-delay 0.5)
-    (setq minuet-auto-suggestion-debounce-delay 0.3)
+    (setq minuet-auto-suggestion-debounce-delay 0.2)
 
     ;; You can use M-x minuet-configure-provider to interactively configure provider and model
     )
