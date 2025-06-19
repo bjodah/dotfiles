@@ -584,9 +584,18 @@
   (add-to-list 'auto-mode-alist '("Containerfile" . dockerfile-mode)))
 (use-package realgud :ensure t)
 
+(require 'package)
+(require 'url)
+
+(bjodah/install-package-from-url-if-missing
+ 'ein
+ "https://github.com/bjodah/emacs-ipython-notebook/releases/download/2025-06-19/ein-0.17.1pre.tar")
 
 (use-package ein
-  :ensure t
+  ;; :vc (:url "https://github.com/bjodah/emacs-ipython-notebook"
+  ;;           :rev :newest
+  ;;           :branch "fix-polymode-compatibility")
+  ;;:ensure t
   :bind
   ("C-c 1" . ein:worksheet-execute-all-cells)
   ("C-c 2" . ein:worksheet-execute-all-cells-above)

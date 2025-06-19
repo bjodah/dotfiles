@@ -111,3 +111,47 @@ Prompts for a character, uses literal matching (no regex)."
        (backward-char)
        (backward-char)
        (transpose-chars 1))
+
+(defun bjodah/install-package-from-url-if-missing (package-symbol package-url)
+  "Download and install a package from a URL if it's not already installed.
+This version uses `curl` for robust downloading.
+PACKAGE-SYMBOL is the symbol of the package (e.g., 'evil).
+PACKAGE-URL is the URL to the .tar or .el file."
+  (if (package-installed-p package-symbol)
+      (message "Package '%s' is already installed." package-symbol)
+    ;; Check if curl is available before proceeding.
+    (unless (executable-find "curl")
+      (error "`curl` command not found, but is required for this function"))
+
+    (let* ((package-file-name (file-name-nondirectory package-url))
+           (local-file (expand-file-name package-file-name temporary-file-directory)))
+      (message "Package '%s' not found. Installing from %s..."
+               package-symbol package-url)
+      (unwind-protect
+          (condition-case err
+              (progn
+                ;; Use curl to download the file.
+                ;; -L: Follow redirects (essential for GitHub)
+                ;; -sS: Silent mode, but show errors
+                ;; -o: Output file
+                (let ((exit-code (call-process "curl" nil nil nil
+                                               "-sSL"
+                                               "-o" local-file
+                                               package-url)))
+                  ;; Check if curl exited successfully. A non-zero exit code
+                  ;; indicates an error (e.g., 404, network issue).
+                  (unless (zerop exit-code)
+                    (error "curl failed with exit code %d for URL: %s"
+                           exit-code package-url)))
+
+                (message "Downloaded to %s" local-file)
+
+                ;; Install the package from the local file.
+                (package-install-file local-file)
+                (message "Successfully installed package '%s'." package-symbol))
+            ;; This block runs if an error occurs.
+            (error (message "Failed to install package '%s': %s" package-symbol err)))
+        ;; This cleanup form runs whether there was an error or not.
+        (when (file-exists-p local-file)
+          (delete-file local-file)
+          (message "Cleaned up temporary file: %s" local-file))))))

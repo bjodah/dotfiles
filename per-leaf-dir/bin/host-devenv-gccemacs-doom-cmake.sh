@@ -141,7 +141,7 @@ chmod +x $THIS_RUNDIR/launch-tmux.sh
 cat <<EOF>$THIS_RUNDIR/launch-emacs.el
 (progn
   (require 'lsp-mode)
-  (lsp-workspace-folders-add "/usr/include/c++/10/")
+  (lsp-workspace-folders-add "$(compgen -G '/usr/include/c++/*/')")
   (lsp-workspace-folders-add "$(pwd)")
   ${EMACS_COMMANDS:-""}
 )
@@ -160,20 +160,23 @@ if [[ ! -e $THIS_CCACHE ]]; then
 fi
 
 
-{  # this scope saves us from surprises if editing this file during podman executiong below
+main() {  
     podrun \
-        --image bjodah/triceratops-6:17 \
+        --image bjodah/triceratops-7:9 \
         --name host-dev-env-gccemacs-doom-cmake \
         --volume $THIS_CCACHE:/root/.ccache \
         --volume $THIS_CLANGD_CACHE:/root/.cache/clangd \
         --volume "$THIS_RUNDIR":/opt/my-rundir/ \
         --publish 7682:7682 \
         -e THIS_IS_RUNNING_IN_CONTAINER=1 \
-        -e CXX=clang++ \
-        -e CCC=clang \
-        $* \
-        -- /opt/my-rundir/launch-tmux.sh
-    exit 0
-        # --volume "$THIS_FOLDER":/opt/my-scripts/ \
+        "$@" \
+        -- bash -l /opt/my-rundir/launch-tmux.sh
 
+        # -e CXX=clang++ \
+        # -e CCC=clang \
+
+}
+{
+    main "$@"
+    exit 0
 }

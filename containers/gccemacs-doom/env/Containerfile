@@ -2,12 +2,15 @@
 # -*- compile-command: "podman build ." -*-
 
 #FROM bjodah/bjodahimg22dot:jan23.a.1
-FROM bjodah/tomevermes-dot:23.h.1.2
+#FROM bjodah/tomevermes-dot:23.h.1.2
 #FROM bjodah/triceratops-6:17
+#FROM bjodah/triceratops-6:21
+FROM bjodah/triceratops-7:9
 
 
 #ENV CXX=clang++-15 CC=clang-15 PATH=/opt/emacs-28/bin:$PATH
-ENV CXX=clang++ CC=clang PATH=/opt-3/emacs-29/bin:$PATH
+#ENV CXX=clang++ CC=clang PATH=/opt-3/emacs-29/bin:$PATH
+ENV CXX=clang++ CC=clang
 
 # RUN git clone --branch fix-straight --depth 1 https://github.com/rafa-dot-el/doomemacs.git ~/.emacs.d \
 #     && ~/.emacs.d/bin/doom sync
@@ -33,6 +36,6 @@ RUN ~/.emacs.d/bin/doom sync \
     && mkdir -p $HOME/.local/share \
     && curl -Ls https://github.com/domtronn/all-the-icons.el/archive/master.tar.gz | tar zx -C $HOME/.local/share --strip-components=1 --wildcards "all-the-icons.el-master/fonts/*.ttf" \
     && fc-cache -f -v \
-    && apt update && apt-get -y install libboost-math1.81-dev neovim && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-ENV PATH=/opt-2/llvm-17/bin:$PATH
+    && apt update && apt-get -y install neovim && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# libboost-math1.81-dev
+# ENV PATH=/opt-2/llvm-17/bin:$PATH

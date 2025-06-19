@@ -63,30 +63,30 @@ export EMACS_COMMANDS="\
 
 export CXXFLAGS="-ffunction-sections -fdata-sections ${CXXFLAGS:-''}"
 export LDFLAGS="${LDFLAGS:-''}"
-export CC=clang CXX=clang++
-EXTRA_ENV="-e CXXFLAGS -e LDFLAGS -e CC -e CXX"
 
 if [[ $USE_LLVM == 1 ]]; then
+    export CC=gcc CXX=g++
     CMAKE_ARGS="-DWITH_LLVM:BOOL=ON $CMAKE_ARGS"
+    export CXXFLAGS="-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -std=c++17 -O0 -ggdb3 $CXXFLAGS"
 else
+    export CC=clang CXX=clang++
     LIBCXX_ASAN_ROOT="/opt-2/libcxx19-asan"
     CMAKE_ARGS="-DWITH_LLVM:BOOL=OFF $CMAKE_ARGS"
-    export CXXFLAGS="-std=c++17 -fsanitize=address,undefined -nostdinc++ -I$LIBCXX_ASAN_ROOT/include -I$LIBCXX_ASAN_ROOT/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb $CXXFLAGS"  # -stdlib=libc++
-    export LDFLAGS="-fsanitize=address,undefined -nostdlib++ -Wl,-rpath,/opt-2/libcxx17-asan/lib -L/opt-2/libcxx17-asan/lib -lc++ -lc++abi $LDFLAGS"
+    export CXXFLAGS="-D_LIBCPP_DEBUG -std=c++17 -fsanitize=address,undefined -nostdinc++ -I$LIBCXX_ASAN_ROOT/include -I$LIBCXX_ASAN_ROOT/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb $CXXFLAGS"
+    export LDFLAGS="-fsanitize=address,undefined -nostdlib++ -Wl,-rpath,/opt-2/libcxx19-asan/lib -L/opt-2/libcxx19-asan/lib -lc++ -lc++abi $LDFLAGS"
 fi
+EXTRA_ENV="-e CXXFLAGS -e LDFLAGS -e CC -e CXX"
 
 if [[ $USE_BOOST == 1 ]]; then
     CMAKE_ARGS="$CMAKE_ARGS\
  -DINTEGER_CLASS=boostmp"
     export THIS_BUILD=${PWD}/build-boost-gccemacs-doom
-    #EXTRA_ENV="-e CMAKE_PREFIX_PATH=/opt2/boost-1.81.0 $EXTRA_ENV"
 else
     CMAKE_ARGS="$CMAKE_ARGS\
  -DWITH_GMP=ON \
  -DWITH_MPFR=ON \
  -DWITH_MPC=ON \
  -DINTEGER_CLASS=flint"
-    #EXTRA_ENV="-e FLINT_ROOT=/opt-3/flint-3.0.1-release $EXTRA_ENV"
     export THIS_BUILD=${PWD}/build-flint-gccemacs-doom
 fi
 
@@ -115,4 +115,4 @@ if [[ $INSERTED == 0 ]]; then
 fi
 
 export CMAKE_ARGS
-host-devenv-gccemacs-doom-cmake.sh ${ARGS[@]}
+host-devenv-gccemacs-doom-cmake.sh "${ARGS[@]}"

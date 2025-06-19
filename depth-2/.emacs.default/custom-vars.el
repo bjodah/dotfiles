@@ -5,9 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
-   '("e8ceeba381ba723b59a9abc4961f41583112fc7dc0e886d9fc36fa1dc37b4079"
-     "2b501400e19b1dd09d8b3708cefcb5227fda580754051a24e8abf3aff0601f87"
-     "e4d4cc443964b8a64defc06de3edb2363f7cb1b3c3ae2272b2c1487f626e4318"
+   '("e4d4cc443964b8a64defc06de3edb2363f7cb1b3c3ae2272b2c1487f626e4318"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "c5975101a4597094704ee78f89fb9ad872f965a84fb52d3e01b9102168e8dc40"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a"
@@ -75,10 +73,8 @@
  '(fill-column 100)
  '(flycheck-c/c++-gcc-executable "gcc-12")
  '(ignored-local-variable-values
-   '((eval and (fboundp 'toc-org-mode) (toc-org-mode 1)) (toc-org-max-depth . 4)
-     (editorconfig-lisp-use-default-indent . t)
-     (vc-default-patch-addressee . "bug-gnu-emacs@gnu.org") (vc-prepare-patches-separately)
-     (etags-regen-ignores "test/manual/etags/")
+   '((editorconfig-lisp-use-default-indent . t) (vc-default-patch-addressee . "bug-gnu-emacs@gnu.org")
+     (vc-prepare-patches-separately) (etags-regen-ignores "test/manual/etags/")
      (etags-regen-regexp-alist
       (("c" "objc") "/[ \11]*DEFVAR_[A-Z_ \11(]+\"\\([^\"]+\\)\"/\\1/"
        "/[ \11]*DEFVAR_[A-Z_ \11(]+\"[^\"]+\",[ \11]\\([A-Za-z0-9_]+\\)/\\1/"))
@@ -98,7 +94,8 @@
                rg rmsbolt rust-mode semext sqlite3 tangotango-theme treemacs-magit typescript-mode
                undo-tree use-package validate vertico vterm which-key yaml-mode yasnippet-snippets))
  '(package-vc-selected-packages
-   '((semext :url "https://github.com/ahyatt/semext" :branch "main")
+   '((ein :url "https://github.com/bjodah/emacs-ipython-notebook" :branch "fix-polymode-compatibility")
+     (semext :url "https://github.com/ahyatt/semext" :branch "main")
      (minuet :url "https://github.com/milanglacier/minuet-ai.el" :branch "main")
      (gptel-quick :url "https://github.com/karthink/gptel-quick")
      (gptel :url "https://github.com/karthink/gptel" :branch "master")))
