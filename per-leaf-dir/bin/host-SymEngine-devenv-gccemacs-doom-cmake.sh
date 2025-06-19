@@ -53,7 +53,7 @@ CMAKE_ARGS="\
  -DBUILD_BENCHMARKS=ON \
  -DHAVE_GCC_ABI_DEMANGLE=no"
 
-LLVM_ROOT="/opt-2/llvm-19"
+LLVM_ROOT="/opt-2/llvm-20"
 export EMACS_COMMANDS="\
 (lsp-workspace-folders-add \"$LLVM_ROOT\") \
 (split-window-below) \
@@ -67,13 +67,13 @@ export LDFLAGS="${LDFLAGS:-''}"
 if [[ $USE_LLVM == 1 ]]; then
     export CC=gcc CXX=g++
     CMAKE_ARGS="-DWITH_LLVM:BOOL=ON $CMAKE_ARGS"
-    export CXXFLAGS="-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -std=c++17 -O0 -ggdb3 $CXXFLAGS"
+    export CXXFLAGS="-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -std=c++23 -O0 -ggdb3 $CXXFLAGS"
 else
     export CC=clang CXX=clang++
-    LIBCXX_ASAN_ROOT="/opt-2/libcxx19-asan"
+    LIBCXX_ASAN_ROOT="/opt-2/libcxx20-asan"
     CMAKE_ARGS="-DWITH_LLVM:BOOL=OFF $CMAKE_ARGS"
-    export CXXFLAGS="-D_LIBCPP_DEBUG -std=c++17 -fsanitize=address,undefined -nostdinc++ -I$LIBCXX_ASAN_ROOT/include -I$LIBCXX_ASAN_ROOT/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb $CXXFLAGS"
-    export LDFLAGS="-fsanitize=address,undefined -nostdlib++ -Wl,-rpath,/opt-2/libcxx19-asan/lib -L/opt-2/libcxx19-asan/lib -lc++ -lc++abi $LDFLAGS"
+    export CXXFLAGS="-D_LIBCPP_DEBUG -std=c++23 -fsanitize=address,undefined -nostdinc++ -I$LIBCXX_ASAN_ROOT/include -I$LIBCXX_ASAN_ROOT/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb $CXXFLAGS"
+    export LDFLAGS="-fsanitize=address,undefined -nostdlib++ -Wl,-rpath,${LIBCXX_ASAN_ROOT}/lib -L${LIBCXX_ASAN_ROOT}/lib -lc++ -lc++abi $LDFLAGS"
 fi
 EXTRA_ENV="-e CXXFLAGS -e LDFLAGS -e CC -e CXX"
 

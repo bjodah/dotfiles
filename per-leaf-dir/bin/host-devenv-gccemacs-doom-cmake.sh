@@ -100,6 +100,7 @@ if [[ $NO_EVIL == 1 ]]; then
    ~/.emacs.doom/bin/doom sync
 fi
 while ! test -e $(pwd)/compile_commands.json; do sleep 1; done
+source \$(compgen -G "/opt-3/cpython-*-apt-deb/bin")/activate
 emacs --fg-daemon=$EMACS_SOCKET $EMACS_FLAGS --init-directory=/root/.emacs.doom
 EOF
 chmod +x $THIS_RUNDIR/launch-emacs-daemon.sh
@@ -113,7 +114,7 @@ chmod +x $THIS_RUNDIR/launch-emacs-client.sh
 cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
 #!/bin/bash
 source /etc/profile
-export FLINT_ROOT=/opt-3/flint-3.1.3-p1-release
+export FLINT_ROOT=/opt-3/flint-d81bf03-asan
 set -euxo pipefail
 #export PATH="\$(compgen -G "/opt-?/llvm-??/bin/"):\$(compgen -G "/opt-?/emacs-3*/bin/"):\$PATH"
 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
@@ -123,6 +124,7 @@ tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \
              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \\
              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \\
              $CMAKE_ARGS \\
+             --fresh \\
              -B $THIS_BUILD \\
              -S $(pwd) \\
       && ln -fs $THIS_BUILD/compile_commands.json . \\
@@ -141,7 +143,7 @@ chmod +x $THIS_RUNDIR/launch-tmux.sh
 cat <<EOF>$THIS_RUNDIR/launch-emacs.el
 (progn
   (require 'lsp-mode)
-  (lsp-workspace-folders-add "$(compgen -G '/usr/include/c++/*/')")
+  (lsp-workspace-folders-add "/usr/include/c++/14/")
   (lsp-workspace-folders-add "$(pwd)")
   ${EMACS_COMMANDS:-""}
 )
@@ -162,13 +164,12 @@ fi
 
 main() {  
     podrun \
-        --image bjodah/triceratops-7:9 \
+        --image bjodah/triceratops-6:23 \
         --name host-dev-env-gccemacs-doom-cmake \
         --volume $THIS_CCACHE:/root/.ccache \
         --volume $THIS_CLANGD_CACHE:/root/.cache/clangd \
         --volume "$THIS_RUNDIR":/opt/my-rundir/ \
         --publish 7682:7682 \
-        -e THIS_IS_RUNNING_IN_CONTAINER=1 \
         "$@" \
         -- bash -l /opt/my-rundir/launch-tmux.sh
 
