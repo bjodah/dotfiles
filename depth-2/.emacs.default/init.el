@@ -23,11 +23,8 @@
 
 (if (string-match-p "^Linux" (shell-command-to-string "uname"))
     (custom-set-faces
-     ;; custom-set-faces was added by Custom.
-     ;; If you edit it by hand, you could mess it up, so be careful.
-     ;; Your init file should contain only one such instance.
-     ;; If there is more than one, they won't work right.
-     '(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :height 110 :width normal)))))
+     `(default ((t (:family "DejaVu Sans Mono" :foundry "unknown" :slant normal :weight normal :width normal
+                            :height ,(if (string= (system-name) "argus") 140 110))))))
   (message "on MS Windows?")
   )
 
@@ -42,7 +39,7 @@
 (defun bjodah/customize-window ()
   (cond
    ((string= (system-name) "argus")
-    (set-face-attribute 'default nil :height 140))
+    (set-face-attribute 'default nil :height 160))
    (t
     (set-face-attribute 'default nil :height 105)))
   (scroll-bar-mode 0)
@@ -260,6 +257,10 @@
                                            :name "Python :: Run pytest (at point)"))        
         )
 ))
+
+(use-package eat
+  :ensure t ; https://codeberg.org/akib/emacs-eat
+  )
 
 ;; (use-package evil
 ;;   :ensure t ;; install the evil package if not installed
@@ -1157,3 +1158,14 @@
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 ;;; init.el ends here
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")

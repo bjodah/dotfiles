@@ -130,11 +130,11 @@ fib(5)")
                  (plist-get ctx :before-cursor)
                  (plist-get ctx :after-cursor)))
      :template)
-    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256) ; or 56 for local llm?
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 70) ; tg ~= 35 t/s
     (minuet-set-optional-options minuet-openai-fim-compatible-options :temperature 0.07)
     (minuet-set-optional-options minuet-openai-fim-compatible-options :seed 42) ; deterministic
     (setq minuet-n-completions 2)
-    (setq minuet-context-window 3072) ;; 4k chars ~= 1000 tokens
+    (setq minuet-context-window 3072) ;; pp ~= 800 t/s, 4k chars ~= 1000 tokens
     (setq minuet-provider 'openai-fim-compatible)
   )
 
@@ -215,6 +215,6 @@ fib(5)")
     (bjodah/minuet-use-llama-swap-qwen-coder-14B)
     (setq minuet-auto-suggestion-throttle-delay 0.5)
     (setq minuet-auto-suggestion-debounce-delay 0.2)
-
+    (setq minuet-request-timeout 7.0)
     ;; You can use M-x minuet-configure-provider to interactively configure provider and model
     )

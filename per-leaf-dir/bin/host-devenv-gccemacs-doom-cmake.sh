@@ -114,7 +114,6 @@ chmod +x $THIS_RUNDIR/launch-emacs-client.sh
 cat <<EOF>$THIS_RUNDIR/launch-tmux.sh
 #!/bin/bash
 source /etc/profile
-export FLINT_ROOT=/opt-3/flint-d81bf03-asan
 set -euxo pipefail
 #export PATH="\$(compgen -G "/opt-?/llvm-??/bin/"):\$(compgen -G "/opt-?/emacs-3*/bin/"):\$PATH"
 tmux -f /opt/my-rundir/.tmux.conf -2 -S tmux.sock \

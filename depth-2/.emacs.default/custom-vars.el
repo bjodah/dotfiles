@@ -87,8 +87,8 @@
                  "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
    '(aidermacs all-the-icons auctex auto-dim-other-buffers cape cmake-mode company corfu cython-mode
-               dired-filter dired-preview dockerfile-mode doom-themes ein elfeed embark-consult
-               flycheck flymake-shellcheck forge go-mode god-mode gptel-quick highlight-thing
+               dired-filter dired-preview dockerfile-mode doom-themes eat elfeed embark-consult
+               flycheck flymake-shellcheck forge go-mode god-mode highlight-thing
                julia-mode jupyter lsp-java lsp-pyright lsp-ui marginalia minuet mmm-mode
                modus-themes monokai-theme nerd-icons nginx-mode orderless org-roam pdf-tools realgud
                rg rmsbolt rust-mode semext sqlite3 tangotango-theme treemacs-magit typescript-mode
