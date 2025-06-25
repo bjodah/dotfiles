@@ -1169,3 +1169,4 @@
 (lsp-workspace-folders-add "/work/")
 (lsp-workspace-folders-add "/work/")
 (lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")

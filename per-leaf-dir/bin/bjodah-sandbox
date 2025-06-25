@@ -1,0 +1,27 @@
+#!/bin/bash
+declare -a PODRUN_ARGS
+if [ -e ~/dotfiles ]; then
+    PODRUN_ARGS+=(-v ~/dotfiles:/opt-3/bjodah-dotfiles)
+fi
+if [ -e ~/doc/it/apei-nycklar ]; then
+    PODRUN_ARGS+=(-v ~/doc/it/apei-nycklar:/root/doc/it/apei-nycklar)
+fi
+main() {
+    podrun \
+        --cap-add=SYS_PTRACE \
+        --device /dev/fuse \
+        --cap-add SYS_ADMIN \
+        --name bjodah-sandbox-$(basename "$PWD") \
+        --image bjodah/triceratops-6:23 \
+        ${PODRUN_ARGS[@]} \
+        "$@" \
+        -- "\
+env -C /opt-3/bjodah-dotfiles bash install_defaults.sh \
+&& touch /root/.bash_history \
+&& echo -e '. /opt-3/cpython-*-apt-deb/bin/activate\n'>>/root/.bashrc \
+&& bash"
+}
+{
+    main "$@"
+    exit $?
+}
