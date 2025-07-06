@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: in-line-comment
+# key: ico
+# --
+/* $0 */

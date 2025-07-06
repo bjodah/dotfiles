@@ -554,6 +554,13 @@
   ;;   (add-to-list 'lsp-enabled-clients 'rls))
   )
 
+(use-package rustic
+  :ensure t
+  :config
+  (setq rustic-format-on-save nil)
+  :custom
+  (rustic-cargo-use-last-stored-arguments t))
+
 (use-package typescript-mode
   :ensure t
   ;;   :config
@@ -1158,6 +1165,8 @@
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 ;;; init.el ends here
+(lsp-workspace-folders-add "/work/")
+(lsp-workspace-folders-add "/work/")
 (lsp-workspace-folders-add "/work/")
 (lsp-workspace-folders-add "/work/")
 (lsp-workspace-folders-add "/work/")
