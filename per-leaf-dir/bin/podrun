@@ -10,6 +10,7 @@
     NAME=""
     WITH_GUI=0
     WITH_GPU=0
+    WITH_AUDIO=0
     DO_MOUNT_CWD=1
     show_help(){
         echo "Launch an container using podman-run with some defaults:"
@@ -28,6 +29,7 @@
         echo "--name               name of container, default is basename of image"
         echo "--gui                set DISPLAY, mount X11 socket folder. Note, for X11 this automatically adds: --net=host"
         echo "--gpu                mount /dev/dri, for OpenGL, test with e.g. glxgears from mesa-utils"
+        echo "--audio              mount /dev/snd, and e.g. pulseaudio socket"
         echo "--no-mount-cwd       disable default mounting of current working directory"
         echo ""
         echo "Example:"
@@ -76,6 +78,10 @@
                 WITH_GPU=1
                 shift
                 ;;
+            --audio)
+                WITH_AUDIO=1
+                shift
+                ;;
             --)
                 shift
                 break
@@ -96,6 +102,19 @@
     fi
     if [[ $WITH_GPU == 1 ]]; then
         PODMAN_RUN_ARGS+=("--device /dev/dri:/dev/dri:rwm")
+    fi
+    if [[ $WITH_AUDIO == 1 ]]; then
+        PODMAN_RUN_ARGS+=("--device /dev/snd:/dev/snd")
+        PODMAN_RUN_ARGS+=("--group-add audio")
+        PULSE_SOCKET_DIR="/run/user/$(id -u)/pulse"
+        if [ ! -e "${PULSE_SOCKET_DIR}/native" ]; then
+            
+            >&2 echo "Not implemented yet, using pipewire perhaps?, check output of 'pactl info | grep \"Server String\"'"
+            exit 1
+        fi
+        PULSE_SERVER_STRING="unix:${PULSE_SOCKET_DIR}/native"
+        PODMAN_RUN_ARGS+=("-v ${PULSE_SOCKET_DIR}:${PULSE_SOCKET_DIR}")
+        PODMAN_RUN_ARGS+=("-e PULSE_SERVER=${PULSE_SERVER_STRING}")
     fi
     if [[ $WITH_GUI == 1 ]]; then
         if [[ -e /mnt/wsl/ ]]; then

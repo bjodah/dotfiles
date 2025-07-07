@@ -164,10 +164,11 @@
 ;(load-file (format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/whisper.el"))
 (require 'strisper)
 (global-set-key (kbd "C-c M-R") 'strisper-record-at-point)
+(global-set-key (kbd "C-c M-E") 'strisper-stop)
 
 (require 'whisper)
 (require 'my-text-to-speech)
-(global-set-key (kbd "M-P") 'my-text-to-speech)
+(global-set-key (kbd "C-c M-P") 'my-text-to-speech)
 
 ;; whisper for Speech-To-Text (STT)
 (use-package whisper
@@ -1165,17 +1166,3 @@
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 ;;; init.el ends here
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")
-(lsp-workspace-folders-add "/work/")

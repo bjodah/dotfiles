@@ -1,5 +1,5 @@
 ;;; my-text-to-speech.el --- Text-to-Speech using API endpoint -*- lexical-binding: t; -*-
-
+(require 'json)
 (defun my-text-to-speech ()
   "Send the currently marked selection to a local TTS server and play audio non-blocking.
 
@@ -16,14 +16,22 @@ To use:
       (when (string-empty-p selected-text)
         (message "Selection is empty."))
       (unless (string-empty-p selected-text)
-        (let ((curl-command
-                (format "curl -X POST http://localhost:8880/v1/audio/speech -H 'Content-Type: application/json' -d %s | ffplay -nodisp -autoexit -loglevel quiet -"
-                        (json-encode-string (json-encode
-                         `((input . ,selected-text)
-                           (voice . "af_sky")))))))
-          (message "Executing text-to-speech in the background...")
-          (async-shell-command curl-command "*TTS curl output*") ; Using async-shell-command for non-blocking execution
-          (message (format "Text-to-speech command started in the background: %s" curl-command))))))
+        (let* ((json-payload `((input . ,selected-text)
+                               (voice . "af_sky")))
+               (json-string (json-encode json-payload))
+               (temp-json-file (make-temp-file "my-tts" nil ".json")))
+          (message json-string)
+          (message temp-json-file)
+          (write-region json-string nil temp-json-file)
+          (let ((curl-command
+                 (format "curl -X POST http://localhost:8880/v1/audio/speech -H 'Content-Type: application/json' -d @%s  | ffplay -nodisp -autoexit -loglevel quiet -"
+                         (shell-quote-argument temp-json-file))))
+            (message "Executing text-to-speech in the background...")
+            (async-shell-command curl-command "*TTS curl output*") ; Using async-shell-command for non-blocking execution
+            (message (format "Text-to-speech command started in the background: %s" curl-command)))
+          (when (file-exists-p temp-json-file)
+            (delete-file temp-json-file))
+          ))))
   (unless (region-active-p)
     (message "No region selected. Please mark the text you want to convert to speech.")))
 

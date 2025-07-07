@@ -32,7 +32,7 @@ Inserts parsed text directly into strisper--target-buffer if set."
     (setq strisper--rec-proc
           (make-process
            :name "strisper--arecord"
-           :command '("sh" "-c" "arecord -f S16_LE -c1 -r 16000 -t raw -D default | nc localhost 43007")
+           :command '("sh" "-c" "arecord -f S16_LE -c1 -r 16000 -t raw -D pulse | nc localhost 43007")
            :buffer stdout-buffer ; Process output goes here by default
            :stderr (get-buffer-create strisper--stderr-buffer-name)
            :coding 'utf-8-unix
