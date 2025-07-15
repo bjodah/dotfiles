@@ -67,13 +67,13 @@ export LDFLAGS="${LDFLAGS:-}"
 if [[ $USE_LLVM == 1 ]]; then
     export CC=gcc CXX=g++
     CMAKE_ARGS="-DWITH_LLVM:BOOL=ON $CMAKE_ARGS"
-    export CXXFLAGS="-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -std=c++23 -O0 -ggdb3 $CXXFLAGS"
+    export CXXFLAGS="-D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC -std=c++23 -O0 -ggdb3 -fmax-errors=3 $CXXFLAGS"
     export FLINT_ROOT=/opt-3/flint-d81bf03-release
 else
     export CC=clang CXX=clang++
     LIBCXX_ASAN_ROOT="/opt-2/libcxx20-asan"
     CMAKE_ARGS="-DWITH_LLVM:BOOL=OFF $CMAKE_ARGS"
-    export CXXFLAGS="-D_LIBCPP_DEBUG -std=c++23 -fsanitize=address,undefined -nostdinc++ -I$LIBCXX_ASAN_ROOT/include -I$LIBCXX_ASAN_ROOT/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb $CXXFLAGS"
+    export CXXFLAGS="-D_LIBCPP_DEBUG -std=c++23 -fsanitize=address,undefined -nostdinc++ -I$LIBCXX_ASAN_ROOT/include -I$LIBCXX_ASAN_ROOT/include/c++/v1 -fno-omit-frame-pointer -fno-optimize-sibling-calls -O0 -glldb -ferror-limit=3 $CXXFLAGS"
     export LDFLAGS="-fsanitize=address,undefined -nostdlib++ -Wl,-rpath,${LIBCXX_ASAN_ROOT}/lib -L${LIBCXX_ASAN_ROOT}/lib -lc++ -lc++abi $LDFLAGS"
     export FLINT_ROOT=/opt-3/flint-d81bf03-asan
 fi

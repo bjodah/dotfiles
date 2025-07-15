@@ -531,7 +531,8 @@
 (global-set-key (kbd "M-Z") 'bjodah/mark-to-char-before-literal)
 (global-set-key (kbd "C-c Z") 'bjodah/vterm-execute-region-or-current-line)
 (global-set-key (kbd "C-c T") 'bjodah/transpose1)
-
+(global-set-key (kbd "C-c M-U") 'bjodah/insert-uuid-8-4-4-4-12)
+(global-set-key (kbd "C-c M-$") #'bjodah/gptel-spot-typos-in-region)
 
 (use-package aidermacs
   :ensure t

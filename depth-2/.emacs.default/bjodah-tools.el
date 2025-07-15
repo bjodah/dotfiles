@@ -155,3 +155,14 @@ PACKAGE-URL is the URL to the .tar or .el file."
         (when (file-exists-p local-file)
           (delete-file local-file)
           (message "Cleaned up temporary file: %s" local-file))))))
+
+(defun bjodah/insert-uuid-8-4-4-4-12 ()
+  "Generate a UUID and insert it at point."
+  (interactive)
+  (insert (format "uuid:%08x-%04x-%04x-%04x-%08x%04x" ; 8-4-4-4-12
+                  (random 4294967295)
+                  (random 65535)
+                  (random 65535)
+                  (random 65535)
+                  (random 4294967295)
+                  (random 65535))))
