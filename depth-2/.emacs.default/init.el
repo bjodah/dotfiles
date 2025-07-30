@@ -581,7 +581,11 @@
   :config
   (which-key-mode))
 
-
+(use-package avy
+  :ensure t
+  :bind (("C-M-z" . avy-goto-char)
+         ("M-S M-S" . avy-goto-char)
+         ))
 
 (use-package cython-mode
   :ensure t
@@ -620,6 +624,8 @@
 (use-package god-mode
   :ensure t
   :bind
+  (:map god-local-mode-map
+        ("C-i" . 'god-local-mode))
   ("C-<escape>" . #'god-local-mode)
   ("ESC M-SPC" . #'god-local-mode) ; ESC ESC space
   :config
@@ -654,6 +660,12 @@
   :ensure t)
 ;; mmm-mako
 
+(use-package graphviz-dot-mode
+  :ensure t
+  :config
+  (setq graphviz-dot-indent-width 4)
+  :hook
+  (graphviz-dot-mode . flycheck-mode))
 
 (message (format "%s%s" (file-name-directory load-file-name) "lisp/"))
 (require 'sln-mode)
@@ -693,7 +705,12 @@
   (add-to-list 'auto-mode-alist '("\\.yaml.mako\\'" . yaml-mode))
   (add-to-list 'auto-mode-alist '("\\.yaml.mako\\'" . mmm-mode))
   (mmm-add-mode-ext-class 'yaml-mode "\\.yaml.mako\\'" 'mako)
-  
+
+  ;; - Graphviz DOT
+  (add-to-list 'auto-mode-alist '("\\.dot.mako\\'" . graphviz-dot-mode))
+  (add-to-list 'auto-mode-alist '("\\.dot.mako\\'" . mmm-mode))
+  (mmm-add-mode-ext-class 'yaml-mode "\\.dot.mako\\'" 'mako)
+ 
   )
 ;; (require 'mmm-mode)
 ;; (load-file "~/.emacs.d/lisp/mmm-mako.el")
@@ -1167,3 +1184,4 @@
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 ;;; init.el ends here
+(lsp-workspace-folders-add "/work/")

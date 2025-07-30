@@ -55,9 +55,9 @@
             meta-llama/llama-4-scout-17b-16e-instruct ; 131 072, 8192
             llama-3.3-70b-versatile ; 128k, 32768
             llama-3.1-8b-instant ; 128k, 8192
-            qwen-qwq-32b ; 128l, -
-            deepseek-r1-distill-qwen-32b ; 128k, 16384
-            deepseek-r1-distill-llama-70b ; 128k, -
+            ;qwen-qwq-32b ; 128l, -
+            ;deepseek-r1-distill-qwen-32b ; 128k, 16384
+            ;deepseek-r1-distill-llama-70b ; 128k, -
             compound-beta; 128k, 8192  (searches web, ...)
             ))
 
@@ -93,18 +93,30 @@
             qwen-3-32b
             llama-4-scout-17b-16e-instruct))
 
+(gptel-make-openai "Alibaba"
+  :stream t
+  :key (lambda () (getenv "ALIBABA_API_KEY"))
+  :protocol "https"
+  :host "dashscope-intl.aliyuncs.com"
+  :endpoint "/compatible-mode/v1/chat/completions"
+  :models '(qwen3-coder-plus))
+
 (gptel-make-openai "OpenRouter"               ;Any name you want
   :host "openrouter.ai"
   :endpoint "/api/v1/chat/completions"
   :stream t
   :key (lambda () (getenv "OPENROUTER_API_KEY"))
-  :models '(qwen/qwen3-235b-a22b
-            qwen/qwen3-235b-a22b:free
+  :models '(qwen/qwen3-235b-a22b-2507
+            ;qwen/qwen3-235b-a22b:free
             qwen/qwen2.5-coder-7b-instruct ; 33k, 33k, $0.01/$0.03 ~160tps (nebius)
+            mistralai/devstral-medium
             mistralai/mistral-medium-3
+            z-ai/glm-4.5 ; 129k, 96k, $0.6/2.2
+            z-ai/glm-4.5-air ; 129k, 96k, $0.2/1.1
             ;anthropic/claude-opus-4 ; 200k, 32k, $15/$75, ~30tps
             anthropic/claude-sonnet-4 ; 200k, 64k, $3/$15, ~60tps
-            anthropic/claude-3.7-sonnet))
+            ;anthropic/claude-3.7-sonnet
+            ))
 
 ;; (gptel-make-openai "localhost-8000"
 ;;   :stream t
@@ -167,6 +179,5 @@ The response is displayed in the *gptel-typo-spotting* buffer."
   :protocol "http"
   :host (concat (if (string= (getenv "container") "podman") "host.docker.internal" "localhost") ":8688")
   :key "sk-empty"
-  :models '(llamacpp-Qwen2.5-Coder-3B llamacpp-openthinker2-32b llamacpp-gemma-3-12b llamacpp-qwen25-32b-ablt llamacpp-Omega-Darker-Gaslight_The-Final-Forgotten-Fever-Dream-24B llamacpp-Phi-4-ablt llamacpp-Qwen2.5-Coder-14B vllm-Qwen2.5-Coder-7B vllm-Qwen2.5-Coder-14B llamacpp-DeepCoder-14B llamacpp-cydonia-24b-v2.1 llamacpp-Phi-4-ablt-Orion-18B exllamav2-Qwen2.5-Coder-7B llamacpp-Qwen3-30B-A3B-cpu llamacpp-Qwen3-14B llamacpp-Qwen3-30B-A3B exllamav2-gemma-3-27b llamacpp-Omega-Darker-final-directive-24b llamacpp-Qwen3-4B llamacpp-Qwen3-8B llamacpp-mistral-small-24b-2501 llamacpp-mistral-small-3.1-24b-2503 llamacpp-llama4-maverick llamacpp-gemma-3-4b llamacpp-glm-4-32b-0414 llamacpp-glm-z1-32b-0414 llamacpp-QwQ-32B-RpR llamacpp-fallen-gemma-3-27b exllamav2-QwQ-32B llamacpp-glm-z1-rumination-32b-0414 llamacpp-Ling-Coder-lite llamacpp-amoral-gemma-3-27b llamacpp-Qwen2.5-Coder-7B llamacpp-Qwen3-32B llamacpp-mistral-small-3.2-24b-2506 vllm-Qwen3-14B llamacpp-Qwen2.5-Coder-32B exllamav2-Qwen2.5-Coder-14B llamacpp-Qwen3-0.6B llamacpp-Qwen3-1.7B llamacpp-QwQ-32B vllm-SmolLM2-1.7B-Instruct vllm-Qwen2.5-VL-7B llamacpp-exaone-deep-32b llamacpp-Qwen3-4B-128K llamacpp-gemma-3-27b llamacpp-gemma-3-1b llamacpp-lars1234-mistral-small-24b-2501-writer llamacpp-devstral-small-2505 vllm-Qwen-QwQ-32B llamacpp-Qwen3-30B-A3B-K_XL llamacpp-ling-lite-0415 llamacpp-Broken-Tutu-24B llamacpp-Phi-4 llamacpp-Phi-4-reasoning-plus llamacpp-Qwen3-30B-A3B-cpu@do-think llamacpp-Qwen3-30B-A3B-cpu@no-think llamacpp-Qwen3-30B-A3B-cpu@think-silent llamacpp-Qwen3-14B@do-think llamacpp-Qwen3-14B@no-think llamacpp-Qwen3-14B@think-silent llamacpp-Qwen3-30B-A3B@do-think llamacpp-Qwen3-30B-A3B@no-think llamacpp-Qwen3-30B-A3B@think-silent llamacpp-Qwen3-4B@do-think llamacpp-Qwen3-4B@no-think llamacpp-Qwen3-4B@think-silent llamacpp-Qwen3-8B@do-think llamacpp-Qwen3-8B@no-think llamacpp-Qwen3-8B@think-silent llamacpp-QwQ-32B-RpR@think-less exllamav2-QwQ-32B@think-less llamacpp-Qwen3-32B@do-think llamacpp-Qwen3-32B@no-think llamacpp-Qwen3-32B@think-silent vllm-Qwen3-14B@do-think vllm-Qwen3-14B@no-think vllm-Qwen3-14B@think-silent llamacpp-Qwen3-0.6B@do-think llamacpp-Qwen3-0.6B@no-think llamacpp-Qwen3-0.6B@think-silent llamacpp-Qwen3-1.7B@do-think llamacpp-Qwen3-1.7B@no-think llamacpp-Qwen3-1.7B@think-silent llamacpp-QwQ-32B@think-less llamacpp-Qwen3-4B-128K@do-think llamacpp-Qwen3-4B-128K@no-think llamacpp-Qwen3-4B-128K@think-silent vllm-Qwen-QwQ-32B@think-less llamacpp-Qwen3-30B-A3B-K_XL@do-think llamacpp-Qwen3-30B-A3B-K_XL@no-think llamacpp-Qwen3-30B-A3B-K_XL@think-silent)
+  :models '(llamacpp-gemma-3-27b llamacpp-Ling-Coder-lite llamacpp-fallen-gemma-3-27b llamacpp-devstral-small-2507 llamacpp-Omega-Darker-Gaslight_The-Final-Forgotten-Fever-Dream-24B llamacpp-Phi-4-reasoning-plus llamacpp-Qwen3-30B-A3B-K_XL llamacpp-Qwen3-30B-A3B llamacpp-magistral-small-2507 vllm-Qwen3-14B llamacpp-llama4-maverick llamacpp-Qwen3-30B-A3B-it-2507 llamacpp-gemma-3-4b llamacpp-qwen25-32b-ablt llamacpp-lars1234-mistral-small-24b-2501-writer llamacpp-Omega-Darker-final-directive-24b llamacpp-exaone-deep-32b llamacpp-amoral-gemma-3-27b llamacpp-Phi-4-ablt vllm-Qwen2.5-Coder-7B llamacpp-Qwen3-1.7B llamacpp-QwQ-32B vllm-SmolLM2-1.7B-Instruct llamacpp-gemma-3-1b llamacpp-glm-4-32b-0414 llamacpp-ling-lite-0415 llamacpp-Qwen3-14B llamacpp-glm-z1-rumination-32b-0414 llamacpp-Phi-4-ablt-Orion-18B llamacpp-Qwen2.5-Coder-3B llamacpp-Qwen3-4B llamacpp-mistral-small-3.2-24b-2506 llamacpp-Broken-Tutu-24B llamacpp-Qwen2.5-Coder-14B llamacpp-mistral-small-24b-2501 llamacpp-DeepCoder-14B vllm-Qwen2.5-VL-7B llamacpp-cydonia-24b-v2.1 llamacpp-Qwen2.5-Coder-32B llamacpp-mistral-small-3.1-24b-2503 llamacpp-gemma-3-12b vllm-Qwen-QwQ-32B llamacpp-QwQ-32B-RpR llamacpp-Qwen2.5-Coder-7B llamacpp-Qwen3-32B exllamav2-Qwen2.5-Coder-14B vllm-Qwen2.5-Coder-14B llamacpp-Qwen3-30B-A3B-cpu llamacpp-openthinker2-32b llamacpp-Qwen3-0.6B llamacpp-Qwen3-8B exllamav2-gemma-3-27b llamacpp-glm-z1-32b-0414 exllamav2-Qwen2.5-Coder-7B exllamav2-QwQ-32B llamacpp-Phi-4 llamacpp-Qwen3-4B-128K llamacpp-Qwen3-30B-A3B-K_XL@do-think llamacpp-Qwen3-30B-A3B-K_XL@no-think llamacpp-Qwen3-30B-A3B-K_XL@think-silent llamacpp-Qwen3-30B-A3B@do-think llamacpp-Qwen3-30B-A3B@no-think llamacpp-Qwen3-30B-A3B@think-silent vllm-Qwen3-14B@do-think vllm-Qwen3-14B@no-think vllm-Qwen3-14B@think-silent llamacpp-Qwen3-1.7B@do-think llamacpp-Qwen3-1.7B@no-think llamacpp-Qwen3-1.7B@think-silent llamacpp-QwQ-32B@think-less llamacpp-Qwen3-14B@do-think llamacpp-Qwen3-14B@no-think llamacpp-Qwen3-14B@think-silent llamacpp-Qwen3-4B@do-think llamacpp-Qwen3-4B@no-think llamacpp-Qwen3-4B@think-silent vllm-Qwen-QwQ-32B@think-less llamacpp-QwQ-32B-RpR@think-less llamacpp-Qwen3-32B@do-think llamacpp-Qwen3-32B@no-think llamacpp-Qwen3-32B@think-silent llamacpp-Qwen3-30B-A3B-cpu@do-think llamacpp-Qwen3-30B-A3B-cpu@no-think llamacpp-Qwen3-30B-A3B-cpu@think-silent llamacpp-Qwen3-0.6B@do-think llamacpp-Qwen3-0.6B@no-think llamacpp-Qwen3-0.6B@think-silent llamacpp-Qwen3-8B@do-think llamacpp-Qwen3-8B@no-think llamacpp-Qwen3-8B@think-silent exllamav2-QwQ-32B@think-less llamacpp-Qwen3-4B-128K@do-think llamacpp-Qwen3-4B-128K@no-think llamacpp-Qwen3-4B-128K@think-silent)
 )
-

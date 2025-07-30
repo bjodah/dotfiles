@@ -40,7 +40,7 @@ while [ $# -gt 0 ]; do
             break;
             ;;
         *)
-            >&2 echo "Unrecognized flag: $1, pass --help fpr more info, aborting..."
+            >&2 echo "Unrecognized flag: $1, pass --help for more info, aborting..."
             exit 1
     esac
 done
@@ -85,7 +85,6 @@ if [[ $USE_BOOST == 1 ]]; then
     export THIS_BUILD=${PWD}/build-boost-gccemacs-doom
 else
     CMAKE_ARGS="$CMAKE_ARGS\
- -DWITH_GMP=ON \
  -DWITH_MPFR=ON \
  -DWITH_MPC=ON \
  -DINTEGER_CLASS=flint"

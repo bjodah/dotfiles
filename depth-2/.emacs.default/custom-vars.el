@@ -88,10 +88,11 @@
  '(package-selected-packages
    '(aidermacs all-the-icons auctex auto-dim-other-buffers cape cmake-mode corfu cython-mode
                dired-filter dired-preview dockerfile-mode doom-themes eat ein elfeed embark-consult
-               flycheck flymake-shellcheck forge go-mode god-mode gptel-quick julia-mode jupyter
-               lsp-java lsp-pyright lsp-ui marginalia minuet mmm-mode monokai-theme nerd-icons
-               nginx-mode orderless org-roam pdf-tools realgud rg rmsbolt rustic semext sqlite3
-               treemacs-magit typescript-mode validate vertico vterm yaml-mode yasnippet-snippets))
+               flycheck flymake-shellcheck forge go-mode god-mode gptel-quick graphviz-dot-mode
+               julia-mode jupyter lsp-java lsp-pyright lsp-ui marginalia minuet mmm-mode
+               monokai-theme nerd-icons nginx-mode orderless org-roam pdf-tools realgud rg rmsbolt
+               rustic semext sqlite3 treemacs-magit typescript-mode validate vertico vterm yaml-mode
+               yasnippet-snippets))
  '(package-vc-selected-packages
    '((ein :url "https://github.com/bjodah/emacs-ipython-notebook" :branch "fix-polymode-compatibility")
      (semext :url "https://github.com/ahyatt/semext" :branch "main")
