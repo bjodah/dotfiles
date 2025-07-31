@@ -182,6 +182,12 @@ fib(5)")
   (bjodah--minuet-use-llama-swap "llamacpp-Qwen2.5-Coder-7B")
   )
 
+(defun bjodah/minuet-use-llama-swap-qwen3-coder-30b ()
+  "Switch to Qwen/Qwen2.5-Coder-7B on localhost (llama-swap container on port :8686"
+  (interactive)
+  (bjodah--minuet-use-llama-swap "llamacpp-Qwen3-Coder-30B-A3B-it")
+  )
+
 
 (use-package minuet
   :vc (
@@ -212,7 +218,7 @@ fib(5)")
 
     :config
     ;(bjodah/minuet-use-localhost-fim) ; or bjodah/minuet-use-smollm2
-    (bjodah/minuet-use-llama-swap-qwen-coder-14B)
+    (bjodah/minuet-use-llama-swap-qwen3-coder-30b)
     (setq minuet-auto-suggestion-throttle-delay 0.5)
     (setq minuet-auto-suggestion-debounce-delay 0.2)
     (setq minuet-request-timeout 7.0)
