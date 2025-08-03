@@ -163,7 +163,7 @@ fib(5)")
   (setq minuet-n-completions 4)
   (plist-put minuet-openai-fim-compatible-options :end-point
              (concat (if (string= (getenv "container") "podman") "http://host.docker.internal" "http://localhost")
-                     ":8687/v1/completions"))
+                     ":8686/v1/completions"))
   (plist-put minuet-openai-fim-compatible-options :name "llama-swap-qwen-coder")
   (plist-put minuet-openai-fim-compatible-options :api-key (defun my-llama-swap-key () "sk-empty"))
   (plist-put minuet-openai-fim-compatible-options :model model-name)
