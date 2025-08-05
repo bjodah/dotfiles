@@ -51,6 +51,7 @@ CMAKE_ARGS="\
  -DBUILD_SHARED_LIBS=ON \
  -DBUILD_TESTS=ON \
  -DBUILD_BENCHMARKS=ON \
+ -DWITH_SYMENGINE_RCP=yes \
  -DHAVE_GCC_ABI_DEMANGLE=no"
 
 LLVM_ROOT="/opt-2/llvm-20"
@@ -115,5 +116,10 @@ if [[ $INSERTED == 0 ]]; then
     ARGS+=("-e CMAKE_GENERATOR=Ninja")
 fi
 
+#declare -a PODRUN_ARGS
+if [ -d ../symengine.py ]; then
+    ARGS+=("-v $(realpath ../symengine.py):$(realpath ../symengine.py)")
+fi
+
 export CMAKE_ARGS
-host-devenv-gccemacs-doom-cmake.sh "${ARGS[@]}"
+host-devenv-gccemacs-doom-cmake.sh "${ARGS[@]}" #-- "${PODRUN_ARGS[@]}"
