@@ -52,6 +52,8 @@
   ;; https://console.groq.com/docs/deprecations
   ;; https://console.groq.com/dashboard/limits
   :models '(
+            openai/gpt-oss-20b
+            openai/gpt-oss-120b
             moonshotai/kimi-k2-instruct ; 131 072, 16 384
             meta-llama/llama-4-maverick-17b-128e-instruct ; 131 072, 8192
             meta-llama/llama-4-scout-17b-16e-instruct ; 131 072, 8192
@@ -89,7 +91,8 @@
   :endpoint "/v1/chat/completions"
   :stream nil                                    ;optionally nil as Cerebras is instant AI
   :key (lambda () (getenv "CEREBRAS_API_KEY")) ;can be a function that returns the key
-  :models '(qwen-3-235b-a22b
+  :models '(gpt-oss-120b
+            qwen-3-235b-a22b
             llama3.3-70b
             llama3.1-8b
             qwen-3-32b
