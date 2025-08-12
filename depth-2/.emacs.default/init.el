@@ -167,8 +167,8 @@
 (global-set-key (kbd "C-c M-E") 'strisper-stop)
 
 (require 'whisper)
-(require 'my-text-to-speech)
-(global-set-key (kbd "C-c M-P") 'my-text-to-speech)
+(require 'bjodah-text-to-speech)
+(global-set-key (kbd "C-c M-P") 'bjodah-text-to-speech)
 
 ;; whisper for Speech-To-Text (STT)
 (use-package whisper
@@ -474,7 +474,10 @@
   :hook ((prog-mode . corfu-mode)
          (shell-mode . corfu-mode)
          (eshell-mode . corfu-mode))
-
+  :bind
+  (:map corfu-map
+        ("M-n" . corfu-next)
+        ("M-p" . corfu-previous))
   :custom
   ;; Hide commands in M-x which do not apply to the current mode.
   (read-extended-command-predicate #'command-completion-default-include-p)
@@ -536,7 +539,7 @@
 
 (use-package aidermacs
   :ensure t
-  :bind (("C-c a" . aidermacs-transient-menu))
+  :bind (("C-c A" . aidermacs-transient-menu))
   :config
   :custom
   ; See the Configuration section below
@@ -1010,7 +1013,8 @@
       (other-window (- n))
   (other-window -1)))
 (global-set-key (kbd "<f1>") 'other-window-backward)
-(global-set-key "\C-xp" 'other-window-backward)
+(global-set-key (kbd "C-x O") 'other-window-backward)
+(global-set-key (kbd "C-x M-o") 'other-window-backward)
 (global-set-key (kbd "C-<f1>") 'previous-buffer)
 (global-set-key (kbd "C-<f2>") 'next-buffer)
 (global-set-key (kbd "ESC <f1>") 'delete-other-windows)

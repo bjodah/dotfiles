@@ -197,9 +197,9 @@ fib(5)")
             )
   :ensure t
   :bind
- (("M-o" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
-     ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
-     ("M-p" . #'minuet-configure-provider)
+  (("C-c M-O" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
+   ("M-I" . #'minuet-show-suggestion) ;; use overlay for completion
+   ("C-c M-P" . #'minuet-configure-provider)
      :map minuet-active-mode-map
      ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
      ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
