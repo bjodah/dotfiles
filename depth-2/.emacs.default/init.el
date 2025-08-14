@@ -477,7 +477,11 @@
   :bind
   (:map corfu-map
         ("M-n" . corfu-next)
-        ("M-p" . corfu-previous))
+        ("M-p" . corfu-previous)
+        ;; :map completion-list-mode-map
+        ;; ("M-n" . corfu-next)
+        ;; ("M-p" . corfu-previous)
+        )
   :custom
   ;; Hide commands in M-x which do not apply to the current mode.
   (read-extended-command-predicate #'command-completion-default-include-p)
@@ -536,6 +540,15 @@
 (global-set-key (kbd "C-c T") 'bjodah/transpose1)
 (global-set-key (kbd "C-c M-U") 'bjodah/insert-uuid-8-4-4-4-12)
 (global-set-key (kbd "C-c M-$") #'bjodah/gptel-spot-typos-in-region)
+(defun bjodah/complete ()
+  "If a completions window is visible, select it.
+Otherwise, invoke completion-at-point to generate completions."
+  (interactive)
+  (let ((completion-window (get-buffer-window "*Completions*" 0)))
+    (if (and completion-window (window-live-p completion-window))
+        (select-window completion-window)
+      (completion-at-point))))
+(global-set-key (kbd "M-U") 'bjodah/complete) ;'switch-to-completions)
 
 (use-package aidermacs
   :ensure t
@@ -1029,6 +1042,7 @@
 (global-set-key (kbd "C-c M-3") (lambda () (interactive) (switch-to-buffer "*scratch*")))
 (global-set-key (kbd "C-c M-4") (lambda () (interactive) (display-buffer "*scratch*")))
 (global-set-key (kbd "C-c M-G") 'exit-minibuffer)
+(global-set-key (kbd "<f12>") 'mark-defun)
 
 
 

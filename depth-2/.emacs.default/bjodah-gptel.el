@@ -9,7 +9,7 @@
    gptel-model 'llamacpp-Qwen3-Coder-30B-A3B-it ; 'gemini-2.5-flash-preview-05-20
    ;gptel-backend ...
    )
-  (setq gptel-temperature 0.2)
+  ;(setq gptel-temperature 0.2)
   :bind (("C-c M-." . 'gptel-send)
          ("C-c M-/" . 'gptel-rewrite)
          ("C-c M->" . (lambda ()
@@ -149,9 +149,7 @@ The response is displayed in the *gptel-typo-spotting* buffer."
     (message "Asking gptel to check for bugs and typos...")
 
     ;; 3. Call gptel-request with a hard-coded model and a custom callback.
-    ;; We let-bind `gptel-model` to 'gpt-4o-mini for this specific request.
-    ;; This model is a good balance of speed and capability for this task.
-    (let ((gptel-model 'llamacpp-gemma-3-27b))
+    (let ((gptel-model 'llamacpp-Qwen3-Coder-30B-A3B-it))
       (gptel-request
        prompt
        ;; 4. The callback function defines what to do with the response.
@@ -269,7 +267,13 @@ The response is displayed in the *gptel-typo-spotting* buffer."
             llamacpp-glm-z1-32b-0414
             llamacpp-glm-z1-rumination-32b-0414
             llamacpp-gpt-oss-120b
+            llamacpp-gpt-oss-120b@high
+            llamacpp-gpt-oss-120b@low
+            llamacpp-gpt-oss-120b@medium
             llamacpp-gpt-oss-20b
+            llamacpp-gpt-oss-20b@high
+            llamacpp-gpt-oss-20b@low
+            llamacpp-gpt-oss-20b@medium
             llamacpp-lars1234-mistral-small-24b-2501-writer
             llamacpp-ling-lite-0415
             llamacpp-llama4-maverick
