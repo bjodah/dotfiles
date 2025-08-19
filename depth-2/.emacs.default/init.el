@@ -102,6 +102,10 @@
             ;(format "%s%s" (file-name-directory load-file-name) "lisp/whisper.el/")
              )
 
+(defun bjodah/kill-current-buffer()
+    (interactive)
+  (kill-buffer (current-buffer)))
+
 (use-package emacs
   :ensure nil
   :custom
@@ -119,9 +123,7 @@
         ("C-c M-V" . visual-line-mode)
         ("C-c M-F" . auto-fill-mode)
         ("M-F"     . fill-region)
-        ("M-K" . (lambda ()
-                  (interactive)
-                  (kill-buffer (current-buffer))))
+        ("M-K" . bjodah/kill-current-buffer)
         ))
 
 ;; (use-package mb-depth
@@ -1035,6 +1037,16 @@ Otherwise, invoke completion-at-point to generate completions."
 (global-set-key (kbd "ESC <f3>") 'split-window-right)
 (global-set-key (kbd "ESC <f4>") 'delete-window)
 (global-set-key (kbd "ESC <f5>") 'vterm)
+(global-set-key (kbd "S-<f1>") 'backward-char)
+(global-set-key (kbd "S-<f2>") 'next-line)
+(global-set-key (kbd "S-<f3>") 'previous-line)
+(global-set-key (kbd "S-<f4>") 'forward-char)
+(global-set-key (kbd "C-S-<f1>") 'xref-find-definitions)
+(global-set-key (kbd "C-S-<f2>") 'vc-git-grep)
+(global-set-key (kbd "C-S-<f3>") 'find-file-at-point)
+(global-set-key (kbd "C-S-<f4>") 'bjodah/kill-current-buffer)
+(global-set-key (kbd "C-S-<f5>") 'dired-jump)
+
 (global-set-key (kbd "C-c C-<left>") 'previous-buffer)
 (global-set-key (kbd "C-c C-<right>") 'next-buffer)
 (global-set-key (kbd "C-c M-1") (lambda () (interactive) (find-file "~/.emacs.default/init.el")))

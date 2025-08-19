@@ -85,20 +85,14 @@
  '(org-format-latex-options
    '(:foreground default :background default :scale 1.25 :html-foreground "Black" :html-background
                  "Transparent" :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
- '(package-selected-packages
-   '(aidermacs all-the-icons auctex auto-dim-other-buffers cape cmake-mode corfu cython-mode
-               dired-filter dired-preview dockerfile-mode doom-themes eat ein elfeed embark-consult
-               flycheck flymake-shellcheck forge go-mode god-mode gptel-quick graphviz-dot-mode
-               julia-mode jupyter lsp-java lsp-pyright lsp-ui marginalia minuet mmm-mode
-               monokai-theme nerd-icons nginx-mode orderless org-roam pdf-tools realgud rg rmsbolt
-               rustic semext sqlite3 treemacs-magit typescript-mode validate vertico vterm yaml-mode
-               yasnippet-snippets))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
-   '((ein :url "https://github.com/bjodah/emacs-ipython-notebook" :branch "fix-polymode-compatibility")
+   '((gptel :url "https://github.com/karthink/gptel" :branch "master")
+     (ein :url "https://github.com/bjodah/emacs-ipython-notebook" :branch
+          "fix-polymode-compatibility")
      (semext :url "https://github.com/ahyatt/semext" :branch "main")
      (minuet :url "https://github.com/milanglacier/minuet-ai.el" :branch "main")
-     (gptel-quick :url "https://github.com/karthink/gptel-quick")
-     (gptel :url "https://github.com/karthink/gptel" :branch "master")))
+     (gptel-quick :url "https://github.com/karthink/gptel-quick")))
  '(preview-image-type 'dvipng)
  '(preview-scale-function 2)
  '(safe-local-variable-values
