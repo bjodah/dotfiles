@@ -1,0 +1,25 @@
+#!/bin/bash
+env -C /opt-3/bjodah-dotfiles bash install_defaults.sh
+#touch /root/.bash_history
+#echo -e '. /opt-3/cpython-*-apt-deb/bin/activate\n'>>/root/.bashrc
+mkdir -p -m 0700 /tmp/emx/
+export EMACS_SOCKET=/tmp/emx/bjodah-sandbox.sock
+cat <<'EOF' >/tmp/emxclient.sh
+#!/bin/bash
+chars='|/-\\'
+i=0
+echo -n "Waiting for emacs-daemon to launch... "
+while [ ! -e $EMACS_SOCKET ]; do
+  printf '\b%c' ${chars:$((i % ${#chars})):1}; i=$((i+1))
+  sleep 0.25
+done
+emacsclient -t --socket-name=$EMACS_SOCKET
+EOF
+chmod +x /tmp/emxclient.sh
+if [ ! -e /tmp/emxclient.sh ]; then
+    >&2 echo "Missing?"
+    exit 1
+fi
+tmux -2 -S /tmp/emx.sock new -s bjodah-sandbox \
+     "emacs --fg-daemon=$EMACS_SOCKET" \; \
+     new-window "ls -l /tmp && set -x; /tmp/emxclient.sh"

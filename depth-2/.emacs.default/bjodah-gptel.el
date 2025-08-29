@@ -39,9 +39,10 @@
   :bind (("C-c M-," . gptel-quick)) ; C-. ?
 )
 
-(gptel-make-gemini "Gemini"
-  :key (lambda () (getenv "GEMINI_API_KEY"))
-  :stream t)
+;; (gptel-make-gemini "Gemini"
+;;   :key (lambda () (getenv "GEMINI_API_KEY"))
+;;   :models '(gemini-2.5-flash-preview-05-20)
+;;   :stream t)
 
 (gptel-make-openai "Groq"
   :host "api.groq.com"
@@ -189,6 +190,7 @@ The response is displayed in the *gptel-typo-spotting* buffer."
             exllamav2-gemma-3-27b
             llamacpp-Broken-Tutu-24B
             llamacpp-DeepCoder-14B
+            llamacpp-Forgotten-Safeword-36B-4.1
             llamacpp-Ling-Coder-lite
             llamacpp-Omega-Darker-Gaslight_The-Final-Forgotten-Fever-Dream-24B
             llamacpp-Omega-Darker-final-directive-24b
@@ -255,15 +257,20 @@ The response is displayed in the *gptel-typo-spotting* buffer."
             llamacpp-Qwen3-Coder-30B-A3B-it@no-think
             llamacpp-Qwen3-Coder-30B-A3B-it@think-silent
             llamacpp-amoral-gemma-3-27b
-            llamacpp-cydonia-24b-v4
+            llamacpp-cydonia-24b-v4.1
             llamacpp-devstral-small-2507
             llamacpp-exaone-deep-32b
             llamacpp-fallen-gemma-3-27b
             llamacpp-gemma-3-12b
             llamacpp-gemma-3-1b
+            llamacpp-gemma-3-270m-it
+            llamacpp-gemma-3-270m-it-qat
             llamacpp-gemma-3-27b
             llamacpp-gemma-3-4b
             llamacpp-glm-4-32b-0414
+            llamacpp-glm-4.5-air
+            llamacpp-glm-4.5-air-ablt
+            llamacpp-glm-4.5-air-ablt@extract-thinking
             llamacpp-glm-z1-32b-0414
             llamacpp-glm-z1-rumination-32b-0414
             llamacpp-gpt-oss-120b
@@ -283,6 +290,8 @@ The response is displayed in the *gptel-typo-spotting* buffer."
             llamacpp-mistral-small-3.2-24b-2506
             llamacpp-openthinker2-32b
             llamacpp-qwen25-32b-ablt
+            llamacpp-seed-oss-36b
+            llamacpp-seed-oss-36b@extract-thinking
             llamacpp-tiger-gemma-v3-27b
             vllm-Qwen-QwQ-32B
             vllm-Qwen-QwQ-32B@think-less

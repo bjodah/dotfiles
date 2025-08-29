@@ -124,6 +124,7 @@
         ("C-c M-F" . auto-fill-mode)
         ("M-F"     . fill-region)
         ("M-K" . bjodah/kill-current-buffer)
+        ("M-L" . bury-buffer)
         ))
 
 ;; (use-package mb-depth

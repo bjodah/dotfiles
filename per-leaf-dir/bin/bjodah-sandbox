@@ -6,6 +6,12 @@ fi
 if [ -e ~/doc/it/apei-nycklar ]; then
     PODRUN_ARGS+=(-v ~/doc/it/apei-nycklar:/root/doc/it/apei-nycklar)
 fi
+if [ -e ~/.bash_history ]; then
+    PODRUN_ARGS+=(-v ~/.bash_history:/root/.bash_history)
+fi
+if [ -e $(dirname $0)/bjodah-sandbox.tmux ]; then
+    PODRUN_ARGS+=(-v $(dirname $0)/bjodah-sandbox.tmux:/root/.tmux.conf)
+fi
 main() {
     podrun \
         --cap-add=SYS_PTRACE \
@@ -14,12 +20,11 @@ main() {
         --name bjodah-sandbox-$(basename "$PWD") \
         --image bjodah/triceratops-6:23 \
         ${PODRUN_ARGS[@]} \
+        -v $(dirname $0)/bjodah-sandbox.rc:/opt/bjodah-sandbox.rc \
         "$@" \
-        -- "\
-env -C /opt-3/bjodah-dotfiles bash install_defaults.sh \
-&& touch /root/.bash_history \
-&& echo -e '. /opt-3/cpython-*-apt-deb/bin/activate\n'>>/root/.bashrc \
-&& bash"
+            -- \
+            bash -xc "\"echo -e '. /opt-3/cpython-v3.*-apt-deb/bin/activate\nexport PYTHONPATH=$(pwd)'>>/root/.bashrc\
+                        ; bash -l /opt/bjodah-sandbox.rc\""  # that was easy...
 }
 {
     main "$@"
