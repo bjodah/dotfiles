@@ -55,11 +55,11 @@
   :models '(
             openai/gpt-oss-20b
             openai/gpt-oss-120b
-            moonshotai/kimi-k2-instruct ; 131 072, 16 384
+            moonshotai/kimi-k2-instruct-0905 ; 262 144, 16 384
             meta-llama/llama-4-maverick-17b-128e-instruct ; 131 072, 8192
             meta-llama/llama-4-scout-17b-16e-instruct ; 131 072, 8192
             llama-3.3-70b-versatile ; 128k, 32768
-            llama-3.1-8b-instant ; 128k, 8192
+            ;llama-3.1-8b-instant ; 128k, 8192
             ;qwen-qwq-32b ; 128l, -
             ;deepseek-r1-distill-qwen-32b ; 128k, 16384
             ;deepseek-r1-distill-llama-70b ; 128k, -
@@ -73,8 +73,8 @@
   :endpoint "/v1/chat/completions"
   :stream t
   ;; https://console.x.ai/ ;;
-  :models '(grok-3-mini-beta
-            grok-3-beta
+  :models '(grok-3-mini
+            grok-4
             ;grok-3-fast-beta
             ))
 
@@ -84,7 +84,7 @@
   :stream t
   :key (lambda () (getenv "DEEPSEEK_API_KEY"))
   :models '(deepseek-chat ; v3
-            deepseek-reasoner ; r1
+            ;deepseek-reasoner ; r1
             ))
 
 (gptel-make-openai "Cerebras"
@@ -93,9 +93,11 @@
   :stream nil                                    ;optionally nil as Cerebras is instant AI
   :key (lambda () (getenv "CEREBRAS_API_KEY")) ;can be a function that returns the key
   :models '(gpt-oss-120b
-            qwen-3-235b-a22b
+            qwen-3-235b-a22b-instruct-2507
+            qwen-3-235b-a22b-thinking-2507
+            qwen-3-coder-480b
             llama3.3-70b
-            llama3.1-8b
+            ;llama3.1-8b
             qwen-3-32b
             llama-4-scout-17b-16e-instruct))
 
@@ -105,7 +107,10 @@
   :protocol "https"
   :host "dashscope-intl.aliyuncs.com"
   :endpoint "/compatible-mode/v1/chat/completions"
-  :models '(qwen3-coder-plus))
+  :models '(qwen3-max-preview
+            qwen3-coder-480b-a35b-instruct ;qwen3-coder-plus
+            qwen3-235b-a22b-instruct-2507
+            qwen3-235b-a22b-thinking-2507))
 
 (gptel-make-openai "OpenRouter"               ;Any name you want
   :host "openrouter.ai"
@@ -114,7 +119,7 @@
   :key (lambda () (getenv "OPENROUTER_API_KEY"))
   :models '(qwen/qwen3-235b-a22b-2507
             ;qwen/qwen3-235b-a22b:free
-            qwen/qwen2.5-coder-7b-instruct ; 33k, 33k, $0.01/$0.03 ~160tps (nebius)
+            ;qwen/qwen2.5-coder-7b-instruct ; 33k, 33k, $0.01/$0.03 ~160tps (nebius)
             mistralai/devstral-medium
             mistralai/mistral-medium-3
             z-ai/glm-4.5 ; 129k, 96k, $0.6/2.2
