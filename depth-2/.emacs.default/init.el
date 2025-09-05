@@ -106,6 +106,13 @@
     (interactive)
   (kill-buffer (current-buffer)))
 
+(defun bjodah/select-current-line ()
+  "Select the current line."
+  (interactive)
+  (move-beginning-of-line 1)
+  (set-mark (point))
+  (move-end-of-line 1))
+
 (use-package emacs
   :ensure nil
   :custom
@@ -124,7 +131,8 @@
         ("C-c M-F" . auto-fill-mode)
         ("M-F"     . fill-region)
         ("M-K" . bjodah/kill-current-buffer)
-        ("M-L" . bury-buffer)
+        ("M-J" . bury-buffer)
+        ("M-L" . bjodah/select-current-line)
         ))
 
 ;; (use-package mb-depth
