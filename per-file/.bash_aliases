@@ -18,9 +18,9 @@ alias aider-local="env OPENAI_API_KEY=sk-empty OPENAI_API_BASE=http://host.docke
 # alias aider-local-fuse01="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --model litellm_local-fuseo1"
 # alias aider-local-tabby="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --architect --model litellm_proxy/local-tabby-qwq-32b-architect --editor-model litellm_proxy/local-tabby-qwq-32b-editor"
 # alias aider-local-exllamav2="env LOCAL_AIDER_SKIP_HEALTH_CHECK=1 local-model-enablement-wrapper contaider --architect --model litellm_proxy/local-exllamav2-qwq-32b --editor-model litellm_proxy/local-exllamav2-qwen25-coder-32b"
-alias qc="~/venv/bin/python -m llmmbc query --model llamacpp-Qwen2.5-Coder-7B -t"
+alias qc="~/venv/bin/python -m llmmbc query --model llamacpp-Qwen3-Coder-30B-A3B-it -t"
 qask() {
-    ~/venv/bin/python -m llmmbc stream --model llamacpp-Qwen3-30B-A3B -t "$@" # | glow --stream
+    ~/venv/bin/python -m llmmbc stream --model llamacpp-Qwen3-Coder-30B-A3B-it -t "$@" # | glow --stream
 }
 ask_multiple_choice_three() {
     ( set -x ; \

@@ -75,6 +75,8 @@
   ;; https://console.x.ai/ ;;
   :models '(grok-3-mini
             grok-4
+            grok-4-fast-non-reasoning
+            grok-code-fast-1 ; 0.2 / 1.5
             ;grok-3-fast-beta
             ))
 
@@ -110,7 +112,10 @@
   :models '(qwen3-max-preview
             qwen3-coder-480b-a35b-instruct ;qwen3-coder-plus
             qwen3-235b-a22b-instruct-2507
-            qwen3-235b-a22b-thinking-2507))
+            qwen3-235b-a22b-thinking-2507
+            qwen3-next-80b-a3b-thinking
+            qwen3-next-80b-a3b-instruct
+))
 
 (gptel-make-openai "OpenRouter"               ;Any name you want
   :host "openrouter.ai"
@@ -127,6 +132,8 @@
             ;anthropic/claude-opus-4 ; 200k, 32k, $15/$75, ~30tps
             anthropic/claude-sonnet-4 ; 200k, 64k, $3/$15, ~60tps
             ;anthropic/claude-3.7-sonnet
+            x-ai/grok-4-fast:free
+            openai/gpt-5  ;; halfprice until 2025-09-24
             ))
 
 ;; (gptel-make-openai "localhost-8000"
