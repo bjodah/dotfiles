@@ -123,6 +123,7 @@
         modus-themes-preset-overrides-intense)
   (add-hook 'modus-themes-after-load-theme-hook 'bjodah/customize-window)
   ;(enable-recursive-minibuffers t "Allow minibuffer commands in the minibuffer") ;see mb-depth
+  (put 'narrow-to-region 'disabled nil)
   :bind
   (:map global-map
         ("C-c M-! 1" . modus-themes-toggle)
@@ -133,7 +134,12 @@
         ("M-K" . bjodah/kill-current-buffer)
         ("M-J" . bury-buffer)
         ("M-L" . bjodah/select-current-line)
-        ))
+        )
+  (:map completion-in-region-mode-map
+        ("M-n" . minibuffer-next-completion)
+        ("M-p" . minibuffer-previous-completion)
+        )
+  )
 
 ;; (use-package mb-depth
 ;;   :config

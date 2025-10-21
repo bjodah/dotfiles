@@ -7,6 +7,7 @@
   (setq
    gptel-api-key (lambda () (getenv "OPENAI_API_KEY"))
    gptel-model 'llamacpp-Qwen3-Coder-30B-A3B-it ; 'gemini-2.5-flash-preview-05-20
+   gptel-expert-commands t
    ;gptel-backend ...
    )
   ;(setq gptel-temperature 0.2)
@@ -41,7 +42,10 @@
 
 ;; (gptel-make-gemini "Gemini"
 ;;   :key (lambda () (getenv "GEMINI_API_KEY"))
-;;   :models '(gemini-2.5-flash-preview-05-20)
+;;   :models '(
+;;              gemini-2.5-flash-preview-05-20
+;;              gemini-2.5-flash-preview-09-2025
+;;   )
 ;;   :stream t)
 
 (gptel-make-openai "Groq"
@@ -127,13 +131,13 @@
             ;qwen/qwen2.5-coder-7b-instruct ; 33k, 33k, $0.01/$0.03 ~160tps (nebius)
             mistralai/devstral-medium
             mistralai/mistral-medium-3
-            z-ai/glm-4.5 ; 129k, 96k, $0.6/2.2
+            z-ai/glm-4.6 ; 200k, 128k, $0.6/2.2, ~41tps
             z-ai/glm-4.5-air ; 129k, 96k, $0.2/1.1
             ;anthropic/claude-opus-4 ; 200k, 32k, $15/$75, ~30tps
-            anthropic/claude-sonnet-4 ; 200k, 64k, $3/$15, ~60tps
-            ;anthropic/claude-3.7-sonnet
-            x-ai/grok-4-fast:free
-            openai/gpt-5  ;; halfprice until 2025-09-24
+            anthropic/claude-sonnet-4.5 ; 1M, 64k, $3/$15 ≤200k, $6/$22 >200k, ~60tps
+            ;x-ai/grok-4-fast:free
+            ;openai/gpt-5  ;; halfprice until 2025-09-24
+            deepseek/deepseek-v3.2-exp ; 163k, 163k, $0.27/$0.4, ~70tps (DeepInfra)
             ))
 
 ;; (gptel-make-openai "localhost-8000"

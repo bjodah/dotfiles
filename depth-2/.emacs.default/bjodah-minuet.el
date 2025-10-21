@@ -130,32 +130,14 @@ fib(5)")
                  (plist-get ctx :before-cursor)
                  (plist-get ctx :after-cursor)))
      :template)
-    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 70) ; tg ~= 35 t/s
+    (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 256) ; tg ~= 35 t/s
     (minuet-set-optional-options minuet-openai-fim-compatible-options :temperature 0.07)
     (minuet-set-optional-options minuet-openai-fim-compatible-options :seed 42) ; deterministic
     (setq minuet-n-completions 2)
-    (setq minuet-context-window 3072) ;; pp ~= 800 t/s, 4k chars ~= 1000 tokens
+    (setq minuet-context-window 8192) ;; pp ~= 800 t/s, 4k chars ~= 1000 tokens
     (setq minuet-provider 'openai-fim-compatible)
   )
 
-
-(defun bjodah/minuet-use-llama-swap-ling ()
-  "Switch to Ling-Coder-lite on localhost (llama-swap container on port :8686)"
-  (interactive)
-  (plist-put minuet-openai-compatible-options :end-point
-             (concat (if (string= (getenv "container") "podman") "http://host.docker.internal" "http://localhost")
-                     ":8686/v1/completions"))
-  (plist-put minuet-openai-compatible-options :api-key (defun my-llama-swap-key () "sk-empty"))
-                                        ;(plist-put minuet-openai-compatible-options :model "HuggingFaceTB/SmolLM2-1.7B-Instruct")
-  (plist-put minuet-openai-compatible-options :model "llamacpp-Ling-Coder-lite")
-
-  ;; Prioritize throughput for faster completion
-  (minuet-set-optional-options minuet-openai-compatible-options :max_tokens 128)
-  (minuet-set-optional-options minuet-openai-compatible-options :top_p 0.9)
-  (setq minuet-n-completions 2)
-  (setq minuet-context-window 2000) ;; 2000 chars ~= 500 tokens
-  (setq minuet-provider 'openai-compatible)
-  )
 
 (defun bjodah--minuet-use-llama-swap (model-name)
   "Swtich to a llama-swap model"
