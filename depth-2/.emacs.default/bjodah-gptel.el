@@ -98,14 +98,29 @@
   :endpoint "/v1/chat/completions"
   :stream nil                                    ;optionally nil as Cerebras is instant AI
   :key (lambda () (getenv "CEREBRAS_API_KEY")) ;can be a function that returns the key
-  :models '(gpt-oss-120b
-            qwen-3-235b-a22b-instruct-2507
-            qwen-3-235b-a22b-thinking-2507
-            qwen-3-coder-480b
-            llama3.3-70b
-            ;llama3.1-8b
-            qwen-3-32b
-            llama-4-scout-17b-16e-instruct))
+  :models (append
+                 '(gpt-oss-120b
+                   zai-glm-4.6
+                   qwen-3-235b-a22b-instruct-2507
+                   llama3.3-70b
+                   qwen-3-32b
+                   llama-4-scout-17b-16e-instruct)
+                 (when (time-less-p (current-time) (encode-time 0 0 0 14 11 2025)) '(qwen-3-235b-a22b-thinking-2507))
+                 (when (time-less-p (current-time) (encode-time 0 0 0 05 11 2025)) '(qwen-3-coder-480b))
+                 )
+  ;; :models (delq nil (list
+  ;;                    'gpt-oss-120b
+  ;;                    'zai-glm-4.6
+  ;;                    'qwen-3-235b-a22b-instruct-2507
+  ;;                    'llama3.3-70b
+  ;;                    'qwen-3-32b
+  ;;                    'llama-4-scout-17b-16e-instruct
+  ;;                    (when (string< (format-time-string "%Y-%m-%d") "2025-11-14") 'qwen-3-235b-a22b-thinking-2507)
+  ;;                    (when (string< (format-time-string "%Y-%m-%d") "2025-11-05") 'qwen-3-coder-480b)
+  ;;                    ))
+  )
+
+
 
 (gptel-make-openai "Alibaba"
   :stream t
